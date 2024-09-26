@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(TargetFrameworks);net8.0-ios</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);net8.0-android</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);net8.0-maccatalyst</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>ShinyWonderland</RootNamespace>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UseMaui>true</UseMaui>
+
+        <ApplicationTitle>Wonderland</ApplicationTitle>
+        <ApplicationId>org.shiny.wonderland</ApplicationId>
+        <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
+
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+
+        <MauiVersion>8.0.90</MauiVersion>
+        <ShinyVersion>3.3.3</ShinyVersion>
+        <MediatorVersion>2.0.0-beta-0026</MediatorVersion>
+        <!--slower build, faster runtime in DEBUG-->
+        <!-- <_MauiForceXamlCForDebug Condition="'$(Configuration)' == 'Debug'">true</_MauiForceXamlCForDebug> -->
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+        <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
+        <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+        <TargetPlatformVersion>34</TargetPlatformVersion>
+        <!--
+        <EmbedAssembliesIntoApk Condition="'$(Configuration)' == 'Debug'">true</EmbedAssembliesIntoApk>
+        <AndroidPackageFormats Condition="'$(Configuration)' == 'Release'">aab</AndroidPackageFormats>
+        <AndroidLinkTool>r8</AndroidLinkTool>
+        <AndroidLinkTool>proguard</AndroidLinkTool>
+        -->
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' AND '$(Configuration)' == 'Debug'">
+        <!--these help speed up android builds-->
+        <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+        <AndroidEnableProfiler>true</AndroidEnableProfiler>
+        <AndroidPackageFormat>aab</AndroidPackageFormat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' AND '$(Configuration)' == 'Debug'">
+        <!--forces the simulator to pickup entitlements-->
+        <EnableCodeSigning>true</EnableCodeSigning>
+        <CodesignRequireProvisioningProfile>true</CodesignRequireProvisioningProfile>
+        <DisableCodesignVerification>true</DisableCodesignVerification>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+        <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+        <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
+
+        <UseHardenedRuntime Condition="'$(Configuration)' == 'Release'">true</UseHardenedRuntime>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" Visible="false"/>
+        <CustomEntitlements Include="com.apple.security.get-task-allow" Type="boolean" Value="true" Visible="false"/>
+        <CustomEntitlements Include="com.apple.security.network.client" Type="boolean" Value="true" Visible="false"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+        <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy"/>
+
+        <CustomEntitlements Include="keychain-access-groups" Type="StringArray" Value="%24(AppIdentifierPrefix)$(ApplicationId)" Visible="false"/>
+        <!--
+        For scheduled notifications, you need to setup "Time Sensitive Notifications" in the Apple Developer Portal for your app provisioning and uncomment below
+        <CustomEntitlements Include="com.apple.developer.usernotifications.time-sensitive" Type="Boolean" Value="true" />
+        -->
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Linker.xml" Condition="'$(Configuration)' == 'Release'"/>
+
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
+
+        <MauiImage Include="Resources\Images\*"/>
+        <MauiFont Include="Resources\Fonts\*"/>
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+        <MauiAsset Include="appsettings.json" LogicalName="appsettings.json"/>
+
+        <Content Remove="**\appsettings.json"/>
+        <Content Remove="**\appsettings.*.json"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="CommunityToolkit.Maui" Version="9.0.3"/>
+        <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
+        <PackageReference Include="Shiny.Core" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Support.DeviceMonitoring" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Mediator" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Mediator.Caching" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Mediator.Resilience" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Mediator.Prism" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
+        <PackageReference Include="CompiledBindings.MAUI" Version="1.0.18"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <MediatorHttp Include="OpenApiRemote" 
+                      Uri="https://api.themeparks.wiki/docs/v1.yaml" 
+                      Namespace="ShinyWonderland.ThemeParksApi" 
+                      ContractPostfix="HttpRequest" 
+                      Visible="false" />
+    </ItemGroup>
+
+</Project>

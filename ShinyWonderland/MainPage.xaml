@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ShinyWonderland"
+             x:DataType="local:MainViewModel"
+             x:Class="ShinyWonderland.MainPage"
+             Title="Wonderland Rides">
+    
+    <RefreshView Command="{Binding LoadCommand}"
+                 IsRefreshing="{Binding IsBusy}">
+        <CollectionView ItemsSource="{Binding Rides}">
+            <CollectionView.EmptyView>
+                <Label Text="No Open Rides" 
+                       FontSize="Large" 
+                       HorizontalOptions="Fill"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Fill"
+                       VerticalTextAlignment="Center" />
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:RideInfo">
+                    <Grid RowDefinitions="Auto, Auto"
+                          ColumnDefinitions="3*, 1*"
+                          Padding="10">
+                        
+                        <Label Text="{Binding Name}" 
+                               FontSize="Large" 
+                               Grid.Row="0"
+                               Grid.Column="0" />
+                        
+                        <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}" 
+                               FontAttributes="Italic" 
+                               Grid.Row="0"
+                               Grid.Column="1" />
+                        
+                        <!--
+                        <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='{0} minutes'}"
+                               IsVisible="{x:Bind PaidWaitTimeMinutes ne null}" 
+                               Grid.Row=""/>
+                        
+                        <Label Text="{Binding PaidAmount}"
+                               IsVisible="{x:Bind PaidAmount ne null}" />
+                        -->    
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="Black"
+                                 HorizontalOptions="Fill" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

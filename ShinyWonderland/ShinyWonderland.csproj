@@ -17,9 +17,9 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>8.0.90</MauiVersion>
+        <MauiVersion>8.0.92</MauiVersion>
         <ShinyVersion>3.3.3</ShinyVersion>
-        <MediatorVersion>2.0.0-beta-0026</MediatorVersion>
+        <MediatorVersion>2.1.0-beta-0014</MediatorVersion>
         <!--slower build, faster runtime in DEBUG-->
         <!-- <_MauiForceXamlCForDebug Condition="'$(Configuration)' == 'Debug'">true</_MauiForceXamlCForDebug> -->
     </PropertyGroup>
@@ -96,21 +96,17 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" Condition="'$(Configuration)' == 'Debug'"/>
-        <PackageReference Include="CommunityToolkit.Maui" Version="9.0.3"/>
+        <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2"/>
         <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
-        <PackageReference Include="Shiny.Core" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Support.DeviceMonitoring" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Mediator" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Mediator.Caching" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Mediator.Resilience" Version="$(MediatorVersion)"/>
-        <PackageReference Include="Shiny.Mediator.Prism" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
         <PackageReference Include="CompiledBindings.MAUI" Version="1.0.18"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2"/>
     </ItemGroup>
     
     <ItemGroup>

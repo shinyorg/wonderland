@@ -1,5 +1,7 @@
-﻿using Polly;
+﻿using CommunityToolkit.Maui;
+using Polly;
 using Polly.Retry;
+using Shiny.Mediator.Infrastructure;
 
 namespace ShinyWonderland;
 
@@ -10,11 +12,11 @@ public static class MauiProgram
         var builder = MauiApp
             .CreateBuilder()
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .UsePrism(
                 new DryIocContainerExtension(),
                 prism => prism.CreateWindow("NavigationPage/MainPage")
             )
-            .UseShiny()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -26,8 +28,7 @@ public static class MauiProgram
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddConnectivity();
-        builder.Services.AddBattery();
+
         builder.Services.AddShinyMediator(x => x
             .AddMemoryCaching()
             .AddDataAnnotations()

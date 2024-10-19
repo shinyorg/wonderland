@@ -6,12 +6,13 @@ namespace ShinyWonderland.Delegates;
 
 public class MyJob(
     ILogger<MyJob> logger,
+    IMediator mediator,
     INotificationManager notifications
 ) : Job(logger)
 {
-    protected override Task Run(CancellationToken cancelToken)
+    protected override async Task Run(CancellationToken cancelToken)
     {
-        // TODO: if I have a watch for changing times - pull and create notification is condition is met
-        return Task.CompletedTask;
+        // keep offline up to date? 
+        await mediator.GetWonderlandData(cancelToken);    
     }
 }

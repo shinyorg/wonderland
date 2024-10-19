@@ -20,8 +20,8 @@
             
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="local:RideInfo">
-                    <Grid RowDefinitions="Auto, Auto"
-                          ColumnDefinitions="3*, 1*"
+                    <Grid RowDefinitions="Auto, Auto, 3"
+                          ColumnDefinitions="2*, 1*"
                           Padding="10">
                         
                         <Label Text="{Binding Name}" 
@@ -34,17 +34,20 @@
                                Grid.Row="0"
                                Grid.Column="1" />
                         
-                        <!--
-                        <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='{0} minutes'}"
+                        <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='PAID: {0} minutes'}"
                                IsVisible="{x:Bind PaidWaitTimeMinutes ne null}" 
-                               Grid.Row=""/>
+                               Grid.Row="1"
+                               Grid.Column="1" />
                         
-                        <Label Text="{Binding PaidAmount}"
-                               IsVisible="{x:Bind PaidAmount ne null}" />
-                        -->    
+                        <!-- <Label Text="{Binding PaidAmount}" -->
+                        <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
+                        
                         <BoxView HeightRequest="1"
                                  BackgroundColor="Black"
-                                 HorizontalOptions="Fill" />
+                                 HorizontalOptions="Fill" 
+                                 VerticalOptions="Center"
+                                 Grid.Row="2"
+                                 Grid.ColumnSpan="2" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

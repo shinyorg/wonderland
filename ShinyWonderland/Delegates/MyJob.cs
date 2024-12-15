@@ -13,6 +13,6 @@ public class MyJob(
     protected override async Task Run(CancellationToken cancelToken)
     {
         // keep offline up to date? 
-        await mediator.GetWonderlandData(cancelToken);    
+        await mediator.GetWonderlandData(true, cancelToken);    
     }
 }

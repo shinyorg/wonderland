@@ -3,30 +3,25 @@
 namespace ShinyWonderland;
 
 
-public partial class MainViewModel(IMediator mediator) : ObservableObject, IPageLifecycleAware
+public partial class MainViewModel(
+    IMediator mediator,
+    ILogger<MainViewModel> logger
+) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] IReadOnlyList<RideInfo> rides = null!;
     [ObservableProperty] bool isBusy;
 
+    public void OnAppearing() =>  this.LoadData(false).RunInBackground(logger);
+    public void OnDisappearing() {}
+    [RelayCommand] Task Load() => this.LoadData(true);
 
-    public void OnAppearing()
+
+    async Task LoadData(bool forceRefresh)
     {
-        this.LoadCommand.Execute(null);
-    }
-
-    public void OnDisappearing()
-    {
-    }
-
-
-    [RelayCommand]
-    async Task Load(CancellationToken cancellationToken)
-    {
-        // TODO: search filter and Timer Auto Refresh 
         try
         {
             this.IsBusy = true;
-            var result = await mediator.GetWonderlandData(cancellationToken);
+            var result = await mediator.GetWonderlandData(forceRefresh, CancellationToken.None);
             this.Rides = result
                 .LiveData
                 .Where(x =>
@@ -49,7 +44,8 @@ public partial class MainViewModel(IMediator mediator) : ObservableObject, IPage
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            // TODO: System.Threading.Tasks.TaskCanceledException on httpclient timeout
+            logger.LogWarning(ex, "Error loading data");
         }
         finally
         {

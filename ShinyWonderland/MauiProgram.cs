@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using Shiny.Jobs;
 
 namespace ShinyWonderland;
 
@@ -32,7 +33,11 @@ public static class MauiProgram
             .AddPersistentCache()
             .UseMaui()
         );
-        builder.Services.AddJob(typeof(ShinyWonderland.Delegates.MyJob));
+        builder.Services.AddJob(
+            typeof(ShinyWonderland.Delegates.MyJob),
+            requiredNetwork: InternetAccess.Any,
+            runInForeground: true
+        );
         builder.Services.AddNotifications();
 
         builder.Services.RegisterForNavigation<MainPage, MainViewModel>();

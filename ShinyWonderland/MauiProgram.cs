@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Maui;
-using Polly;
-using Polly.Retry;
-using Shiny.Mediator.Infrastructure;
 
 namespace ShinyWonderland;
+
 
 public static class MauiProgram
 {
@@ -30,23 +28,12 @@ public static class MauiProgram
 #endif
 
         builder.Services.AddShinyMediator(x => x
-            .AddMemoryCaching()
             .AddDataAnnotations()
-            .AddResiliencyMiddleware(
-                ("Default", pipeline =>
-                {
-                    pipeline.AddRetry(new RetryStrategyOptions
-                    {
-                        MaxRetryAttempts = 2,
-                        MaxDelay = TimeSpan.FromSeconds(1.0),
-                    });
-                    pipeline.AddTimeout(TimeSpan.FromSeconds(5));
-                })
-            )
+            .AddPersistentCache()
             .UseMaui()
         );
         builder.Services.AddJob(typeof(ShinyWonderland.Delegates.MyJob));
-        builder.Services.AddNotifications<ShinyWonderland.Delegates.MyLocalNotificationDelegate>();
+        builder.Services.AddNotifications();
 
         builder.Services.RegisterForNavigation<MainPage, MainViewModel>();
         var app = builder.Build();

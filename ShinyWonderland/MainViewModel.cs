@@ -1,19 +1,37 @@
-﻿using ShinyWonderland.ThemeParksApi;
+﻿using Humanizer;
+using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
 
 
 public partial class MainViewModel(
     IMediator mediator,
+    IConnectivity connectivity,
     ILogger<MainViewModel> logger
 ) : ObservableObject, IPageLifecycleAware
 {
-    [ObservableProperty] IReadOnlyList<RideInfo> rides = null!;
-    [ObservableProperty] bool isBusy;
+    [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
+    [ObservableProperty] public partial bool IsBusy { get; private set; }
+    [ObservableProperty] public partial bool IsConnected { get; private set; }
+    [ObservableProperty] public partial string? CacheTime { get; private set; }
 
-    public void OnAppearing() =>  this.LoadData(false).RunInBackground(logger);
-    public void OnDisappearing() {}
-    [RelayCommand] Task Load() => this.LoadData(true);
+    public void OnAppearing()
+    {
+        connectivity.ConnectivityChanged += this.OnConnectivityChanged;
+        this.OnConnectivityChanged(null, null!);
+        this.LoadData(false).RunInBackground(logger);
+    }
+    
+    
+    public void OnDisappearing()
+    {
+        connectivity.ConnectivityChanged -= this.OnConnectivityChanged;
+    }
+    
+
+    // always take from cache, user has to pull to refresh to force update?
+    // could force refresh if fresh start of app?
+    [RelayCommand] Task Load() => this.LoadData(false);
 
 
     async Task LoadData(bool forceRefresh)
@@ -22,7 +40,13 @@ public partial class MainViewModel(
         {
             this.IsBusy = true;
             var result = await mediator.GetWonderlandData(forceRefresh, CancellationToken.None);
+            var cacheInfo = result.Context.Cache();
+            this.CacheTime = cacheInfo?.IsHit == true
+                ? cacheInfo.Timestamp.Humanize()
+                : null;
+            
             this.Rides = result
+                .Result
                 .LiveData
                 .Where(x =>
                     x.EntityType == EntityType.ATTRACTION &&
@@ -52,6 +76,10 @@ public partial class MainViewModel(
             this.IsBusy = false;
         }
     }
+    
+    
+    void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs _)
+        => this.IsConnected = connectivity is { NetworkAccess: NetworkAccess.Internet or NetworkAccess.ConstrainedInternet };
 }
 
 

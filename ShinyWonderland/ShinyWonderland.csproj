@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>$(TargetFrameworks);net8.0-ios</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);net8.0-android</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);net8.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);net9.0-ios</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);net9.0-maccatalyst</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
@@ -13,13 +13,14 @@
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
-
+        <LangVersion>preview</LangVersion>
+        
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>8.0.92</MauiVersion>
+        <MauiVersion>9.0.21</MauiVersion>
         <ShinyVersion>3.3.3</ShinyVersion>
-        <MediatorVersion>2.1.1</MediatorVersion>
+        <MediatorVersion>3.0.0-beta-0007</MediatorVersion>
         <!--slower build, faster runtime in DEBUG-->
         <!-- <_MauiForceXamlCForDebug Condition="'$(Configuration)' == 'Debug'">true</_MauiForceXamlCForDebug> -->
     </PropertyGroup>
@@ -27,7 +28,7 @@
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-        <TargetPlatformVersion>34</TargetPlatformVersion>
+        <TargetPlatformVersion>35</TargetPlatformVersion>
         <!--
         <EmbedAssembliesIntoApk Condition="'$(Configuration)' == 'Debug'">true</EmbedAssembliesIntoApk>
         <AndroidPackageFormats Condition="'$(Configuration)' == 'Release'">aab</AndroidPackageFormats>
@@ -51,12 +52,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-        <SupportedOSPlatformVersion>14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-        <SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
 
         <UseHardenedRuntime Condition="'$(Configuration)' == 'Release'">true</UseHardenedRuntime>
@@ -94,15 +95,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" Condition="'$(Configuration)' == 'Debug'"/>
-        <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
         <PackageReference Include="Shiny.Mediator" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
-        <PackageReference Include="Shiny.Mediator.Caching" Version="$(MediatorVersion)"/>
-        <PackageReference Include="Shiny.Mediator.Resilience" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

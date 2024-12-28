@@ -5,52 +5,63 @@
              x:DataType="local:MainViewModel"
              x:Class="ShinyWonderland.MainPage"
              Title="Wonderland Rides">
-    
     <RefreshView Command="{Binding LoadCommand}"
                  IsRefreshing="{Binding IsBusy}">
-        <CollectionView ItemsSource="{Binding Rides}">
-            <CollectionView.EmptyView>
-                <Label Text="No Open Rides" 
-                       FontSize="Large" 
-                       HorizontalOptions="Fill"
-                       HorizontalTextAlignment="Center"
-                       VerticalOptions="Fill"
-                       VerticalTextAlignment="Center" />
-            </CollectionView.EmptyView>
+    
+        <Grid RowDefinitions="Auto, Auto, *">
+            <Label Text="You are currently offline"
+                   IsVisible="{x:Bind !IsConnected}"
+                   Grid.Row="0" />
             
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="local:RideInfo">
-                    <Grid RowDefinitions="Auto, Auto, 3"
-                          ColumnDefinitions="2*, 1*"
-                          Padding="10">
-                        
-                        <Label Text="{Binding Name}" 
-                               FontSize="Large" 
-                               Grid.Row="0"
-                               Grid.Column="0" />
-                        
-                        <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}" 
-                               FontAttributes="Italic" 
-                               Grid.Row="0"
-                               Grid.Column="1" />
-                        
-                        <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='PAID: {0} minutes'}"
-                               IsVisible="{x:Bind PaidWaitTimeMinutes ne null}" 
-                               Grid.Row="1"
-                               Grid.Column="1" />
-                        
-                        <!-- <Label Text="{Binding PaidAmount}" -->
-                        <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
-                        
-                        <BoxView HeightRequest="1"
-                                 BackgroundColor="Black"
-                                 HorizontalOptions="Fill" 
-                                 VerticalOptions="Center"
-                                 Grid.Row="2"
-                                 Grid.ColumnSpan="2" />
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <Label Text="{Binding CacheTime, StringFormat='Data is from {0}'}"
+                   IsVisible="{x:Bind CacheTime ne null}"
+                   Grid.Row="1" />
+            
+            <CollectionView ItemsSource="{Binding Rides}"
+                            Grid.Row="2">
+                <CollectionView.EmptyView>
+                    <Label Text="No Open Rides" 
+                           FontSize="Large" 
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Fill"
+                           VerticalTextAlignment="Center" />
+                </CollectionView.EmptyView>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:RideInfo">
+                        <Grid RowDefinitions="Auto, Auto, 3"
+                              ColumnDefinitions="2*, 1*"
+                              Padding="10">
+                            
+                            <Label Text="{Binding Name}" 
+                                   FontSize="Large" 
+                                   Grid.Row="0"
+                                   Grid.Column="0" />
+                            
+                            <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}" 
+                                   FontAttributes="Italic" 
+                                   Grid.Row="0"
+                                   Grid.Column="1" />
+                            
+                            <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='PAID: {0} minutes'}"
+                                   IsVisible="{x:Bind PaidWaitTimeMinutes ne null}" 
+                                   Grid.Row="1"
+                                   Grid.Column="1" />
+                            
+                            <!-- <Label Text="{Binding PaidAmount}" -->
+                            <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
+                            
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="Black"
+                                     HorizontalOptions="Fill" 
+                                     VerticalOptions="Center"
+                                     Grid.Row="2"
+                                     Grid.ColumnSpan="2" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </RefreshView>
 </ContentPage>

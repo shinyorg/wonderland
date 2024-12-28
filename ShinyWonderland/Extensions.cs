@@ -1,9 +1,9 @@
 using Shiny.Mediator.Caching;
 using ShinyWonderland.ThemeParksApi;
 
+
 namespace ShinyWonderland
 {
-
     public static class Extensions
     {
         // https://api.themeparks.wiki/docs/v1.yaml

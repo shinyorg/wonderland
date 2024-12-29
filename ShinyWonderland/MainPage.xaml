@@ -10,7 +10,7 @@
     
         <Grid RowDefinitions="Auto, Auto, *">
             <Label Text="You are currently offline"
-                   IsVisible="{x:Bind !IsConnected}"
+                   IsVisible="{x:Bind not IsConnected}"
                    Grid.Row="0" />
             
             <Label Text="{Binding CacheTime, StringFormat='Data is from {0}'}"

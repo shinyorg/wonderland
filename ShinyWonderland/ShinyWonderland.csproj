@@ -101,7 +101,7 @@
         <PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
-        <PackageReference Include="Shiny.Mediator" Version="3.0.0" />
+        <PackageReference Include="Shiny.Mediator" Version="$(MediatorVersion)" />
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>

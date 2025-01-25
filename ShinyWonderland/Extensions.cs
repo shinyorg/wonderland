@@ -15,7 +15,7 @@ namespace ShinyWonderland
         ) => mediator.RequestWithContext(
             new GetEntityLiveDataHttpRequest
             {
-                EntityID = "66f5d97a-a530-40bf-a712-a6317c96b06d",
+                EntityID = Constants.ParkId,
                 ForceRefresh = forceRefresh
             },
             cancellationToken

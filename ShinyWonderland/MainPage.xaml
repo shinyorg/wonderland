@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:ShinyWonderland"
              x:DataType="local:MainViewModel"
              x:Class="ShinyWonderland.MainPage"
-             Title="Wonderland Rides">
+             Title="{Binding Title}">
     <RefreshView Command="{Binding LoadCommand}"
                  IsRefreshing="{Binding IsBusy}">
     

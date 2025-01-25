@@ -32,7 +32,7 @@ public partial class MainViewModel(
     // always take from cache, user has to pull to refresh to force update?
     // could force refresh if fresh start of app?
     [RelayCommand] Task Load() => this.LoadData(false);
-
+    public string Title => Constants.ParkName;
 
     async Task LoadData(bool forceRefresh)
     {

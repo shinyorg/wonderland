@@ -5,6 +5,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{361252EA-15D1-4FAC-ABCD-1A16365F9AFF}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
+		themeparkapi.http = themeparkapi.http
 	EndProjectSection
 EndProject
 Global

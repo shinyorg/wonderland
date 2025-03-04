@@ -30,7 +30,8 @@ public static class MauiProgram
 
         builder.Services.AddShinyMediator(x => x
             .AddDataAnnotations()
-            .AddPersistentCache()
+            .AddMauiPersistentCache()
+            .AddConnectivityBroadcaster()
             .UseMaui()
         );
         builder.Services.AddJob(

@@ -6,27 +6,16 @@ namespace ShinyWonderland;
 
 public partial class MainViewModel(
     IMediator mediator,
-    IConnectivity connectivity,
     ILogger<MainViewModel> logger
-) : ObservableObject, IPageLifecycleAware
+) : ObservableObject, IPageLifecycleAware, IConnectivityEventHandler
 {
     [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial bool IsConnected { get; private set; }
     [ObservableProperty] public partial string? CacheTime { get; private set; }
 
-    public void OnAppearing()
-    {
-        connectivity.ConnectivityChanged += this.OnConnectivityChanged;
-        this.OnConnectivityChanged(null, null!);
-        this.LoadData(false).RunInBackground(logger);
-    }
-    
-    
-    public void OnDisappearing()
-    {
-        connectivity.ConnectivityChanged -= this.OnConnectivityChanged;
-    }
+    public void OnAppearing() => this.LoadData(false).RunInBackground(logger);
+    public void OnDisappearing() { }
     
 
     // always take from cache, user has to pull to refresh to force update?
@@ -78,8 +67,11 @@ public partial class MainViewModel(
     }
     
     
-    void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs _)
-        => this.IsConnected = connectivity is { NetworkAccess: NetworkAccess.Internet or NetworkAccess.ConstrainedInternet };
+    [MainThread]
+    public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        this.IsConnected = @event.Connected;
+    }
 }
 
 

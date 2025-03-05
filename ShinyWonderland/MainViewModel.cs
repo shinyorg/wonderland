@@ -71,6 +71,7 @@ public partial class MainViewModel(
     public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
     {
         this.IsConnected = @event.Connected;
+        return Task.CompletedTask;
     }
 }
 

@@ -16,19 +16,13 @@ namespace ShinyWonderland
             new GetEntityLiveDataHttpRequest
             {
                 EntityID = Constants.ParkId,
-                ForceRefresh = forceRefresh
             },
-            cancellationToken
+            cancellationToken,
+            ctx =>
+            {
+                if (forceRefresh)
+                    ctx.ForceCacheRefresh();
+            }
         );
-    }
-}
-
-namespace ShinyWonderland.ThemeParksApi
-{
-    public partial class GetEntityLiveDataHttpRequest : ICacheControl
-    {
-        public bool ForceRefresh { get; set; }
-        public TimeSpan? AbsoluteExpiration { get; set; }
-        public TimeSpan? SlidingExpiration { get; set; }
     }
 }

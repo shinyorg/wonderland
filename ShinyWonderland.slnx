@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Folder Name="/Solution/">
+    <File Path="readme.md" />
+    <File Path="themeparkapi.http" />
+  </Folder>
+  <Project Path="ShinyWonderland\ShinyWonderland.csproj" Type="Classic C#" />
+</Solution>

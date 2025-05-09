@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using System.Runtime.CompilerServices;
+using Humanizer;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -7,28 +8,37 @@ namespace ShinyWonderland;
 public partial class MainViewModel(
     IMediator mediator,
     ILogger<MainViewModel> logger
-) : ObservableObject, IPageLifecycleAware, IConnectivityEventHandler
+) : ObservableObject, IPageLifecycleAware, IApplicationLifecycleAware, IConnectivityEventHandler
 {
+    CancellationTokenSource? cancellationTokenSource;
+    
     [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial bool IsConnected { get; private set; }
     [ObservableProperty] public partial string? CacheTime { get; private set; }
 
+    public void OnResume() => this.LoadData(false).RunInBackground(logger);
+    public void OnSleep() => this.cancellationTokenSource?.Cancel();
     public void OnAppearing() => this.LoadData(false).RunInBackground(logger);
-    public void OnDisappearing() { }
-    
+    public void OnDisappearing() => this.cancellationTokenSource?.Cancel();
 
-    // always take from cache, user has to pull to refresh to force update?
-    // could force refresh if fresh start of app?
-    [RelayCommand] Task Load() => this.LoadData(false);
+
+    [RelayCommand]
+    async Task Load()
+    {
+        if (!this.IsBusy)
+            await this.LoadData(true);
+    }
+
     public string Title => Constants.ParkName;
-
+    
     async Task LoadData(bool forceRefresh)
     {
         try
         {
+            this.cancellationTokenSource = new();
             this.IsBusy = true;
-            var result = await mediator.GetWonderlandData(forceRefresh, CancellationToken.None);
+            var result = await mediator.GetWonderlandData(forceRefresh, this.cancellationTokenSource.Token);
             var cacheInfo = result.Context.Cache();
             this.CacheTime = cacheInfo?.IsHit == true
                 ? cacheInfo.Timestamp.Humanize()
@@ -57,7 +67,6 @@ public partial class MainViewModel(
         }
         catch (Exception ex)
         {
-            // TODO: System.Threading.Tasks.TaskCanceledException on httpclient timeout
             logger.LogWarning(ex, "Error loading data");
         }
         finally
@@ -73,6 +82,8 @@ public partial class MainViewModel(
         this.IsConnected = @event.Connected;
         return Task.CompletedTask;
     }
+
+
 }
 
 

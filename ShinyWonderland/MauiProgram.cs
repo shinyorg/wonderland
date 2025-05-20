@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Shiny.Jobs;
+using ShinyWonderland.Delegates;
+using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
 
@@ -23,13 +25,14 @@ public static class MauiProgram
             });
 
         builder.Configuration.AddJsonPlatformBundle();
+        
 #if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
 #endif
 
         builder.Services.AddShinyMediator(x => x
-            .AddDataAnnotations()
+            .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()
             .AddMauiPersistentCache()
             .AddConnectivityBroadcaster()
             .UseMaui()

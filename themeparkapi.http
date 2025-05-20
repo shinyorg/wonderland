@@ -1,8 +1,29 @@
+@baseUrl = https://api.themeparks.wiki/v1
 
 # wonderland
 @entityID = 66f5d97a-a530-40bf-a712-a6317c96b06d
 
-### GET PARKS
-https://api.themeparks.wiki/v1/entity/{{entityID}}/live
+### LIVE
+GET {{baseUrl}}/entity/{{entityID}}/live
+Accept: application/json
+Content-Type: application/json
+
+### ENTITY DATA
+GET {{baseUrl}}/entity/{{entityID}}
+Accept: application/json
+Content-Type: application/json
+
+### CHILDREN
+GET {{baseUrl}}/entity/{{entityID}}/children
+Accept: application/json
+Content-Type: application/json
+
+### SCHEDULE
+GET {{baseUrl}}/entity/{{entityID}}/schedule
+Accept: application/json
+Content-Type: application/json
+
+### HISTORICAL
+GET {{baseUrl}}/entity/{{entityID}}/schedule/2025/05/
 Accept: application/json
 Content-Type: application/json

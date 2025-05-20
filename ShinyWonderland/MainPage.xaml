@@ -11,10 +11,17 @@
         <Grid RowDefinitions="Auto, Auto, *">
             <Label Text="You are currently offline"
                    IsVisible="{x:Bind not IsConnected}"
+                   VerticalTextAlignment="Center"
+                   BackgroundColor="LemonChiffon"
+                   TextColor="Black"
                    Grid.Row="0" />
             
             <Label Text="{Binding CacheTime, StringFormat='Data is from {0}'}"
                    IsVisible="{x:Bind CacheTime ne null}"
+                   BackgroundColor="BlueViolet"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
                    Grid.Row="1" />
             
             <CollectionView ItemsSource="{Binding Rides}"
@@ -30,7 +37,7 @@
                 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RideInfo">
-                        <Grid RowDefinitions="Auto, Auto, 3"
+                        <Grid RowDefinitions="Auto, Auto, Auto, 3"
                               ColumnDefinitions="2*, 1*"
                               Padding="10">
                             
@@ -39,7 +46,8 @@
                                    Grid.Row="0"
                                    Grid.Column="0" />
                             
-                            <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}" 
+                            <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}"
+                                   IsVisible="{x:Bind WaitTimeMinutes ne null}"
                                    FontAttributes="Italic" 
                                    Grid.Row="0"
                                    Grid.Column="1" />
@@ -51,6 +59,14 @@
                             
                             <!-- <Label Text="{Binding PaidAmount}" -->
                             <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
+                            
+                            <Label Text="CLOSED" 
+                                   IsVisible="{x:Bind !IsOpen}"
+                                   BackgroundColor="Red"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"
+                                   Grid.Row="1"
+                                   Grid.ColumnSpan="2" />
                             
                             <BoxView HeightRequest="1"
                                      BackgroundColor="Black"

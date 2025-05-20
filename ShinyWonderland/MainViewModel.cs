@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Humanizer;
+﻿using Humanizer;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -7,6 +6,7 @@ namespace ShinyWonderland;
 
 public partial class MainViewModel(
     IMediator mediator,
+    IConfiguration config,
     ILogger<MainViewModel> logger
 ) : ObservableObject, IPageLifecycleAware, IApplicationLifecycleAware, IConnectivityEventHandler
 {
@@ -30,7 +30,7 @@ public partial class MainViewModel(
             await this.LoadData(true);
     }
 
-    public string Title => Constants.ParkName;
+    public string Title => config.GetValue<string>("Park:Name")!;
     
     async Task LoadData(bool forceRefresh)
     {
@@ -47,19 +47,13 @@ public partial class MainViewModel(
             this.Rides = result
                 .Result
                 .LiveData
-                .Where(x =>
-                    x.EntityType == EntityType.ATTRACTION &&
-                    (
-                        x.Queue?.Standby?.WaitTime != null ||
-                        x.Queue?.PaidStandby?.WaitTime != null
-                    )
-                )
+                .Where(x => x.EntityType == EntityType.ATTRACTION)
                 .Select(x => new RideInfo(
                     x.Name,
-                    //x.OperatingHours?.FirstOrDefault(x => x.Type == EntityType.)
-                    x.Queue?.Standby?.WaitTime ?? 0,
-                    x.Queue?.PaidStandby?.WaitTime,
-                    x.Queue?.PaidReturnTime?.Price?.Formatted
+                    x.Status == LiveStatusType.OPERATING ? x.Queue?.Standby?.WaitTime : null,
+                    x.Status == LiveStatusType.OPERATING ? x.Queue?.PaidStandby?.WaitTime : null,
+                    x.Status == LiveStatusType.OPERATING
+                    // x.Queue?.PaidReturnTime?.Price?.Formatted
                     // x.Queue?.PaidReturnTime?.Price?.Formatted + " " x.Queue?.PaidReturnTime?.Price?.Currency
                 ))
                 .OrderBy(x => x.Name)
@@ -82,8 +76,6 @@ public partial class MainViewModel(
         this.IsConnected = @event.Connected;
         return Task.CompletedTask;
     }
-
-
 }
 
 
@@ -91,7 +83,7 @@ public record RideInfo(
     string Name, 
     // DateTime OpenTime,
     // DateTime CloseTime,
-    int WaitTimeMinutes, 
+    int? WaitTimeMinutes, 
     int? PaidWaitTimeMinutes,
-    string? PaidAmount
+    bool IsOpen
 );

@@ -18,7 +18,7 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>9.0.60</MauiVersion>
+        <MauiVersion>9.0.70</MauiVersion>
         <ShinyVersion>4.0.0-beta-0069</ShinyVersion>
         <MediatorVersion>4.2.1</MediatorVersion>
         <!--slower build, faster runtime in DEBUG-->
@@ -103,6 +103,7 @@
         <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
         <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
+        <!--<PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>-->
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
         <PackageReference Include="CompiledBindings.MAUI" Version="1.0.18"/>

@@ -4,7 +4,7 @@ This app does serve a functional purpose in that it shows available ride times t
 This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 
 This app works offline without issue.
-
+  
 ## Technology
 
 This app also serves as a great example of using [Shiny Mediator](https://shinylib.net/client/mediator/)
@@ -22,3 +22,27 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
                   Visible="false" />
 </ItemGroup>
 ```
+
+## TODO
+* If ride closed, what's the open time
+* If ride open, what's the close time
+* Notification of wait time drop (favourites only?)
+    * Should only be enabled when within the park
+    * Ability to toggle enabled
+* GPS starts when app is open AND inside wonderland - stops when outsides
+    * Forces job to run consistently
+* GPS nearby rides filter
+* Order By 
+  * Name
+  * Smallest wait time
+* Filter by 
+  * NOT closed
+  * Ride Type
+  * Thill Level
+
+## STRETCH FEATURES
+* PIN coordinates to wonderland map where the drink stations are
+* Peak times - requires server
+    * Need weather at current time request
+* Wonderland Map
+* Restaurant Points with Menu & Prices

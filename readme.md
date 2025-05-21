@@ -24,23 +24,21 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 ```
 
 ## TODO
-* If ride closed, what's the open time
-* If ride open, what's the close time
-* Notification of wait time drop (favourites only?)
-    * Should only be enabled when within the park
-    * Ability to toggle enabled
 * GPS starts when app is open AND inside wonderland - stops when outsides
     * Forces job to run consistently
+    * Notifications only fire when inside park
+
+
+
+## Considering
+* Notification of wait time drops for favourites only
 * GPS nearby rides filter
-* Order By 
-  * Name
-  * Smallest wait time
-* Filter by 
-  * NOT closed
+* Filter by
   * Ride Type
   * Thill Level
-
+  
 ## STRETCH FEATURES
+* Parking Locator
 * PIN coordinates to wonderland map where the drink stations are
 * Peak times - requires server
     * Need weather at current time request

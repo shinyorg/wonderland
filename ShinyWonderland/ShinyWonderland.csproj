@@ -102,8 +102,9 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.537"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
+        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
-        <!--<PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>-->
+        <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
         <PackageReference Include="CompiledBindings.MAUI" Version="1.0.18"/>

@@ -9,6 +9,7 @@ namespace ShinyWonderland.Delegates;
 public class MyJob(
     ILogger<MyJob> logger,
     TimeProvider timeProvider,
+    AppSettings appSettings,
     IMediator mediator,
     INotificationManager notifications
 ) : Job(logger)
@@ -19,6 +20,7 @@ public class MyJob(
         get;
         set => this.Set(ref field, value);
     }
+    
 
     public DateTimeOffset? LastSnapshotTime
     {
@@ -26,8 +28,12 @@ public class MyJob(
         set => this.Set(ref field, value);
     }
     
+    
     protected override async Task Run(CancellationToken cancelToken)
     {
+        if (!appSettings.EnableNotifications)
+            return;
+        
         this.EnsureLastSnapshot();
         var current = await mediator.GetWonderlandData(true, cancelToken);
 
@@ -73,7 +79,7 @@ public class MyJob(
                 var currentWait = currentRide.Queue.Standby.WaitTime;
                 var waitDiff = currentRide.Queue.Standby.WaitTime - ride.Queue.Standby.WaitTime;
 
-                notifications.Send(new Notification
+                await notifications.Send(new Notification
                 {
                     Title = ride.Name,
                     Message = $"Wait Time Down {waitDiff} minutes to {currentWait} minutes total"

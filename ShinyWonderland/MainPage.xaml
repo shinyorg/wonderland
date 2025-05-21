@@ -1,76 +1,82 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ShinyWonderland"
              x:DataType="local:MainViewModel"
              x:Class="ShinyWonderland.MainPage"
              Title="{Binding Title}">
-    <RefreshView Command="{Binding LoadCommand}"
-                 IsRefreshing="{Binding IsBusy}">
     
-        <Grid RowDefinitions="Auto, Auto, *">
-            <Label Text="You are currently offline"
-                   IsVisible="{x:Bind not IsConnected}"
-                   VerticalTextAlignment="Center"
-                   BackgroundColor="LemonChiffon"
-                   TextColor="Black"
-                   Grid.Row="0" />
-            
-            <Label Text="{Binding CacheTime, StringFormat='Data is from {0}'}"
-                   IsVisible="{x:Bind CacheTime ne null}"
-                   BackgroundColor="BlueViolet"
-                   TextColor="White"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   Grid.Row="1" />
-            
-            <CollectionView ItemsSource="{Binding Rides}"
-                            Grid.Row="2">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Settings" 
+                     Command="{Binding NavToSettingsCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Label Text="You are currently offline"
+               IsVisible="{x:Bind not IsConnected}"
+               VerticalTextAlignment="Center"
+               BackgroundColor="LemonChiffon"
+               TextColor="Black"
+               Grid.Row="0" />
+
+        <Label Text="{Binding CacheTime, StringFormat='Data is from {0}'}"
+               IsVisible="{x:Bind CacheTime ne null}"
+               BackgroundColor="BlueViolet"
+               TextColor="White"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               Grid.Row="1" />
+
+        <RefreshView Command="{Binding LoadCommand}"
+                     IsRefreshing="{Binding IsBusy}"
+                     Grid.Row="2">
+
+            <CollectionView ItemsSource="{Binding Rides}">
                 <CollectionView.EmptyView>
-                    <Label Text="No Open Rides" 
-                           FontSize="Large" 
+                    <Label Text="No Open Rides"
+                           FontSize="Large"
                            HorizontalOptions="Fill"
                            HorizontalTextAlignment="Center"
                            VerticalOptions="Fill"
                            VerticalTextAlignment="Center" />
                 </CollectionView.EmptyView>
-                
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RideInfo">
                         <Grid RowDefinitions="Auto, Auto, Auto, 3"
                               ColumnDefinitions="2*, 1*"
                               Padding="10">
-                            
-                            <Label Text="{Binding Name}" 
-                                   FontSize="Large" 
+
+                            <Label Text="{Binding Name}"
+                                   FontSize="Large"
                                    Grid.Row="0"
                                    Grid.Column="0" />
-                            
+
                             <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}"
                                    IsVisible="{x:Bind WaitTimeMinutes ne null}"
-                                   FontAttributes="Italic" 
+                                   FontAttributes="Italic"
                                    Grid.Row="0"
                                    Grid.Column="1" />
-                            
+
                             <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='PAID: {0} minutes'}"
-                                   IsVisible="{x:Bind PaidWaitTimeMinutes ne null}" 
+                                   IsVisible="{x:Bind PaidWaitTimeMinutes ne null}"
                                    Grid.Row="1"
                                    Grid.Column="1" />
-                            
+
                             <!-- <Label Text="{Binding PaidAmount}" -->
                             <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
-                            
-                            <Label Text="CLOSED" 
+
+                            <Label Text="CLOSED"
                                    IsVisible="{x:Bind !IsOpen}"
                                    BackgroundColor="Red"
                                    TextColor="White"
                                    HorizontalTextAlignment="Center"
                                    Grid.Row="1"
                                    Grid.ColumnSpan="2" />
-                            
+
                             <BoxView HeightRequest="1"
                                      BackgroundColor="Black"
-                                     HorizontalOptions="Fill" 
+                                     HorizontalOptions="Fill"
                                      VerticalOptions="Center"
                                      Grid.Row="2"
                                      Grid.ColumnSpan="2" />
@@ -78,6 +84,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </Grid>
-    </RefreshView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

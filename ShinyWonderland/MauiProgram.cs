@@ -14,6 +14,7 @@ public static class MauiProgram
             .CreateBuilder()
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseShiny()
             .UsePrism(
                 new DryIocContainerExtension(),
                 prism => prism.CreateWindow("NavigationPage/MainPage")
@@ -37,14 +38,18 @@ public static class MauiProgram
             .AddConnectivityBroadcaster()
             .UseMaui()
         );
+        builder.Services.AddSingleton(TimeProvider.System);
+        builder.Services.AddGps();
         builder.Services.AddJob(
-            typeof(ShinyWonderland.Delegates.MyJob),
+            typeof(MyJob),
             requiredNetwork: InternetAccess.Any,
             runInForeground: true
         );
         builder.Services.AddNotifications();
 
+        builder.Services.AddShinyService<AppSettings>();
         builder.Services.RegisterForNavigation<MainPage, MainViewModel>();
+        builder.Services.RegisterForNavigation<SettingsPage, SettingsViewModel>();
         var app = builder.Build();
 
         return app;

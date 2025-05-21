@@ -1,4 +1,6 @@
 ﻿using Humanizer;
+using Shiny.Locations;
+using Shiny.Notifications;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -7,6 +9,9 @@ namespace ShinyWonderland;
 public partial class MainViewModel(
     IMediator mediator,
     IConfiguration config,
+    IGpsManager gpsManager,
+    INotificationManager notifications,
+    INavigationService navigation,
     ILogger<MainViewModel> logger
 ) : ObservableObject, IPageLifecycleAware, IApplicationLifecycleAware, IConnectivityEventHandler
 {
@@ -16,10 +21,20 @@ public partial class MainViewModel(
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial bool IsConnected { get; private set; }
     [ObservableProperty] public partial string? CacheTime { get; private set; }
+    [RelayCommand] Task NavToSettings() =>navigation.NavigateAsync(nameof(SettingsPage));
 
     public void OnResume() => this.LoadData(false).RunInBackground(logger);
     public void OnSleep() => this.cancellationTokenSource?.Cancel();
-    public void OnAppearing() => this.LoadData(false).RunInBackground(logger);
+
+    public async void OnAppearing()
+    {
+        this.LoadData(false).RunInBackground(logger);
+        
+        // TODO: permissions
+        await notifications.RequestAccess();
+        // await gpsManager.RequestAccess(GpsRequest.Foreground); background permission
+    }
+
     public void OnDisappearing() => this.cancellationTokenSource?.Cancel();
 
 
@@ -43,6 +58,9 @@ public partial class MainViewModel(
             this.CacheTime = cacheInfo?.IsHit == true
                 ? cacheInfo.Timestamp.Humanize()
                 : null;
+
+            // var operatingHours = await mediator.Request(new GetEntityScheduleUpcomingHttpRequest());
+            // operatingHours.Result.Schedule.FirstOrDefault(x => x.OpeningTime.Date == )
             
             this.Rides = result
                 .Result
@@ -80,9 +98,7 @@ public partial class MainViewModel(
 
 
 public record RideInfo(
-    string Name, 
-    // DateTime OpenTime,
-    // DateTime CloseTime,
+    string Name,
     int? WaitTimeMinutes, 
     int? PaidWaitTimeMinutes,
     bool IsOpen

@@ -1,3 +1,4 @@
+using System.Text;
 using Shiny.Jobs;
 using Shiny.Notifications;
 using ShinyWonderland.ThemeParksApi;
@@ -72,6 +73,8 @@ public class MyJob(
     
     async Task IterateDiff(EntityLiveDataResponse previous, EntityLiveDataResponse current)
     {
+        var sb = new StringBuilder();
+        
         foreach (var ride in previous.LiveData)
         {
             var currentRide = current.LiveData.FirstOrDefault(x => x.Id == ride.Id);
@@ -79,13 +82,17 @@ public class MyJob(
             {
                 var currentWait = currentRide.Queue.Standby.WaitTime;
                 var waitDiff = currentRide.Queue.Standby.WaitTime - ride.Queue.Standby.WaitTime;
-
-                await notifications.Send(new Notification
-                {
-                    Title = ride.Name,
-                    Message = $"Wait Time Down {waitDiff} minutes to {currentWait} minutes total"
-                });
+                sb.AppendLine($"Wait Time Down {waitDiff} minutes to {currentWait} minutes total");
+                
             }
+        }
+        if (sb.Length > 0)
+        {
+            await notifications.Send(new Notification
+            {
+                Title = "Wonderland Time",
+                Message = sb.ToString()
+            });
         }
     }
 }

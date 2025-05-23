@@ -1,5 +1,6 @@
 using System.Text;
 using Shiny.Jobs;
+using Shiny.Locations;
 using Shiny.Notifications;
 using ShinyWonderland.ThemeParksApi;
 using Notification = Shiny.Notifications.Notification;
@@ -9,6 +10,7 @@ namespace ShinyWonderland.Services;
 
 public class MyJob(
     ILogger<MyJob> logger,
+    IGpsManager gpsManager,
     TimeProvider timeProvider,
     AppSettings appSettings,
     IMediator mediator,
@@ -32,6 +34,8 @@ public class MyJob(
     
     protected override async Task Run(CancellationToken cancelToken)
     {
+        // TODO: this should only run if inside the park
+        
         this.MinimumTime = TimeSpan.FromMinutes(3); // this only matters when the GPS is running
         if (!appSettings.EnableNotifications)
             return;
@@ -83,7 +87,6 @@ public class MyJob(
                 var currentWait = currentRide.Queue.Standby.WaitTime;
                 var waitDiff = currentRide.Queue.Standby.WaitTime - ride.Queue.Standby.WaitTime;
                 sb.AppendLine($"Wait Time Down {waitDiff} minutes to {currentWait} minutes total");
-                
             }
         }
         if (sb.Length > 0)

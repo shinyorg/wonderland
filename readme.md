@@ -22,12 +22,17 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
                   Visible="false" />
 </ItemGroup>
 ```
-  
+
+## KNOWN ISSUES
+* iOS GPS permissions from Shiny beta are bad
+* "You are currently offline" mediator event is not firing this until the page is hit again
+* Android maps not setup - users need to setup their own keys and stuff
+
 ## FEATURE IDEAS
 * GPS distancing to each ride from current
-* Parking Locator
-* PIN coordinates to wonderland map where the drink stations are
 * Peak times - requires server
     * Need weather at current time request
 * Wonderland Map
 * Restaurant Points with Menu & Prices
+  * This data does not come back
+  * Could do manual pins?

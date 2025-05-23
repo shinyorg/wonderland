@@ -3,22 +3,27 @@
 # wonderland
 @entityID = 66f5d97a-a530-40bf-a712-a6317c96b06d
 
-### LIVE
+### ALL PARKS
+GET {{baseUrl}}/destinations
+Accept: application/json
+Content-Type: application/json
+
+### LIVE WAITING TIMES
 GET {{baseUrl}}/entity/{{entityID}}/live
 Accept: application/json
 Content-Type: application/json
 
-### ENTITY DATA
+### PARK INFORMATION
 GET {{baseUrl}}/entity/{{entityID}}
 Accept: application/json
 Content-Type: application/json
 
-### CHILDREN
+### PARK RIDE INFORMATION
 GET {{baseUrl}}/entity/{{entityID}}/children
 Accept: application/json
 Content-Type: application/json
 
-### SCHEDULE
+### PARK SCHEDULE
 GET {{baseUrl}}/entity/{{entityID}}/schedule
 Accept: application/json
 Content-Type: application/json

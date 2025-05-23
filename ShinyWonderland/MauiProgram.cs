@@ -16,9 +16,11 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .UseShiny()
+            .UseMauiMaps()
             .UseShinyNavigation(x => x
                 .Add<MainPage, MainViewModel>()
                 .Add<SettingsPage, SettingsViewModel>()
+                .Add<ParkingPage, ParkingViewModel>()
             )
             .AddShinyMediator(x => x
                 .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()

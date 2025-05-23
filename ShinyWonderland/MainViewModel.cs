@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reactive.Disposables;
 using Humanizer;
 using Shiny.Locations;
 using Shiny.Notifications;
@@ -13,30 +13,28 @@ public partial class MainViewModel(
     IConfiguration config,
     AppSettings appSettings,
     IGpsManager gpsManager,
+    TimeProvider timeProvider,
     INotificationManager notifications,
     INavigator navigation,
     ILogger<MainViewModel> logger
 ) : ObservableObject, INavigatedAware, IConnectivityEventHandler
 {
     CancellationTokenSource? cancellationTokenSource;
+    CompositeDisposable? disposer;
     
     [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
+    [ObservableProperty] public partial string? DataTimestamp { get; private set; }
 
     [NotifyPropertyChangedFor(nameof(IsNotConnected))]
     [ObservableProperty]
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
-    [NotifyPropertyChangedFor(nameof(IsFromCache))]
-    [ObservableProperty]
-    public partial string? CacheTime { get; private set; }
-    public bool IsFromCache => !this.CacheTime.IsEmpty();
     
     [RelayCommand] Task NavToSettings() => navigation.NavigateTo("SettingsPage");
-
-    // public void OnResume() => this.LoadData(false).RunInBackground(logger);
-    // public void OnSleep() => this.cancellationTokenSource?.Cancel();
+    [RelayCommand] Task NavToParking() => navigation.NavigateTo("ParkingPage");
+    
 
     public async void OnNavigatedTo()
     {
@@ -48,7 +46,12 @@ public partial class MainViewModel(
             await gpsManager.StartListener(GpsRequest.Realtime(true));
     }
 
-    public void OnDisappearing() => this.cancellationTokenSource?.Cancel();
+    
+    public void OnNavigatedFrom()
+    {
+        this.cancellationTokenSource?.Cancel();
+        this.disposer?.Dispose();
+    }
 
 
     [RelayCommand]
@@ -67,11 +70,7 @@ public partial class MainViewModel(
             this.cancellationTokenSource = new();
             this.IsBusy = true;
             var result = await mediator.GetWonderlandData(forceRefresh, this.cancellationTokenSource.Token);
-            var cacheInfo = result.Context.Cache();
-            this.CacheTime = cacheInfo?.IsHit == true
-                ? cacheInfo.Timestamp.Humanize()
-                : null;
-
+            this.StartDataTimer(result.Context.Cache()?.Timestamp);
             // var operatingHours = await mediator.Request(new GetEntityScheduleUpcomingHttpRequest());
             // operatingHours.Result.Schedule.FirstOrDefault(x => x.OpeningTime.Date == )
             
@@ -122,6 +121,20 @@ public partial class MainViewModel(
     {
         this.IsConnected = @event.Connected;
         return Task.CompletedTask;
+    }
+
+
+    void StartDataTimer(DateTimeOffset? from)
+    {
+        this.disposer = new();
+        from ??= timeProvider.GetUtcNow();
+        this.DataTimestamp = from.Value.Humanize();
+        
+        Observable
+            .Interval(TimeSpan.FromSeconds(10))
+            .Select(_ => from.Value.Humanize())
+            .Subscribe(x => this.DataTimestamp = x)
+            .DisposedBy(this.disposer);
     }
 }
 

@@ -7,4 +7,10 @@ public class ShellNavigator : INavigator
         var dict = args.ToDictionary(x => x.Key, x => x.Value);
         return Shell.Current.GoToAsync(route, true, dict);
     }
+
+    public Task Alert(string title, string message)
+        => Shell.Current.DisplayAlert(title, message, "OK");
+
+    public Task<bool> Confirm(string title, string message)
+        => Shell.Current.DisplayAlert(title, message, "Yes", "No");
 }

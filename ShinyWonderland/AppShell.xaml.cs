@@ -11,12 +11,13 @@ public partial class AppShell : Shell
     }
 
     
-    // protected override void OnNavigating(ShellNavigatingEventArgs args)
-    // {
-    //     Console.WriteLine("Before: " + CurrentPage?.GetType().FullName ?? "NONE");
-    //     base.OnNavigating(args);
-    //     Console.WriteLine("After: " + CurrentPage?.GetType().FullName ?? "NONE");
-    // }
+    protected override void OnNavigating(ShellNavigatingEventArgs args)
+    {
+        if (this.CurrentPage?.BindingContext is INavigatedAware navigatedAware)
+            navigatedAware.OnNavigatedFrom();
+
+        base.OnNavigating(args);
+    }
 
 
     protected override void OnNavigated(ShellNavigatedEventArgs args)

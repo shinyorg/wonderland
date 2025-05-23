@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Shiny.Jobs;
 using ShinyWonderland.Services;
-using ShinyWonderland.Services.Impl;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -9,6 +8,7 @@ namespace ShinyWonderland;
 
 public static class MauiProgram
 {
+    #if PLATFORM
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp
@@ -51,4 +51,5 @@ public static class MauiProgram
 
         return app;
     }
+    #endif
 }

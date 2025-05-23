@@ -33,7 +33,7 @@ public partial class MainViewModel(
     public partial string? CacheTime { get; private set; }
     public bool IsFromCache => !this.CacheTime.IsEmpty();
     
-    [RelayCommand] Task NavToSettings() => navigation.NavigateTo(nameof(SettingsPage));
+    [RelayCommand] Task NavToSettings() => navigation.NavigateTo("SettingsPage");
 
     // public void OnResume() => this.LoadData(false).RunInBackground(logger);
     // public void OnSleep() => this.cancellationTokenSource?.Cancel();

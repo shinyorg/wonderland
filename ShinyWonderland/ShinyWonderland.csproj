@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>$(TargetFrameworks);net9.0-ios</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);net9.0-maccatalyst</TargetFrameworks>
-        <OutputType>Exe</OutputType>
+        <BaseTargetFramework>net9.0</BaseTargetFramework>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-maccatalyst</TargetFrameworks>
+        <OutputType Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">Exe</OutputType>
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -63,6 +65,14 @@
         <UseHardenedRuntime Condition="'$(Configuration)' == 'Release'">true</UseHardenedRuntime>
     </PropertyGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">
+        <MauiXaml Remove="*.xaml"/>
+        <None Remove="*.xaml"/>
+        <None Remove="*.xaml.cs"/>
+        <Compile Remove="*.xaml"/>
+        <Compile Remove="*.xaml.cs"/>
+    </ItemGroup>
+
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
         <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" Visible="false"/>
         <CustomEntitlements Include="com.apple.security.get-task-allow" Type="boolean" Value="true" Visible="false"/>
@@ -101,11 +111,14 @@
         <PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
-        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">
+        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
     </ItemGroup>
     
     <ItemGroup>

@@ -8,7 +8,7 @@ This app works offline without issue.
 ## Technology
 
 This app also serves as a great example of using [Shiny Mediator](https://shinylib.net/client/mediator/)
-At the time of this publishing, we used v3's [new persistent cache](https://shinylib.net/client/mediator/middleware/caching/) 
+At the time of this publishing, we used v4's [new persistent cache](https://shinylib.net/client/mediator/middleware/caching/) 
 that is updated in the background via a [Shiny Background Job](https://shinylib.net/client/jobs/)
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
@@ -22,17 +22,9 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
                   Visible="false" />
 </ItemGroup>
 ```
-
-## TODO
-* GPS starts when app is open AND inside wonderland - stops when outsides
-    * Forces job to run consistently
-    * Notifications only fire when inside park
-
-## Considering
-* Notification of wait time drops for favourites only
-* GPS nearby rides filter
   
-## STRETCH FEATURES
+## FEATURE IDEAS
+* GPS distancing to each ride from current
 * Parking Locator
 * PIN coordinates to wonderland map where the drink stations are
 * Peak times - requires server

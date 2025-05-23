@@ -126,6 +126,7 @@ public partial class MainViewModel(
 
     void StartDataTimer(DateTimeOffset? from)
     {
+        this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
         this.disposer = new();
         from ??= timeProvider.GetUtcNow();
         this.DataTimestamp = from.Value.Humanize();

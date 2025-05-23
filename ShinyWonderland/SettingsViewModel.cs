@@ -37,6 +37,10 @@ public partial class SettingsViewModel(
                 appSettings.ShowOpenOnly = this.ShowOpenOnly;
                 break;
             
+            case nameof(ShowTimedOnly):
+                appSettings.ShowTimedOnly = this.ShowTimedOnly;
+                break;
+            
             case nameof(EnableNotifications):
                 appSettings.EnableNotifications = this.EnableNotifications;
                 break;

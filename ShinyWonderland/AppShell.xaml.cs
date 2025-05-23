@@ -32,7 +32,7 @@ public partial class AppShell : Shell
                 this.CurrentPage!.BindingContext = vm;
             }
         }
-        if (this.CurrentItem.BindingContext is INavigatedAware navAware)
+        if (this.CurrentPage.BindingContext is INavigatedAware navAware)
             navAware.OnNavigatedTo();
         
         base.OnNavigated(args);

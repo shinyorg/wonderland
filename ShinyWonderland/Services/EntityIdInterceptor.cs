@@ -1,6 +1,6 @@
 using ShinyWonderland.ThemeParksApi;
 
-namespace ShinyWonderland.Delegates;
+namespace ShinyWonderland.Services;
 
 public class EntityIdInterceptor(IConfiguration configuration) : IRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse>
 {

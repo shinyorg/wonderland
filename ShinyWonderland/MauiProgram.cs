@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using Shiny.Jobs;
-using ShinyWonderland.Delegates;
 using ShinyWonderland.Services;
 using ShinyWonderland.Services.Impl;
 using ShinyWonderland.ThemeParksApi;

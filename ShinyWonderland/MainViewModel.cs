@@ -2,7 +2,6 @@
 using Humanizer;
 using Shiny.Locations;
 using Shiny.Notifications;
-using ShinyWonderland.Delegates;
 using ShinyWonderland.Services;
 using ShinyWonderland.ThemeParksApi;
 
@@ -90,6 +89,9 @@ public partial class MainViewModel(
             if (appSettings.ShowOpenOnly)
                 rides = rides.Where(x => x.IsOpen);
 
+            if (appSettings.ShowTimedOnly)
+                rides = rides.Where(x => x.HasPaidWaitTime || x.HasWaitTime);
+            
             switch (appSettings.Ordering)
             {
                 case RideOrder.Name:
@@ -97,7 +99,7 @@ public partial class MainViewModel(
                     break;
                 
                 case RideOrder.WaitTime:
-                    rides = rides.OrderByDescending(x => x.WaitTimeMinutes);
+                    rides = rides.OrderBy(x => x.WaitTimeMinutes);
                     break;
             }
             this.Rides = rides.ToList();

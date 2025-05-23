@@ -1,6 +1,6 @@
 using Shiny.Locations;
 
-namespace ShinyWonderland.Delegates;
+namespace ShinyWonderland.Services;
 
 
 public class MyGpsDelegate : GpsDelegate

@@ -13,6 +13,11 @@
             </HorizontalStackLayout>
             
             <HorizontalStackLayout>
+                <Label Text="Show Timed Rides Only" />
+                <CheckBox IsChecked="{Binding ShowTimedOnly}" />
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout>
                 <Label Text="Show Open Only" />
                 <CheckBox IsChecked="{Binding ShowOpenOnly}" />
             </HorizontalStackLayout>

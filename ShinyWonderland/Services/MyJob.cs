@@ -3,7 +3,7 @@ using Shiny.Notifications;
 using ShinyWonderland.ThemeParksApi;
 using Notification = Shiny.Notifications.Notification;
 
-namespace ShinyWonderland.Delegates;
+namespace ShinyWonderland.Services;
 
 
 public class MyJob(

@@ -1,16 +1,20 @@
 using System.ComponentModel;
-using ShinyWonderland.Delegates;
 using ShinyWonderland.Services;
 
 namespace ShinyWonderland;
 
 
-public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject, INavigatedAware
+public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject
 {
     public string[] Sorts { get; } = ["Name", "Wait Time"];
-    [ObservableProperty] public partial int SortByIndex { get; set; }
-    [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = true;
-    [ObservableProperty] public partial bool EnableNotifications { get; set; } = true;
+    [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
+    {
+        RideOrder.Name => 0,
+        RideOrder.WaitTime => 1,
+    };
+    [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
+    [ObservableProperty] public partial bool EnableNotifications { get; set; } = appSettings.EnableNotifications;
+    [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = appSettings.ShowTimedOnly;
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -33,16 +37,5 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
                 break;
         }
         base.OnPropertyChanged(e);
-    }
-
-    public void OnNavigatedTo()
-    {
-        this.EnableNotifications = appSettings.EnableNotifications;
-        this.ShowOpenOnly = appSettings.ShowOpenOnly;
-        this.SortByIndex = appSettings.Ordering switch
-        {
-            RideOrder.Name => 0,
-            RideOrder.WaitTime => 1,
-        };
     }
 }

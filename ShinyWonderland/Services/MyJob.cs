@@ -31,6 +31,7 @@ public class MyJob(
     
     protected override async Task Run(CancellationToken cancelToken)
     {
+        this.MinimumTime = TimeSpan.FromMinutes(3); // this only matters when the GPS is running
         if (!appSettings.EnableNotifications)
             return;
         

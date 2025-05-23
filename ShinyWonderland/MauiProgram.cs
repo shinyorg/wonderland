@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
+using ShinyWonderland.Services;
+using ShinyWonderland.Services.Impl;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -15,9 +17,15 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .UseShiny()
-            .UsePrism(
-                new DryIocContainerExtension(),
-                prism => prism.CreateWindow("NavigationPage/MainPage")
+            .UseShinyNavigation(x => x
+                .Add<MainPage, MainViewModel>()
+                .Add<SettingsPage, SettingsViewModel>()
+            )
+            .AddShinyMediator(x => x
+                .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()
+                .AddMauiPersistentCache()
+                .AddConnectivityBroadcaster()
+                .UseMaui()
             )
             .ConfigureFonts(fonts =>
             {
@@ -26,30 +34,20 @@ public static class MauiProgram
             });
 
         builder.Configuration.AddJsonPlatformBundle();
-        
 #if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddShinyMediator(x => x
-            .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()
-            .AddMauiPersistentCache()
-            .AddConnectivityBroadcaster()
-            .UseMaui()
-        );
         builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddGps();
+        builder.Services.AddShinyService<AppSettings>();
+        builder.Services.AddNotifications();
+        builder.Services.AddGps<MyGpsDelegate>();
         builder.Services.AddJob(
             typeof(MyJob),
             requiredNetwork: InternetAccess.Any,
             runInForeground: true
         );
-        builder.Services.AddNotifications();
-
-        builder.Services.AddShinyService<AppSettings>();
-        builder.Services.RegisterForNavigation<MainPage, MainViewModel>();
-        builder.Services.RegisterForNavigation<SettingsPage, SettingsViewModel>();
         var app = builder.Build();
 
         return app;

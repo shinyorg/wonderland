@@ -28,14 +28,9 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
     * Forces job to run consistently
     * Notifications only fire when inside park
 
-
-
 ## Considering
 * Notification of wait time drops for favourites only
 * GPS nearby rides filter
-* Filter by
-  * Ride Type
-  * Thill Level
   
 ## STRETCH FEATURES
 * Parking Locator

@@ -1,6 +1,9 @@
-﻿using Humanizer;
+﻿using System.Runtime.CompilerServices;
+using Humanizer;
 using Shiny.Locations;
 using Shiny.Notifications;
+using ShinyWonderland.Delegates;
+using ShinyWonderland.Services;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -9,30 +12,39 @@ namespace ShinyWonderland;
 public partial class MainViewModel(
     IMediator mediator,
     IConfiguration config,
+    AppSettings appSettings,
     IGpsManager gpsManager,
     INotificationManager notifications,
-    INavigationService navigation,
+    INavigator navigation,
     ILogger<MainViewModel> logger
-) : ObservableObject, IPageLifecycleAware, IApplicationLifecycleAware, IConnectivityEventHandler
+) : ObservableObject, INavigatedAware, IConnectivityEventHandler
 {
     CancellationTokenSource? cancellationTokenSource;
     
     [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
-    [ObservableProperty] public partial bool IsConnected { get; private set; }
-    [ObservableProperty] public partial string? CacheTime { get; private set; }
-    [RelayCommand] Task NavToSettings() =>navigation.NavigateAsync(nameof(SettingsPage));
 
-    public void OnResume() => this.LoadData(false).RunInBackground(logger);
-    public void OnSleep() => this.cancellationTokenSource?.Cancel();
+    [NotifyPropertyChangedFor(nameof(IsNotConnected))]
+    [ObservableProperty]
+    public partial bool IsConnected { get; private set; }
+    public bool IsNotConnected => !IsConnected;
+    
+    [NotifyPropertyChangedFor(nameof(IsFromCache))]
+    [ObservableProperty]
+    public partial string? CacheTime { get; private set; }
+    public bool IsFromCache => !this.CacheTime.IsEmpty();
+    
+    [RelayCommand] Task NavToSettings() => navigation.NavigateTo(nameof(SettingsPage));
 
-    public async void OnAppearing()
+    // public void OnResume() => this.LoadData(false).RunInBackground(logger);
+    // public void OnSleep() => this.cancellationTokenSource?.Cancel();
+
+    public async void OnNavigatedTo()
     {
         this.LoadData(false).RunInBackground(logger);
         
-        // TODO: permissions
         await notifications.RequestAccess();
-        // await gpsManager.RequestAccess(GpsRequest.Foreground); background permission
+        await gpsManager.RequestAccess(GpsRequest.Realtime(true));
     }
 
     public void OnDisappearing() => this.cancellationTokenSource?.Cancel();
@@ -62,7 +74,7 @@ public partial class MainViewModel(
             // var operatingHours = await mediator.Request(new GetEntityScheduleUpcomingHttpRequest());
             // operatingHours.Result.Schedule.FirstOrDefault(x => x.OpeningTime.Date == )
             
-            this.Rides = result
+            var rides = result
                 .Result
                 .LiveData
                 .Where(x => x.EntityType == EntityType.ATTRACTION)
@@ -73,9 +85,22 @@ public partial class MainViewModel(
                     x.Status == LiveStatusType.OPERATING
                     // x.Queue?.PaidReturnTime?.Price?.Formatted
                     // x.Queue?.PaidReturnTime?.Price?.Formatted + " " x.Queue?.PaidReturnTime?.Price?.Currency
-                ))
-                .OrderBy(x => x.Name)
-                .ToList();
+                ));
+
+            if (appSettings.ShowOpenOnly)
+                rides = rides.Where(x => x.IsOpen);
+
+            switch (appSettings.Ordering)
+            {
+                case RideOrder.Name:
+                    rides = rides.OrderBy(x => x.Name);
+                    break;
+                
+                case RideOrder.WaitTime:
+                    rides = rides.OrderByDescending(x => x.WaitTimeMinutes);
+                    break;
+            }
+            this.Rides = rides.ToList();
         }
         catch (Exception ex)
         {
@@ -99,7 +124,12 @@ public partial class MainViewModel(
 
 public record RideInfo(
     string Name,
-    int? WaitTimeMinutes, 
+    int? WaitTimeMinutes,
     int? PaidWaitTimeMinutes,
     bool IsOpen
-);
+)
+{
+    public bool IsClosed => !this.IsOpen;
+    public bool HasWaitTime => this.WaitTimeMinutes.HasValue;
+    public bool HasPaidWaitTime => this.PaidWaitTimeMinutes.HasValue;
+};

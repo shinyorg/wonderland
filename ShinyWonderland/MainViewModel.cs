@@ -43,7 +43,9 @@ public partial class MainViewModel(
         this.LoadData(false).RunInBackground(logger);
         
         await notifications.RequestAccess();
-        await gpsManager.RequestAccess(GpsRequest.Realtime(true));
+        var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
+        if (access == AccessState.Available)
+            await gpsManager.StartListener(GpsRequest.Realtime(true));
     }
 
     public void OnDisappearing() => this.cancellationTokenSource?.Cancel();

@@ -4,30 +4,107 @@
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
              x:DataType="shinyWonderland:SettingsViewModel"
              x:Class="ShinyWonderland.SettingsPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="Settings">
-    <ContentPage.Content>
-        <VerticalStackLayout>
-            <HorizontalStackLayout>
-                <Label Text="Enable Notifications" />
-                <CheckBox IsChecked="{Binding EnableNotifications}" />
-            </HorizontalStackLayout>
+    <ContentPage.Resources>
+        <Style x:Key="SettingLabelStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="OpenSansRegular" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="0, 0, 15, 0" />
+        </Style>
+        
+        <Style x:Key="SettingsCardStyle" TargetType="Border">
+            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource Gray600}}" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="16, 8" />
+            <Setter Property="StrokeShape">
+                <Setter.Value>
+                    <RoundRectangle CornerRadius="12" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="SettingSectionStyle" TargetType="HorizontalStackLayout">
+            <Setter Property="Spacing" Value="10" />
+            <Setter Property="Margin" Value="0, 10" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="0, 20">
+            <Label Text="Preferences" 
+                   FontSize="22" 
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}" 
+                   HorizontalOptions="Start"
+                   Margin="24, 0, 0, 0"/>
+                
+            <Border Style="{StaticResource SettingsCardStyle}">
+                <VerticalStackLayout Spacing="20">
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Enable Notifications" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding EnableNotifications}" 
+                                 VerticalOptions="Center"
+                                 Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Show Timed Rides Only" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding ShowTimedOnly}" 
+                                 VerticalOptions="Center"
+                                 Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Show Open Only" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding ShowOpenOnly}" 
+                                 VerticalOptions="Center"
+                                 Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
             
-            <HorizontalStackLayout>
-                <Label Text="Show Timed Rides Only" />
-                <CheckBox IsChecked="{Binding ShowTimedOnly}" />
-            </HorizontalStackLayout>
-            
-            <HorizontalStackLayout>
-                <Label Text="Show Open Only" />
-                <CheckBox IsChecked="{Binding ShowOpenOnly}" />
-            </HorizontalStackLayout>
-            
-            <HorizontalStackLayout>
-                <Label Text="Order" />
-                <Picker ItemsSource="{Binding Sorts}" 
-                        SelectedIndex="{Binding SortByIndex}"
-                        Title="Order" />
-            </HorizontalStackLayout>
+            <Border Style="{StaticResource SettingsCardStyle}">
+                <VerticalStackLayout>
+                    <Label Text="Sort Options" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" 
+                           Margin="0, 0, 0, 15"/>
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Order by" Style="{StaticResource SettingLabelStyle}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}"
+                               Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                               StrokeThickness="1"
+                               Padding="0"
+                               VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Picker ItemsSource="{Binding Sorts}" 
+                                    SelectedIndex="{Binding SortByIndex}"
+                                    Title="Order"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                    BackgroundColor="Transparent"
+                                    WidthRequest="150"
+                                    Margin="10, 0" />
+                        </Border>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
-    </ContentPage.Content>
+    </ScrollView>
 </ContentPage>

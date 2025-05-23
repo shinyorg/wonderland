@@ -1,10 +1,14 @@
 using System.ComponentModel;
+using Shiny.Locations;
 using ShinyWonderland.Services;
 
 namespace ShinyWonderland;
 
 
-public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject
+public partial class SettingsViewModel(
+    AppSettings appSettings,
+    IGpsManager gpsManager
+) : ObservableObject
 {
     public string[] Sorts { get; } = ["Name", "Wait Time"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
@@ -15,6 +19,7 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableNotifications { get; set; } = appSettings.EnableNotifications;
     [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = appSettings.ShowTimedOnly;
+    public bool IsNotificationActive => gpsManager.CurrentListener != null && appSettings.EnableNotifications; 
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

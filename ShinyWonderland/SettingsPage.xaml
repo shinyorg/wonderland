@@ -73,6 +73,18 @@
                                  VerticalOptions="Center"
                                  Color="{StaticResource Primary}" />
                     </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Notifications Active" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding IsNotificationActive}" 
+                                  IsEnabled="False"
+                                  VerticalOptions="Center"
+                                  Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Border>
             

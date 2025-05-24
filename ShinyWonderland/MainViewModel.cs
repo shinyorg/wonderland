@@ -1,8 +1,6 @@
 ﻿using System.Reactive.Disposables;
 using Humanizer;
-using Shiny.Locations;
 using Shiny.Notifications;
-using ShinyWonderland.Services;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -10,7 +8,7 @@ namespace ShinyWonderland;
 
 public partial class MainViewModel(
     IMediator mediator,
-    IConfiguration config,
+    IOptions<ParkOptions> parkOptions,
     AppSettings appSettings,
     IGpsManager gpsManager,
     TimeProvider timeProvider,
@@ -61,7 +59,7 @@ public partial class MainViewModel(
             await this.LoadData(true);
     }
 
-    public string Title => config.GetValue<string>("Park:Name")!;
+    public string Title => parkOptions.Value.Name;
     
     async Task LoadData(bool forceRefresh)
     {

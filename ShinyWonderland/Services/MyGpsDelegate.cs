@@ -1,16 +1,15 @@
-using Shiny.Locations;
-
 namespace ShinyWonderland.Services;
 
 
 public class MyGpsDelegate : GpsDelegate
 {
-    readonly Position parkCenter;
     readonly IGpsManager gpsManager;
+    readonly ParkOptions parkOptions;
     
     public MyGpsDelegate(
         ILogger<MyGpsDelegate> logger,
         IConfiguration config,
+        IOptions<ParkOptions> parkOptions,
         IGpsManager gpsManager
     ) : base(logger)
     {
@@ -20,13 +19,13 @@ public class MyGpsDelegate : GpsDelegate
         var lat = config.GetValue<double>("Park:Latitude");
         var lon = config.GetValue<double>("Park:Longitude");
         this.gpsManager = gpsManager;
-        this.parkCenter = new(lat, lon);
+        this.parkOptions = parkOptions.Value;
     }
 
     
     protected override async Task OnGpsReading(GpsReading reading)
     {
-        var dist = reading.Position.GetDistanceTo(this.parkCenter);
+        var dist = reading.Position.GetDistanceTo(this.parkOptions.CenterOfPark);
         if (dist.TotalKilometers >= 1)
         {
             // shutter down

@@ -40,6 +40,7 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+        builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddNotifications();

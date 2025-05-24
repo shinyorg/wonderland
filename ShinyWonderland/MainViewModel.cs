@@ -17,7 +17,7 @@ public partial class MainViewModel(
     INotificationManager notifications,
     INavigator navigation,
     ILogger<MainViewModel> logger
-) : ObservableObject, INavigatedAware, IConnectivityEventHandler
+) : ObservableObject, INavigatedAware, IConnectivityEventHandler, IEventHandler<JobDataRefreshEvent>
 {
     CancellationTokenSource? cancellationTokenSource;
     CompositeDisposable? disposer;
@@ -115,14 +115,6 @@ public partial class MainViewModel(
         }
     }
     
-    
-    [MainThread]
-    public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
-    {
-        this.IsConnected = @event.Connected;
-        return Task.CompletedTask;
-    }
-
 
     void StartDataTimer(DateTimeOffset? from)
     {
@@ -132,11 +124,24 @@ public partial class MainViewModel(
         this.DataTimestamp = from.Value.Humanize();
         
         Observable
-            .Interval(TimeSpan.FromSeconds(10))
+            .Interval(TimeSpan.FromSeconds(1))
             .Select(_ => from.Value.Humanize())
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
+
+    
+    [MainThread]
+    public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        this.IsConnected = @event.Connected;
+        return Task.CompletedTask;
+    }
+    
+    
+    [MainThread]
+    public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+        => this.LoadData(false);
 }
 
 

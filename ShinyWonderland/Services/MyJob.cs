@@ -42,6 +42,7 @@ public class MyJob(
         
         this.EnsureLastSnapshot();
         var current = await mediator.GetWonderlandData(true, cancelToken);
+        await mediator.Publish(new JobDataRefreshEvent(), cancelToken);
 
         if (this.LastSnapshot != null)
             await IterateDiff(this.LastSnapshot, current.Result);

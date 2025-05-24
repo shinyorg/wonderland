@@ -112,6 +112,7 @@ public partial class MainViewModel(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
+            await navigation.Alert("ERROR", "There was an error loading the data");
         }
         finally
         {

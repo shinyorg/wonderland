@@ -30,7 +30,6 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * GPS based notifications while in the park notifying you if ride times have gone down - GPS shuts off once outside of park
 
 ## KNOWN ISSUES
-* iOS GPS permissions from Shiny beta are bad
 * "You are currently offline" mediator event is not firing this until the page is hit again
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed

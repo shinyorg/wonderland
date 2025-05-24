@@ -100,11 +100,11 @@ public partial class MainViewModel(
                     break;
                 
                 case RideOrder.WaitTime:
-                    rides = rides.OrderBy(x => x.WaitTimeMinutes);
+                    rides = rides.OrderBy(x => x.WaitTimeMinutes ?? 999); // nulls are moved to end of the list
                     break;
                 
                 case RideOrder.PaidWaitTime:
-                    rides = rides.OrderBy(x => x.PaidWaitTimeMinutes);
+                    rides = rides.OrderBy(x => x.PaidWaitTimeMinutes ?? 999); // nulls are moved to end of the list
                     break;
             }
             this.Rides = rides.ToList();

@@ -21,8 +21,8 @@
         <ApplicationVersion>1</ApplicationVersion>
 
         <MauiVersion>9.0.70</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0069</ShinyVersion>
-        <MediatorVersion>4.2.1</MediatorVersion>
+        <ShinyVersion>4.0.0-beta-0075</ShinyVersion>
+        <MediatorVersion>4.2.2</MediatorVersion>
         <!--slower build, faster runtime in DEBUG-->
         <!-- <_MauiForceXamlCForDebug Condition="'$(Configuration)' == 'Debug'">true</_MauiForceXamlCForDebug> -->
     </PropertyGroup>

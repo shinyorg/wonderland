@@ -102,6 +102,10 @@ public partial class MainViewModel(
                 case RideOrder.WaitTime:
                     rides = rides.OrderBy(x => x.WaitTimeMinutes);
                     break;
+                
+                case RideOrder.PaidWaitTime:
+                    rides = rides.OrderBy(x => x.PaidWaitTimeMinutes);
+                    break;
             }
             this.Rides = rides.ToList();
         }

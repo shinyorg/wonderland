@@ -15,5 +15,6 @@ public partial class AppSettings : ObservableObject
 public enum RideOrder
 {
     Name,
-    WaitTime
+    WaitTime,
+    PaidWaitTime
 }

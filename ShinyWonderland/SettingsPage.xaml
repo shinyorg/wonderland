@@ -111,7 +111,7 @@
                                     Title="Order"
                                     TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
                                     BackgroundColor="Transparent"
-                                    WidthRequest="150"
+                                    WidthRequest="200"
                                     Margin="10, 0" />
                         </Border>
                     </HorizontalStackLayout>

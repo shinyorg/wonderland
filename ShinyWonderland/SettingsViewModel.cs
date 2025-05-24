@@ -10,11 +10,12 @@ public partial class SettingsViewModel(
     IGpsManager gpsManager
 ) : ObservableObject
 {
-    public string[] Sorts { get; } = ["Name", "Wait Time"];
+    public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
     {
         RideOrder.Name => 0,
         RideOrder.WaitTime => 1,
+        RideOrder.PaidWaitTime => 2
     };
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableNotifications { get; set; } = appSettings.EnableNotifications;
@@ -29,7 +30,8 @@ public partial class SettingsViewModel(
                 appSettings.Ordering = this.SortByIndex switch
                 {
                     0 => RideOrder.Name,
-                    1 => RideOrder.WaitTime
+                    1 => RideOrder.WaitTime,
+                    2 => RideOrder.PaidWaitTime,
                 };
                 break;
             

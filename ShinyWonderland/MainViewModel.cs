@@ -76,9 +76,20 @@ public partial class MainViewModel(
 
     async Task TryGps()
     {
-        var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
-        if (access == AccessState.Available)
-            await gpsManager.StartListener(GpsRequest.Realtime(true));
+        try
+        {
+            var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
+            if (access == AccessState.Available && gpsManager.CurrentListener == null)
+            {
+                var start = await gpsManager.IsWithinPark(parkOptions.Value);
+                if (start)
+                    await gpsManager.StartListener(GpsRequest.Realtime(true));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to start GPS");
+        }
     }
 
     async Task TryGeofencing()

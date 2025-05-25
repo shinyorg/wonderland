@@ -1,6 +1,5 @@
 using System.Text;
 using Shiny.Jobs;
-using Shiny.Locations;
 using Shiny.Notifications;
 using ShinyWonderland.ThemeParksApi;
 using Notification = Shiny.Notifications.Notification;
@@ -10,6 +9,7 @@ namespace ShinyWonderland.Services;
 
 public class MyJob(
     ILogger<MyJob> logger,
+    IOptions<ParkOptions> parkOptions,
     IGpsManager gpsManager,
     TimeProvider timeProvider,
     AppSettings appSettings,
@@ -39,7 +39,13 @@ public class MyJob(
         this.MinimumTime = TimeSpan.FromMinutes(3); // this only matters when the GPS is running
         if (!appSettings.EnableNotifications)
             return;
-        
+
+        var within = await gpsManager.IsWithinPark(parkOptions.Value);
+        if (!within)
+        {
+            logger.LogInformation("Outside Wonderland, background job will not run");
+            return;
+        }
         this.EnsureLastSnapshot();
         var current = await mediator.GetWonderlandData(true, cancelToken);
         await mediator.Publish(new JobDataRefreshEvent(), cancelToken);

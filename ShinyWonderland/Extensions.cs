@@ -18,4 +18,23 @@ public static class Extensions
                 ctx.ForceCacheRefresh();
         }
     );
+
+
+    public static async Task<bool> IsWithinPark(this IGpsManager gpsManager, ParkOptions parkOptions)
+    {
+        var reading = await gpsManager
+            .GetCurrentPosition()
+            .Timeout(TimeSpan.FromSeconds(15))
+            .ToTask();
+
+        return reading.IsWithinPark(parkOptions);
+    }
+
+
+    public static bool IsWithinPark(this GpsReading reading, ParkOptions parkOptions)
+    {
+        var distance = reading.Position.GetDistanceTo(parkOptions.CenterOfPark);
+        var within = distance.TotalKilometers <= parkOptions.NotificationDistance.TotalKilometers;
+        return within;
+    }
 }

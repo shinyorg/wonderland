@@ -27,8 +27,8 @@ public class MyGpsDelegate : GpsDelegate
     
     protected override async Task OnGpsReading(GpsReading reading)
     {
-        var dist = reading.Position.GetDistanceTo(this.parkOptions.CenterOfPark);
-        if (dist.TotalKilometers >= 1)
+        var within = reading.IsWithinPark(this.parkOptions);
+        if (!within)
         {
             // shutter down
             this.Logger.LogInformation("Outside Wonderland, shutting down GPS");

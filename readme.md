@@ -23,16 +23,21 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 </ItemGroup>
 ```
 
+## TODO
+
+
 ## APP FEATURES
 * Show ride times (including paid times if available) for Canada's Wonderland whether you are inside the park or now
 * Ability to filter out closed rides, & rides that don't have an estimated time
 * Basic parking locator
+* Geofence notification reminder for entering to remind user to open app (so GPS is enabled) and to set parking area
 * GPS based notifications while in the park notifying you if ride times have gone down - GPS shuts off once outside of park
 
 ## KNOWN ISSUES
 * "You are currently offline" mediator event is not firing this until the page is hit again
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed
+* Hours (WIP)
 
 ## FEATURE IDEAS
 * GPS distancing to each ride from current

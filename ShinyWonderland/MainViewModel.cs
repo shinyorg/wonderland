@@ -41,22 +41,8 @@ public partial class MainViewModel(
         this.LoadData(false).RunInBackground(logger);
         
         await notifications.RequestAccess();
-        var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
-        if (access == AccessState.Available)
-            await gpsManager.StartListener(GpsRequest.Realtime(true));
-
-        access = await geofenceManager.RequestAccess();
-        if (access == AccessState.Available)
-        {
-            await geofenceManager.StartMonitoring(new GeofenceRegion(
-                "Wonderland",
-                parkOptions.Value.CenterOfPark,
-                Distance.FromKilometers(1),
-                false,
-                true,
-                false // no notification on exit
-            ));
-        }
+        await this.TryGps();
+        await this.TryGeofencing();
     }
 
     
@@ -86,6 +72,34 @@ public partial class MainViewModel(
     [MainThread]
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
+
+
+    async Task TryGps()
+    {
+        var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
+        if (access == AccessState.Available)
+            await gpsManager.StartListener(GpsRequest.Realtime(true));
+    }
+
+    async Task TryGeofencing()
+    {
+        var access = await geofenceManager.RequestAccess();
+        if (access == AccessState.Available)
+        {
+            var exists = geofenceManager.GetMonitorRegions().Any(x => x.Identifier == "Wonderland");
+            if (!exists)
+            {
+                await geofenceManager.StartMonitoring(new GeofenceRegion(
+                    "Wonderland",
+                    parkOptions.Value.CenterOfPark,
+                    Distance.FromKilometers(1),
+                    false,
+                    true,
+                    false // no notification on exit
+                ));
+            }
+        }
+    }
     
     
     async Task LoadData(bool forceRefresh)
@@ -96,8 +110,6 @@ public partial class MainViewModel(
             this.IsBusy = true;
             var result = await mediator.GetWonderlandData(forceRefresh, this.cancellationTokenSource.Token);
             this.StartDataTimer(result.Context.Cache()?.Timestamp);
-            // var operatingHours = await mediator.Request(new GetEntityScheduleUpcomingHttpRequest());
-            // operatingHours.Result.Schedule.FirstOrDefault(x => x.OpeningTime.Date == )
             
             var rides = result
                 .Result

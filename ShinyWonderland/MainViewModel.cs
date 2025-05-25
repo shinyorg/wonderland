@@ -7,14 +7,15 @@ namespace ShinyWonderland;
 
 
 public partial class MainViewModel(
+    ILogger<MainViewModel> logger,
     IMediator mediator,
     IOptions<ParkOptions> parkOptions,
     AppSettings appSettings,
-    IGpsManager gpsManager,
     TimeProvider timeProvider,
+    IGpsManager gpsManager,
+    IGeofenceManager geofenceManager,
     INotificationManager notifications,
-    INavigator navigation,
-    ILogger<MainViewModel> logger
+    INavigator navigation
 ) : ObservableObject, INavigatedAware, IConnectivityEventHandler, IEventHandler<JobDataRefreshEvent>
 {
     CancellationTokenSource? cancellationTokenSource;
@@ -29,6 +30,7 @@ public partial class MainViewModel(
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
+    public string Title => parkOptions.Value.Name;
     
     [RelayCommand] Task NavToSettings() => navigation.NavigateTo("SettingsPage");
     [RelayCommand] Task NavToParking() => navigation.NavigateTo("ParkingPage");
@@ -42,6 +44,19 @@ public partial class MainViewModel(
         var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
         if (access == AccessState.Available)
             await gpsManager.StartListener(GpsRequest.Realtime(true));
+
+        access = await geofenceManager.RequestAccess();
+        if (access == AccessState.Available)
+        {
+            await geofenceManager.StartMonitoring(new GeofenceRegion(
+                "Wonderland",
+                parkOptions.Value.CenterOfPark,
+                Distance.FromKilometers(1),
+                false,
+                true,
+                false // no notification on exit
+            ));
+        }
     }
 
     
@@ -59,7 +74,19 @@ public partial class MainViewModel(
             await this.LoadData(true);
     }
 
-    public string Title => parkOptions.Value.Name;
+    
+    [MainThread]
+    public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        this.IsConnected = @event.Connected;
+        return Task.CompletedTask;
+    }
+    
+    
+    [MainThread]
+    public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+        => this.LoadData(false);
+    
     
     async Task LoadData(bool forceRefresh)
     {
@@ -117,7 +144,7 @@ public partial class MainViewModel(
             this.IsBusy = false;
         }
     }
-    
+
 
     void StartDataTimer(DateTimeOffset? from)
     {
@@ -132,19 +159,6 @@ public partial class MainViewModel(
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
-
-    
-    [MainThread]
-    public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
-    {
-        this.IsConnected = @event.Connected;
-        return Task.CompletedTask;
-    }
-    
-    
-    [MainThread]
-    public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
-        => this.LoadData(false);
 }
 
 

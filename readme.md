@@ -13,10 +13,11 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Persistent app cache](https://shinylib.net/mediator/middleware/caching/#persistent-cache)
   * [Event Broadcasting](https://shinylib.net/mediator/events/) with [MAUI support](https://shinylib.net/mediator/extensions/maui/)
 * [Shiny Mobile Libraries](https://github.com/shinyorg/shiny) - [Documentation](https://shinylib.net)
-  * Periodic Background Jobs
-  * Background GPS
-  * Geofencing
-  * Local Notifications
+  * Periodic Background Jobs - Shiny.Jobs
+  * Background GPS - Shiny.Locations
+  * Geofencing - Shiny.Locations
+  * Local Notifications - Shiny.Notifications
+  * Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration - Shiny.Extensions.Configuration
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
 

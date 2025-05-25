@@ -84,8 +84,6 @@ public class MyJob(
     
     async Task IterateDiff(EntityLiveDataResponse previous, EntityLiveDataResponse current)
     {
-        var sb = new StringBuilder();
-        
         foreach (var ride in previous.LiveData)
         {
             var currentRide = current.LiveData.FirstOrDefault(x => x.Id == ride.Id);
@@ -93,16 +91,15 @@ public class MyJob(
             {
                 var currentWait = currentRide.Queue.Standby.WaitTime;
                 var waitDiff = currentRide.Queue.Standby.WaitTime - ride.Queue.Standby.WaitTime;
-                sb.AppendLine($"Wait Time Down {waitDiff} minutes to {currentWait} minutes total");
+                
+                await notifications.Send(new Notification
+                {
+                    // TODO: would be nice if I could set the ID to the ride entity ID to prevent overlaps in notifications
+                    // Id = ride.Id - w
+                    Title = "Wonderland Ride Time",
+                    Message = $"{ride.Name} is now a {currentWait} minute wait.  Down {waitDiff} minutes"
+                });
             }
-        }
-        if (sb.Length > 0)
-        {
-            await notifications.Send(new Notification
-            {
-                Title = "Wonderland Time",
-                Message = sb.ToString()
-            });
         }
     }
 }

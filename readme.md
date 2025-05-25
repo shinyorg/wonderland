@@ -52,3 +52,10 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Restaurant Points with Menu & Prices
   * This data does not come back
   * Could do manual pins?
+
+## FAQ
+
+> Can I run this for my own local 
+
+Yessir - open themepark.http and run "ALL PARKS" endpoint.  Find your park (if available), copy/paste the entityID and location
+into the appsettings.json.  VOILA

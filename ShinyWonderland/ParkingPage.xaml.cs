@@ -39,7 +39,7 @@ public partial class ParkingPage : ContentPage
 
         var mapSpan = MapSpan.FromCenterAndRadius(
             new Location(vm.CenterOfPark.Latitude, vm.CenterOfPark.Longitude),
-            Microsoft.Maui.Maps.Distance.FromMeters(700)
+            Microsoft.Maui.Maps.Distance.FromMeters(vm.MapStartZoomDistanceMeters)
         );
         this.ParkingMap.MoveToRegion(mapSpan);
         base.OnBindingContextChanged();

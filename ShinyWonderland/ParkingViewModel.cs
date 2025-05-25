@@ -22,6 +22,7 @@ public partial class ParkingViewModel(
         : "Remove Parking Location";
 
     public Position CenterOfPark => parkOptions.Value.CenterOfPark;
+    public int MapStartZoomDistanceMeters => parkOptions.Value.MapStartZoomDistanceMeters;
     
     [RelayCommand]
     async Task ToggleSetLocation()

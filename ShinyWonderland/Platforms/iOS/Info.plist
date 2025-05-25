@@ -34,7 +34,11 @@
 	<string>Say something useful here that your users will understand</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Say something useful here that your users will understand</string>
-
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>shinygps</key>
+		<string>This app wants to know EXACTLY where you are</string>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

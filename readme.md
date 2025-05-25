@@ -6,10 +6,17 @@ This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 This app works offline without issue.
   
 ## Technology
+This app uses several .NET open source technologies from [Shiny](https://github.com/shinyorg)
 
-This app also serves as a great example of using [Shiny Mediator](https://shinylib.net/client/mediator/)
-At the time of this publishing, we used v4's [new persistent cache](https://shinylib.net/client/mediator/middleware/caching/) 
-that is updated in the background via a [Shiny Background Job](https://shinylib.net/client/jobs/)
+* [Shiny Mediator](https://github.com/shinyorg/mediator) - [Documentation](https://shinylib.net/mediator/)
+  * [Smart HTTP client generation](https://shinylib.net/mediator/extensions/http/)
+  * [Persistent app cache](https://shinylib.net/mediator/middleware/caching/#persistent-cache)
+  * [Event Broadcasting](https://shinylib.net/mediator/events/) with [MAUI support](https://shinylib.net/mediator/extensions/maui/)
+* [Shiny Mobile Libraries](https://github.com/shinyorg/shiny) - [Documentation](https://shinylib.net)
+  * Periodic Background Jobs
+  * Background GPS
+  * Geofencing
+  * Local Notifications
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
 
@@ -22,9 +29,6 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
                   Visible="false" />
 </ItemGroup>
 ```
-
-## TODO
-
 
 ## APP FEATURES
 * Show ride times (including paid times if available) for Canada's Wonderland whether you are inside the park or now

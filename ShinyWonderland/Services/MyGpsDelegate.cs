@@ -8,12 +8,14 @@ public class MyGpsDelegate : GpsDelegate
     readonly INotificationManager notifications;
     readonly IGpsManager gpsManager;
     readonly ParkOptions parkOptions;
+    readonly AppSettings appSettings;
     
     public MyGpsDelegate(
         ILogger<MyGpsDelegate> logger,
         IOptions<ParkOptions> parkOptions,
         INotificationManager notifications,
-        IGpsManager gpsManager
+        IGpsManager gpsManager,
+        AppSettings appSettings
     ) : base(logger)
     {
         this.MinimumDistance = Distance.FromMeters(10);
@@ -22,6 +24,7 @@ public class MyGpsDelegate : GpsDelegate
         this.gpsManager = gpsManager;
         this.parkOptions = parkOptions.Value;
         this.notifications = notifications;
+        this.appSettings = appSettings;
     }
 
     
@@ -36,11 +39,12 @@ public class MyGpsDelegate : GpsDelegate
         {
             // shutter down
             this.Logger.LogInformation("Outside Wonderland, shutting down GPS");
-            
+
+            this.appSettings.ParkingLocation = null;
             await this.gpsManager.StopListener();
             await this.notifications.Send(
-                "Wonderland Goodbye",
-                "GPS has been turned off to save battery - you will not receive real time ride updates"
+                "Wonderland",
+                "Hope you had fun.  GPS has been turned off to save battery, you will not receive real time ride updates, and parking has been cleared"
             );
         }
     }

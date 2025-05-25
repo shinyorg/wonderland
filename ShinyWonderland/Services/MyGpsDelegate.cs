@@ -27,6 +27,10 @@ public class MyGpsDelegate : GpsDelegate
     
     protected override async Task OnGpsReading(GpsReading reading)
     {
+        // single reads are coming through here - this is a "bug" with Shiny.Locations
+        if (this.gpsManager.CurrentListener == null)
+            return;
+        
         var within = reading.IsWithinPark(this.parkOptions);
         if (!within)
         {

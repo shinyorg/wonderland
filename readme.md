@@ -32,6 +32,7 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 ```
 
 ## APP FEATURES
+* Decent AI Generated .NET MAUI pure control set with light & dark modes
 * Show ride times (including paid times if available) for Canada's Wonderland whether you are inside the park or now
 * Ability to filter out closed rides, & rides that don't have an estimated time
 * Basic parking locator

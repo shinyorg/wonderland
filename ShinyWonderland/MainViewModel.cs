@@ -103,7 +103,7 @@ public partial class MainViewModel(
                 await geofenceManager.StartMonitoring(new GeofenceRegion(
                     "Wonderland",
                     parkOptions.Value.CenterOfPark,
-                    Distance.FromKilometers(1)
+                    parkOptions.Value.NotificationDistance
                 ));
             }
         }

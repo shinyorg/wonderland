@@ -21,6 +21,7 @@ public static class MauiProgram
                 .Add<MainPage, MainViewModel>()
                 .Add<SettingsPage, SettingsViewModel>()
                 .Add<ParkingPage, ParkingViewModel>()
+                .Add<HoursPage, HoursViewModel>()
             )
             .AddShinyMediator(x => x
                 .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()
@@ -44,6 +45,7 @@ public static class MauiProgram
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddNotifications();
+        builder.Services.AddGeofencing<MyGeofenceDelegate>();
         builder.Services.AddGps<MyGpsDelegate>();
         builder.Services.AddJob(
             typeof(MyJob),

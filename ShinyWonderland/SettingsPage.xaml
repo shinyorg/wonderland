@@ -6,6 +6,7 @@
              x:Class="ShinyWonderland.SettingsPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="Settings">
+    
     <ContentPage.Resources>
         <Style x:Key="SettingLabelStyle" TargetType="Label">
             <Setter Property="FontFamily" Value="OpenSansRegular" />
@@ -34,6 +35,11 @@
         </Style>
     </ContentPage.Resources>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Hours" 
+                     Command="{Binding NavToHoursCommand}"/>
+    </ContentPage.ToolbarItems>
+    
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="0, 20">
             <Label Text="Preferences" 
@@ -50,6 +56,17 @@
                         <CheckBox IsChecked="{Binding EnableNotifications}" 
                                  VerticalOptions="Center"
                                  Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Enable Park Arrival Notification" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding EnableGeofenceReminder}" 
+                                  VerticalOptions="Center"
+                                  Color="{StaticResource Primary}" />
                     </HorizontalStackLayout>
                     
                     <BoxView HeightRequest="1" 

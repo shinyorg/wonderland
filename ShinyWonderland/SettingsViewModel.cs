@@ -7,9 +7,11 @@ namespace ShinyWonderland;
 
 public partial class SettingsViewModel(
     AppSettings appSettings,
-    IGpsManager gpsManager
+    IGpsManager gpsManager,
+    INavigator navigator
 ) : ObservableObject
 {
+    [RelayCommand] Task NavToHours() => navigator.NavigateTo("HoursPage");
     public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
     {
@@ -20,6 +22,7 @@ public partial class SettingsViewModel(
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableNotifications { get; set; } = appSettings.EnableNotifications;
     [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = appSettings.ShowTimedOnly;
+    [ObservableProperty] public partial bool EnableGeofenceReminder { get; set; } = appSettings.EnableGeofenceReminder;
     public bool IsNotificationActive => gpsManager.CurrentListener != null && appSettings.EnableNotifications; 
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

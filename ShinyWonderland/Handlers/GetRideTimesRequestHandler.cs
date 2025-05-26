@@ -19,6 +19,7 @@ public class GetRideTimesRequestHandler(
             },
             cancellationToken
         );
+        
         var childData = context.Request(
             new GetEntityChildrenHttpRequest
             {
@@ -26,10 +27,10 @@ public class GetRideTimesRequestHandler(
             },
             cancellationToken
         );
-
-        await liveData;
-        await childData;
-        await Task.WhenAll(liveData, childData).ConfigureAwait(false);
+        
+        await Task
+            .WhenAll(liveData, childData)
+            .ConfigureAwait(false);
 
         var list = new List<RideTime>();
         foreach (var rideInfo in childData.Result.Children)
@@ -46,14 +47,20 @@ public class GetRideTimesRequestHandler(
 
             if (rideInfo.Location != null)
                 position = new Position(0, 0);
-            
+
             if (live != null)
             {
-                // x.Queue?.PaidReturnTime?.Price?.Formatted
-                waitTime = live.Queue?.PaidStandby?.WaitTime;
-                paidWaitTime = live.Queue?.PaidStandby?.WaitTime;
+                var wt = live.Queue?.PaidStandby?.WaitTime;
+                if (wt != null)
+                    waitTime = Convert.ToInt32(wt);
+                
+                var pwt = live.Queue?.PaidStandby?.WaitTime;
+                if (pwt != null)
+                    paidWaitTime = Convert.ToInt32(pwt);
+                
                 open = live.Status == LiveStatusType.OPERATING;
             }
+
             list.Add(new RideTime(
                 rideInfo.Id,
                 rideInfo.Name,
@@ -63,6 +70,7 @@ public class GetRideTimesRequestHandler(
                 open
             ));
         }
+
         return list;
     }
 }

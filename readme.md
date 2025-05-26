@@ -47,17 +47,30 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Hours (WIP)
 
 ## FEATURE IDEAS
-* GPS distancing to each ride from current
 * Peak times - requires server
     * Need weather at current time request
 * Wonderland Map
 * Restaurant Points with Menu & Prices
   * This data does not come back
   * Could do manual pins?
-
+* Drink & Food Pass Timers
+* Distance - Sorting and Display
+  
 ## FAQ
 
 > Can I run this for my own local 
 
 Yessir - open themepark.http and run "ALL PARKS" endpoint.  Find your park (if available), copy/paste the entityID and location
 into the appsettings.json.  VOILA
+
+> Why broadcast GPS, connectivity, & data refreshes through Mediator
+
+Mediator doesn't need to hook events and then clean them up.  Everything is managed with almost zero code
+
+> Why use mediator for data calls?
+
+Mediator can cache data with nothing more than configuration in appsettings.json.  No layers, no DI hell... just a contract and a single service
+
+> What is the purpose of CoreServices?  This is over complicated dependency injection stuff!
+
+Is it?  Those services are used in pretty much every major class in the app.  This helps alleviate the pain of injecting a TON of services in every constructor

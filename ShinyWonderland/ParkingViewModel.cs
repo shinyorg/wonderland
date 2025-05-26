@@ -65,14 +65,14 @@ public partial class ParkingViewModel(
 
             if (result.IsWithinPark)
             {
+                this.ParkLocation = result.Position!;
+            }
+            else
+            {
                 await services.Navigator.Alert(
                     "ERROR",
                     "You aren't close enough to the park to use the parking function"
                 );
-            }
-            else
-            {
-                this.ParkLocation = result.Position!;
             }
         }
         catch (Exception e)

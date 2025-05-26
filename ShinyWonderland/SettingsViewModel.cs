@@ -12,12 +12,13 @@ public partial class SettingsViewModel(
 ) : ObservableObject
 {
     [RelayCommand] Task NavToHours() => navigator.NavigateTo("HoursPage");
-    public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time"];
+    public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time", "Distance"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
     {
         RideOrder.Name => 0,
         RideOrder.WaitTime => 1,
-        RideOrder.PaidWaitTime => 2
+        RideOrder.PaidWaitTime => 2,
+        RideOrder.Distance => 3
     };
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableNotifications { get; set; } = appSettings.EnableNotifications;
@@ -35,6 +36,7 @@ public partial class SettingsViewModel(
                     0 => RideOrder.Name,
                     1 => RideOrder.WaitTime,
                     2 => RideOrder.PaidWaitTime,
+                    3 => RideOrder.Distance
                 };
                 break;
             

@@ -1,3 +1,3 @@
 namespace ShinyWonderland.Contracts;
 
-public class GpsEvent(Position Position) : IEvent;
+public record GpsEvent(Position Position) : IEvent;

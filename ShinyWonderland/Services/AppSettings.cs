@@ -17,5 +17,6 @@ public enum RideOrder
 {
     Name,
     WaitTime,
-    PaidWaitTime
+    PaidWaitTime,
+    Distance
 }

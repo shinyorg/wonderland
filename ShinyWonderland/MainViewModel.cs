@@ -18,6 +18,7 @@ public partial class MainViewModel(
 {
     CancellationTokenSource? cancellationTokenSource;
     CompositeDisposable? disposer;
+    Position? currentPosition;
     
     public string Title => services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = null!;
@@ -70,6 +71,23 @@ public partial class MainViewModel(
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
 
+    
+    [MainThread]
+    public async Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        foreach (var ride in this.Rides)
+            ride.UpdateDistance(@event.Position);
+        
+        this.currentPosition = @event.Position;
+        if (services.AppSettings.Ordering == RideOrder.Distance)
+        {
+            this.Rides = this.Rides
+                .OrderBy(x => x.DistanceMeters ?? 999)
+                .ThenBy(x => x.Name)
+                .ToList();
+        }
+    }
+    
 
     async Task TryGps()
     {
@@ -146,7 +164,16 @@ public partial class MainViewModel(
 
     void FilterSortBind(List<RideTime> rides)
     {
-        var query = rides.AsQueryable();
+        var query = rides
+            .Select(x =>
+            {
+                var vm = new RideTimeViewModel(x);
+                if (this.currentPosition != null)
+                    vm.UpdateDistance(this.currentPosition);
+                
+                return vm;
+            })
+            .AsQueryable();
         if (services.AppSettings.ShowOpenOnly)
             query = query.Where(x => x.IsOpen);
 
@@ -170,10 +197,14 @@ public partial class MainViewModel(
                     .OrderBy(x => x.PaidWaitTimeMinutes ?? 999) // nulls are moved to end of the list
                     .ThenBy(x => x.Name);
                 break;
+            
+            case RideOrder.Distance:
+                query = query
+                    .OrderBy(x => x.DistanceMeters ?? 999)
+                    .ThenBy(x => x.Name);
+                break;
         }
-        this.Rides = query
-            .Select(x => new RideTimeViewModel(x))
-            .ToList();
+        this.Rides = query.ToList();
     }
     
 
@@ -190,16 +221,6 @@ public partial class MainViewModel(
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
-
-    
-    [MainThread]
-    public async Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
-    {
-        
-        // TODO: each ride needs to have their coordinates on them
-        // TODO: iterate displayed rides and set distance on them
-        // TODO: if sorted by distance also trigger a rebind to list
-    }
 }
 
 
@@ -208,10 +229,12 @@ public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
     public string Name => rideTime.Name;
     public int? WaitTimeMinutes => rideTime.WaitTimeMinutes;
     public int? PaidWaitTimeMinutes => rideTime.PaidWaitTimeMinutes;
+    public bool IsOpen => rideTime.IsOpen;
     public bool IsClosed => !rideTime.IsOpen;
     public bool HasWaitTime => rideTime.WaitTimeMinutes.HasValue;
     public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
-
+    public int? DistanceMeters { get; private set; }
+    
     [ObservableProperty] string distanceText;
 
     public void UpdateDistance(Position position)
@@ -221,13 +244,13 @@ public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
 
         var dist = rideTime.Position.GetDistanceTo(position);
         if (dist.TotalKilometers > 2)
-        {
+        { 
             this.DistanceText = "TOO FAR";
         }
         else
         {
-            var meters = Math.Round(dist.TotalMeters, 0);
-            this.DistanceText = $"{meters} m";
+            this.DistanceMeters = Convert.ToInt32(Math.Round(dist.TotalMeters, 0));
+            this.DistanceText = $"{this.DistanceMeters} m";
         }
     }
 }

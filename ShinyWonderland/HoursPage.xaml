@@ -2,27 +2,81 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
-             xmlns:contracts="clr-namespace:ShinyWonderland.Contracts"
              x:DataType="shinyWonderland:HoursViewModel"
              x:Class="ShinyWonderland.HoursPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="Hours of Operation">
     
-    <ContentPage.Content>
-        <CollectionView ItemsSource="{Binding Schedule}">
-            <CollectionView.EmptyView>
-                <Label Text="No Upcoming Schedule Found" />
-            </CollectionView.EmptyView>
-            
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="shinyWonderland:VmParkSchedule">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding DateString}" />
-                        
-                        <Label Text="{Binding HoursOfOperation}"
-                               IsVisible="{Binding IsOpen}" />
+    <Grid RowDefinitions="Auto, *"
+          RowSpacing="0"
+          Padding="0">
+          
+        <Label Text="Park Hours Schedule"
+               BackgroundColor="{StaticResource Primary}"
+               TextColor="{StaticResource White}"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               Padding="16,8"
+               Margin="0"
+               Grid.Row="0" />
+               
+        <RefreshView Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Schedule}"
+                           Margin="0,8,0,0">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center">
+                        <Image Source="shiny.png" 
+                               HeightRequest="100"
+                               WidthRequest="100"
+                               Opacity="0.6"
+                               HorizontalOptions="Center" />
+                        <Label Text="No Upcoming Schedule Found"
+                               FontSize="Large"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"
+                               VerticalTextAlignment="Center"
+                               Margin="0,16,0,0" />
                     </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </ContentPage.Content>
+                </CollectionView.EmptyView>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="shinyWonderland:VmParkSchedule">
+                        <Border Margin="16,8"
+                               Padding="0"
+                               Stroke="Transparent"
+                               StrokeShape="RoundRectangle 10"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
+                            <Grid RowDefinitions="Auto, Auto"
+                                  Padding="16">
+                                
+                                <Label Text="{Binding DateString}"
+                                       FontSize="Medium"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
+                                       FontAttributes="Bold"
+                                       Grid.Row="0" />
+                                       
+                                <VerticalStackLayout Grid.Row="1" 
+                                                   Margin="0,8,0,0">
+                                    <Label Text="{Binding HoursOfOperation}"
+                                           IsVisible="{Binding IsOpen}"
+                                           TextColor="{StaticResource Blue100Accent}"
+                                           FontAttributes="Bold"
+                                           FontSize="Small" />
+                                           
+                                    <Label Text="Park Closed"
+                                           IsVisible="{Binding IsClosed}"
+                                           TextColor="{StaticResource Yellow100Accent}"
+                                           FontAttributes="Bold"
+                                           FontSize="Small" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
 </ContentPage>

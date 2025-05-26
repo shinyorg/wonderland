@@ -38,6 +38,7 @@ public record VmParkSchedule(
 )
 {
     public bool IsOpen => Info.IsOpen;
+    public bool IsClosed => Info.IsClosed;
     public string HoursOfOperation => $"{Info.Hours?.Open:h:mm tt} - {Info.Hours?.Closed:h:mm tt}";
     public string DateString => IsToday ? "Today" : this.Info.Date.ToString("dddd, MMMM dd");
 }

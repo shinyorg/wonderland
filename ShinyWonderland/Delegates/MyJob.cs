@@ -31,15 +31,15 @@ public class MyJob(
     
     protected override async Task Run(CancellationToken cancelToken)
     {
-        // TODO: this should only run if inside the park
-        
-        this.MinimumTime = TimeSpan.FromMinutes(3); // this only matters when the GPS is running
+        // TODO: shiny foreground services execute immediately on startup - we don't want that
+        this.MinimumTime = TimeSpan.FromMinutes(5); 
+
         if (!services.AppSettings.EnableNotifications)
         {
             logger.LogInformation("Job notifications is disabled");
             return;
         }
-
+        
         var within = await services.IsUserWithinPark(cancelToken);
         if (!within)
         {
@@ -56,7 +56,7 @@ public class MyJob(
 
         if (this.LastSnapshot != null)
             await IterateDiff(this.LastSnapshot, current.Result);
-
+        
         this.LastSnapshot = current.Result;
         this.LastSnapshotTime = services.TimeProvider.GetUtcNow();
     }

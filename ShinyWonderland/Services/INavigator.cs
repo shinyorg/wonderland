@@ -10,6 +10,12 @@ public interface INavigator
 
 public interface INavigatedAware
 {
-    void OnNavigatedTo();
-    void OnNavigatedFrom();
+    void OnNavigatedTo(IDictionary<string, object> parameters);
+}
+
+
+public interface IPageLifecycleAware
+{
+    void OnAppearing();
+    void OnDisappearing();
 }

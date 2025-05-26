@@ -1,18 +1,17 @@
 using ShinyWonderland.Contracts;
-using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
 
+
 public partial class HoursViewModel(
     IMediator mediator, 
-    IOptions<ParkOptions> parkOptions,
     TimeProvider timeProvider
-) : ObservableObject, INavigatedAware
+) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] List<VmParkSchedule> schedule;
-    
-    
-    public async void OnNavigatedTo()
+
+
+    public async void OnAppearing()
     {
         var scheduleDates = await mediator.Request(new GetUpcomingParkHours());
         
@@ -27,8 +26,8 @@ public partial class HoursViewModel(
             .ToList();
     }
 
-    
-    public void OnNavigatedFrom()
+
+    public void OnDisappearing()
     {
     }
 }
@@ -38,5 +37,7 @@ public record VmParkSchedule(
     bool IsToday
 )
 {
-    public string DateString => IsToday ? "Today" : this.Info.Date.ToString("dddd MMM dd");
+    public bool IsOpen => Info.IsOpen;
+    public string HoursOfOperation => $"{Info.Hours?.Open:h:mm tt} - {Info.Hours?.Closed:h:mm tt}";
+    public string DateString => IsToday ? "Today" : this.Info.Date.ToString("dddd, MMMM dd");
 }

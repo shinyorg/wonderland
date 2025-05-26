@@ -11,7 +11,7 @@ public partial class MainViewModel(
     IGeofenceManager geofenceManager
 ) : 
     ObservableObject, 
-    INavigatedAware, 
+    IPageLifecycleAware, 
     IConnectivityEventHandler, 
     IEventHandler<JobDataRefreshEvent>,
     IEventHandler<GpsEvent>
@@ -30,11 +30,11 @@ public partial class MainViewModel(
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
-    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateTo("SettingsPage");
+    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateTo("SettingsPage", ("Test", "HELLO"));
     [RelayCommand] Task NavToParking() => services.Navigator.NavigateTo("ParkingPage");
     
 
-    public async void OnNavigatedTo()
+    public async void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);
         
@@ -44,7 +44,7 @@ public partial class MainViewModel(
     }
 
     
-    public void OnNavigatedFrom()
+    public void OnDisappearing()
     {
         this.cancellationTokenSource?.Cancel();
         this.disposer?.Dispose();
@@ -174,6 +174,7 @@ public partial class MainViewModel(
                 return vm;
             })
             .AsQueryable();
+        
         if (services.AppSettings.ShowOpenOnly)
             query = query.Where(x => x.IsOpen);
 
@@ -213,7 +214,7 @@ public partial class MainViewModel(
         this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
         this.disposer = new();
         from ??= services.TimeProvider.GetUtcNow();
-        this.DataTimestamp = from.Value.Humanize();
+        this.DataTimestamp = from.Value.LocalDateTime.Humanize();
         
         Observable
             .Interval(TimeSpan.FromSeconds(1))

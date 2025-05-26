@@ -11,32 +11,34 @@ public class GetRideTimesRequestHandler(
 {
     public async Task<List<RideTime>> Handle(GetCurrentRideTimes request, IMediatorContext context, CancellationToken cancellationToken)
     {
+        // these calls are done sequentially as themepark api doesn't like multiple requests at the same time
+        
         // these http calls are not cached - the outcome of this handler is which is why we don't do any filters or sorts here
-        var liveData = context.Request(
+        var liveData = await context.Request(
             new GetEntityLiveDataHttpRequest
             {
                 EntityID = parkOptions.Value.EntityId
             },
             cancellationToken
         );
-        
-        var childData = context.Request(
+
+        var childData = await context.Request(
             new GetEntityChildrenHttpRequest
             {
                 EntityID = parkOptions.Value.EntityId
             },
             cancellationToken
         );
-        
-        await Task
-            .WhenAll(liveData, childData)
-            .ConfigureAwait(false);
 
+        return MergeData(liveData, childData);
+    }
+
+    static List<RideTime> MergeData(EntityLiveDataResponse liveData, EntityChildrenResponse childData)
+    {
         var list = new List<RideTime>();
-        foreach (var rideInfo in childData.Result.Children)
+        foreach (var rideInfo in childData.Children)
         {
             var live = liveData
-                .Result
                 .LiveData
                 .FirstOrDefault(x => x.Id.Equals(rideInfo.Id, StringComparison.InvariantCultureIgnoreCase));
 
@@ -53,11 +55,11 @@ public class GetRideTimesRequestHandler(
                 var wt = live.Queue?.PaidStandby?.WaitTime;
                 if (wt != null)
                     waitTime = Convert.ToInt32(wt);
-                
+
                 var pwt = live.Queue?.PaidStandby?.WaitTime;
                 if (pwt != null)
                     paidWaitTime = Convert.ToInt32(pwt);
-                
+
                 open = live.Status == LiveStatusType.OPERATING;
             }
 

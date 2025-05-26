@@ -18,15 +18,8 @@
                     <VerticalStackLayout>
                         <Label Text="{Binding DateString}" />
                         
-                        <Label BindingContext="{Binding Info}">
-                            <Label.FormattedText>
-                                <FormattedString x:DataType="contracts:TimeRange">
-                                    <Span Text="{Binding Open, StringFormat='{0:h:mm tt}'}" />
-                                    <Span Text=" - " />
-                                    <Span Text="{Binding Closed, StringFormat='{0:h:mm tt}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <Label Text="{Binding HoursOfOperation}"
+                               IsVisible="{Binding IsOpen}" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

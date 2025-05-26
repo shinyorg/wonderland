@@ -14,7 +14,7 @@ public static class NavigationExtensions
         navBuilderAction.Invoke(navBuilder);
         navBuilder.RegisterDependencies(builder.Services);
         
-        builder.Services.TryAddSingleton<INavigator, ShinyShellNavigator>();
+        builder.Services.AddSingletonAsImplementedInterfaces<ShinyShellNavigator>();
         builder.Services.TryAddSingleton(navBuilder);
         return builder;
     }

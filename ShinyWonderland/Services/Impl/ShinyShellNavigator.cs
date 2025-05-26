@@ -13,6 +13,25 @@ public class ShinyShellNavigator(
         if (application is not Application app)
             throw new InvalidOperationException($"Invalid MAUI Application - {application.GetType()}");
 
+        app.DescendantAdded += (_, args) =>
+        {
+            if (args.Element is Shell shell)
+            {
+                shell.Navigating += async (_, shellArgs) =>
+                {
+                    if (shell.CurrentPage?.BindingContext is INavigateConfirm confirm)
+                    {
+                        var deferral = shellArgs.GetDeferral();
+                        var canNav = await confirm.CanNavigate();
+                        if (canNav)
+                            shellArgs.Cancel();
+
+                        deferral.Complete();
+                    }
+                };
+            }
+        };
+        
         app.DescendantRemoved += (_, args) =>
         {
             if (args.Element is Page { BindingContext: IDisposable disposable })

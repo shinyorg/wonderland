@@ -6,6 +6,7 @@ using ShinyWonderland.Services.Impl;
 namespace ShinyWonderland.Services;
 
 
+//https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/navigation?view=net-maui-9.0
 public static class NavigationExtensions
 {
     public static MauiAppBuilder UseShinyNavigation(this MauiAppBuilder builder, Action<ShinyNavigationBuilder> navBuilderAction)
@@ -22,17 +23,17 @@ public static class NavigationExtensions
 
 public sealed class ShinyNavigationBuilder
 {
-    readonly Dictionary<string, (Type PageType, Type ViewModelType)> typeMap = new();
+    readonly Dictionary<string, (bool RegisterRoute, Type PageType, Type ViewModelType)> typeMap = new();
     
     public ShinyNavigationBuilder Add<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TPage, 
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewModel
-    >(string? route = null)
+    >(string? route = null, bool registerRoute = true)
         where TPage : Page
         where TViewModel : class, INotifyPropertyChanged
     {
         route ??= typeof(TPage).Name;
-        this.typeMap[route] = (typeof(TPage), typeof(TViewModel));
+        this.typeMap[route] = (registerRoute, typeof(TPage), typeof(TViewModel));
         return this;
     }
     
@@ -48,24 +49,33 @@ public sealed class ShinyNavigationBuilder
     }
 
     
-    public Type? GetViewModelTypeForRoute(string route)
-    {
-        foreach (var pair in this.typeMap)
-        {
-            if (pair.Key.Equals(route, StringComparison.InvariantCultureIgnoreCase)) 
-                return pair.Value.ViewModelType;
-        }
-        return null;
-    }
-
-    
     internal void RegisterDependencies(IServiceCollection services)
     {
         foreach (var pair in this.typeMap)
         {
             services.AddTransient(pair.Value.PageType);
             services.AddTransient(pair.Value.ViewModelType);
-            Routing.RegisterRoute(pair.Key, pair.Value.PageType);
+            if (pair.Value.RegisterRoute)
+            {
+                Routing.RegisterRoute(
+                    pair.Key,
+                    new ShinyRouteFactory(
+                        pair.Value.PageType,
+                        pair.Value.ViewModelType
+                    )
+                );
+            }
         }
+    }
+}
+
+public class ShinyRouteFactory(Type pageType, Type viewModelType) : RouteFactory
+{
+    public override Element GetOrCreate() => throw new NotImplementedException();
+    public override Element GetOrCreate(IServiceProvider services)
+    {
+        var page = (Page)services.GetRequiredService(pageType);
+        page.BindingContext = services.GetRequiredService(viewModelType);
+        return page;
     }
 }

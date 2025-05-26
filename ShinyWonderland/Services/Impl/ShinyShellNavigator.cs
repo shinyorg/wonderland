@@ -1,8 +1,10 @@
 namespace ShinyWonderland.Services.Impl;
 
+
+// https://learn.microsoft.com/en-us/dotnet/maui/fundamentals/shell/navigation?view=net-maui-9.0
 public class ShinyShellNavigator(
     ILogger<ShinyShellNavigator> logger,
-    IApplication application, 
+    IApplication application,
     ShinyNavigationBuilder navBuilder
 ) : INavigator, IMauiInitializeService
 {
@@ -24,6 +26,7 @@ public class ShinyShellNavigator(
         {
             if (page.BindingContext == null)
             {
+                // needed for initial pags - IQueryAttributable would be missed
                 var viewModelType = navBuilder.GetViewModelTypeForPage(page.GetType());
                 if (viewModelType == null)
                 {

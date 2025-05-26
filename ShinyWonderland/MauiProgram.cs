@@ -18,7 +18,7 @@ public static class MauiProgram
             .UseShiny()
             .UseMauiMaps()
             .UseShinyNavigation(x => x
-                .Add<MainPage, MainViewModel>()
+                .Add<MainPage, MainViewModel>(registerRoute: false) // registered in Shell XAML
                 .Add<SettingsPage, SettingsViewModel>()
                 .Add<ParkingPage, ParkingViewModel>()
                 .Add<HoursPage, HoursViewModel>()

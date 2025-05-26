@@ -1,27 +1,26 @@
 ﻿using System.Reactive.Disposables;
 using Humanizer;
-using Shiny.Notifications;
-using ShinyWonderland.ThemeParksApi;
+using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland;
 
 
 public partial class MainViewModel(
+    CoreServices services,
     ILogger<MainViewModel> logger,
-    IMediator mediator,
-    IOptions<ParkOptions> parkOptions,
-    AppSettings appSettings,
-    TimeProvider timeProvider,
-    IGpsManager gpsManager,
-    IGeofenceManager geofenceManager,
-    INotificationManager notifications,
-    INavigator navigation
-) : ObservableObject, INavigatedAware, IConnectivityEventHandler, IEventHandler<JobDataRefreshEvent>
+    IGeofenceManager geofenceManager
+) : 
+    ObservableObject, 
+    INavigatedAware, 
+    IConnectivityEventHandler, 
+    IEventHandler<JobDataRefreshEvent>,
+    IEventHandler<GpsEvent>
 {
     CancellationTokenSource? cancellationTokenSource;
     CompositeDisposable? disposer;
     
-    [ObservableProperty] public partial IReadOnlyList<RideInfo> Rides { get; private set; } = null!;
+    public string Title => services.ParkOptions.Value.Name;
+    [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
 
@@ -30,17 +29,15 @@ public partial class MainViewModel(
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
-    public string Title => parkOptions.Value.Name;
-    
-    [RelayCommand] Task NavToSettings() => navigation.NavigateTo("SettingsPage");
-    [RelayCommand] Task NavToParking() => navigation.NavigateTo("ParkingPage");
+    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateTo("SettingsPage");
+    [RelayCommand] Task NavToParking() => services.Navigator.NavigateTo("ParkingPage");
     
 
     public async void OnNavigatedTo()
     {
         this.LoadData(false).RunInBackground(logger);
         
-        await notifications.RequestAccess();
+        await services.Notifications.RequestAccess();
         await this.TryGps();
         await this.TryGeofencing();
     }
@@ -78,12 +75,14 @@ public partial class MainViewModel(
     {
         try
         {
-            var access = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
-            if (access == AccessState.Available && gpsManager.CurrentListener == null)
+            var access = await services.Gps.RequestAccess(GpsRequest.Realtime(true));
+            
+            // only check GPS if background is running and user has granted permissions
+            if (access == AccessState.Available && services.Gps.CurrentListener == null)
             {
-                var start = await gpsManager.IsWithinPark(parkOptions.Value);
+                var start = await services.IsUserWithinPark();
                 if (start)
-                    await gpsManager.StartListener(GpsRequest.Realtime(true));
+                    await services.Gps.StartListener(GpsRequest.Realtime(true));
             }
         }
         catch (Exception ex)
@@ -91,19 +90,23 @@ public partial class MainViewModel(
             logger.LogError(ex, "Failed to start GPS");
         }
     }
+    
 
     async Task TryGeofencing()
     {
         var access = await geofenceManager.RequestAccess();
         if (access == AccessState.Available)
         {
-            var exists = geofenceManager.GetMonitorRegions().Any(x => x.Identifier == "Wonderland");
+            var exists = geofenceManager
+                .GetMonitorRegions()
+                .Any(x => x.Identifier == "Wonderland");
+            
             if (!exists)
             {
                 await geofenceManager.StartMonitoring(new GeofenceRegion(
                     "Wonderland",
-                    parkOptions.Value.CenterOfPark,
-                    parkOptions.Value.NotificationDistance
+                    services.ParkOptions.Value.CenterOfPark,
+                    services.ParkOptions.Value.NotificationDistance
                 ));
             }
         }
@@ -116,52 +119,23 @@ public partial class MainViewModel(
         {
             this.cancellationTokenSource = new();
             this.IsBusy = true;
-            var result = await mediator.GetWonderlandData(forceRefresh, this.cancellationTokenSource.Token);
+            
+            var result = await services.Mediator.Request(
+                new GetCurrentRideTimes(), 
+                this.cancellationTokenSource.Token,
+                ctx =>
+                {
+                    if (forceRefresh)
+                        ctx.ForceCacheRefresh();
+                }
+            );
             this.StartDataTimer(result.Context.Cache()?.Timestamp);
-            
-            var rides = result
-                .Result
-                .LiveData
-                .Where(x => x.EntityType == EntityType.ATTRACTION)
-                .Select(x => new RideInfo(
-                    x.Name,
-                    x.Status == LiveStatusType.OPERATING ? x.Queue?.Standby?.WaitTime : null,
-                    x.Status == LiveStatusType.OPERATING ? x.Queue?.PaidStandby?.WaitTime : null,
-                    x.Status == LiveStatusType.OPERATING
-                    // x.Queue?.PaidReturnTime?.Price?.Formatted
-                    // x.Queue?.PaidReturnTime?.Price?.Formatted + " " x.Queue?.PaidReturnTime?.Price?.Currency
-                ));
-
-            if (appSettings.ShowOpenOnly)
-                rides = rides.Where(x => x.IsOpen);
-
-            if (appSettings.ShowTimedOnly)
-                rides = rides.Where(x => x.HasPaidWaitTime || x.HasWaitTime);
-            
-            switch (appSettings.Ordering)
-            {
-                case RideOrder.Name:
-                    rides = rides.OrderBy(x => x.Name);
-                    break;
-                
-                case RideOrder.WaitTime:
-                    rides = rides
-                        .OrderBy(x => x.WaitTimeMinutes ?? 999) // nulls are moved to end of the list
-                        .ThenBy(x => x.Name); 
-                    break;
-                
-                case RideOrder.PaidWaitTime:
-                    rides = rides
-                        .OrderBy(x => x.PaidWaitTimeMinutes ?? 999) // nulls are moved to end of the list
-                        .ThenBy(x => x.Name);
-                    break;
-            }
-            this.Rides = rides.ToList();
+            this.FilterSortBind(result.Result);
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
-            await navigation.Alert("ERROR", "There was an error loading the data");
+            await services.Navigator.Alert("ERROR", "There was an error loading the data");
         }
         finally
         {
@@ -170,11 +144,44 @@ public partial class MainViewModel(
     }
 
 
+    void FilterSortBind(List<RideTime> rides)
+    {
+        var query = rides.AsQueryable();
+        if (services.AppSettings.ShowOpenOnly)
+            query = query.Where(x => x.IsOpen);
+
+        if (services.AppSettings.ShowTimedOnly)
+            query = query.Where(x => x.PaidWaitTimeMinutes != null || x.WaitTimeMinutes != null);
+            
+        switch (services.AppSettings.Ordering)
+        {
+            case RideOrder.Name:
+                query = query.OrderBy(x => x.Name);
+                break;
+                
+            case RideOrder.WaitTime:
+                query = query
+                    .OrderBy(x => x.WaitTimeMinutes ?? 999) // nulls are moved to end of the list
+                    .ThenBy(x => x.Name); 
+                break;
+                
+            case RideOrder.PaidWaitTime:
+                query = query
+                    .OrderBy(x => x.PaidWaitTimeMinutes ?? 999) // nulls are moved to end of the list
+                    .ThenBy(x => x.Name);
+                break;
+        }
+        this.Rides = query
+            .Select(x => new RideTimeViewModel(x))
+            .ToList();
+    }
+    
+
     void StartDataTimer(DateTimeOffset? from)
     {
         this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
         this.disposer = new();
-        from ??= timeProvider.GetUtcNow();
+        from ??= services.TimeProvider.GetUtcNow();
         this.DataTimestamp = from.Value.Humanize();
         
         Observable
@@ -183,17 +190,44 @@ public partial class MainViewModel(
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
+
+    
+    [MainThread]
+    public async Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        
+        // TODO: each ride needs to have their coordinates on them
+        // TODO: iterate displayed rides and set distance on them
+        // TODO: if sorted by distance also trigger a rebind to list
+    }
 }
 
 
-public record RideInfo(
-    string Name,
-    int? WaitTimeMinutes,
-    int? PaidWaitTimeMinutes,
-    bool IsOpen
-)
+public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
 {
-    public bool IsClosed => !this.IsOpen;
-    public bool HasWaitTime => this.WaitTimeMinutes.HasValue;
-    public bool HasPaidWaitTime => this.PaidWaitTimeMinutes.HasValue;
-};
+    public string Name => rideTime.Name;
+    public int? WaitTimeMinutes => rideTime.WaitTimeMinutes;
+    public int? PaidWaitTimeMinutes => rideTime.PaidWaitTimeMinutes;
+    public bool IsClosed => !rideTime.IsOpen;
+    public bool HasWaitTime => rideTime.WaitTimeMinutes.HasValue;
+    public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
+
+    [ObservableProperty] string distanceText;
+
+    public void UpdateDistance(Position position)
+    {
+        if (rideTime.Position == null)
+            return;
+
+        var dist = rideTime.Position.GetDistanceTo(position);
+        if (dist.TotalKilometers > 2)
+        {
+            this.DistanceText = "TOO FAR";
+        }
+        else
+        {
+            var meters = Math.Round(dist.TotalMeters, 0);
+            this.DistanceText = $"{meters} m";
+        }
+    }
+}

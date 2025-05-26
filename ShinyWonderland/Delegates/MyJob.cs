@@ -1,27 +1,24 @@
-using System.Text;
 using Shiny.Jobs;
-using Shiny.Notifications;
-using ShinyWonderland.ThemeParksApi;
+using ShinyWonderland.Contracts;
 using Notification = Shiny.Notifications.Notification;
 
-namespace ShinyWonderland.Services;
+namespace ShinyWonderland.Delegates;
 
 
 public class MyJob(
     ILogger<MyJob> logger,
-    IOptions<ParkOptions> parkOptions,
-    IGpsManager gpsManager,
-    TimeProvider timeProvider,
-    AppSettings appSettings,
-    IMediator mediator,
-    INotificationManager notifications
+    CoreServices services
 ) : Job(logger)
 {
     // how old though? - should be a max of 10 mins
-    public EntityLiveDataResponse? LastSnapshot
+    public List<RideTime>? LastSnapshot
     {
         get;
-        set => this.Set(ref field, value);
+        set
+        {
+            field = value;
+            this.RaisePropertyChanged();
+        }
     }
     
 
@@ -37,24 +34,31 @@ public class MyJob(
         // TODO: this should only run if inside the park
         
         this.MinimumTime = TimeSpan.FromMinutes(3); // this only matters when the GPS is running
-        if (!appSettings.EnableNotifications)
+        if (!services.AppSettings.EnableNotifications)
+        {
+            logger.LogInformation("Job notifications is disabled");
             return;
+        }
 
-        var within = await gpsManager.IsWithinPark(parkOptions.Value);
+        var within = await services.IsUserWithinPark(cancelToken);
         if (!within)
         {
             logger.LogInformation("Outside Wonderland, background job will not run");
             return;
         }
         this.EnsureLastSnapshot();
-        var current = await mediator.GetWonderlandData(true, cancelToken);
-        await mediator.Publish(new JobDataRefreshEvent(), cancelToken);
+        var current = await services.Mediator.Request(
+            new GetCurrentRideTimes(), 
+            cancelToken, 
+            ctx => ctx.ForceCacheRefresh()
+        );
+        await services.Mediator.Publish(new JobDataRefreshEvent(), cancelToken);
 
         if (this.LastSnapshot != null)
             await IterateDiff(this.LastSnapshot, current.Result);
 
         this.LastSnapshot = current.Result;
-        this.LastSnapshotTime = timeProvider.GetUtcNow();
+        this.LastSnapshotTime = services.TimeProvider.GetUtcNow();
     }
 
 
@@ -66,8 +70,9 @@ public class MyJob(
         }
         else
         {
-            var now = timeProvider.GetUtcNow();
+            var now = services.TimeProvider.GetUtcNow();
             var diff = now.Subtract(this.LastSnapshotTime.Value);
+            
             if (diff.TotalMinutes <= 30)
             {
                 logger.LogDebug("Snapshot is good at {mins}", diff.TotalMinutes);
@@ -82,17 +87,18 @@ public class MyJob(
     }
 
     
-    async Task IterateDiff(EntityLiveDataResponse previous, EntityLiveDataResponse current)
+    async Task IterateDiff(List<RideTime> previous, List<RideTime> current)
     {
-        foreach (var ride in previous.LiveData)
+        foreach (var ride in previous)
         {
-            var currentRide = current.LiveData.FirstOrDefault(x => x.Id == ride.Id);
-            if (currentRide is { Status: LiveStatusType.OPERATING } && currentRide.Queue.Standby.WaitTime < ride.Queue.Standby.WaitTime)
+            var currentRide = current.FirstOrDefault(x => x.Id == ride.Id);
+            
+            if (currentRide is { IsOpen: true } && currentRide.WaitTimeMinutes < ride.WaitTimeMinutes)
             {
-                var currentWait = currentRide.Queue.Standby.WaitTime;
-                var waitDiff = currentRide.Queue.Standby.WaitTime - ride.Queue.Standby.WaitTime;
+                var currentWait = currentRide.WaitTimeMinutes;
+                var waitDiff = currentRide.WaitTimeMinutes! - ride.WaitTimeMinutes!;
                 
-                await notifications.Send(new Notification
+                await services.Notifications.Send(new Notification
                 {
                     // TODO: would be nice if I could set the ID to the ride entity ID to prevent overlaps in notifications
                     // Id = ride.Id - w

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Shiny.Jobs;
-using ShinyWonderland.Services;
+using ShinyWonderland.Delegates;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland;
@@ -24,7 +24,6 @@ public static class MauiProgram
                 .Add<HoursPage, HoursViewModel>()
             )
             .AddShinyMediator(x => x
-                .AddRequestMiddleware<GetEntityLiveDataHttpRequest, EntityLiveDataResponse, EntityIdInterceptor>()
                 .AddMauiPersistentCache()
                 .AddConnectivityBroadcaster()
                 .UseMaui()
@@ -40,7 +39,8 @@ public static class MauiProgram
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
 #endif
-
+        builder.Services.AddDiscoveredMediatorHandlersFromShinyWonderland();
+        builder.Services.AddSingleton<CoreServices>();
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddShinyService<AppSettings>();

@@ -1,6 +1,6 @@
 using Shiny.Notifications;
 
-namespace ShinyWonderland.Services;
+namespace ShinyWonderland.Delegates;
 
 public class MyGeofenceDelegate(
     ILogger<MyGeofenceDelegate> logger,

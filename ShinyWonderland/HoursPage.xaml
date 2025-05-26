@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:contracts="clr-namespace:ShinyWonderland.Contracts"
              x:DataType="shinyWonderland:HoursViewModel"
              x:Class="ShinyWonderland.HoursPage"
              Title="Hours of Operation">
@@ -13,11 +14,19 @@
             </CollectionView.EmptyView>
             
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="shinyWonderland:ParkSchedule">
+                <DataTemplate x:DataType="shinyWonderland:VmParkSchedule">
                     <VerticalStackLayout>
                         <Label Text="{Binding DateString}" />
-                        <Label Text="{Binding OpeningTime, StringFormat='{0:h:mm tt}'}" />
-                        <Label Text="{Binding ClosingTime, StringFormat='{0:h:mm tt}'}" />
+                        
+                        <Label BindingContext="{Binding Info}">
+                            <Label.FormattedText>
+                                <FormattedString x:DataType="contracts:TimeRange">
+                                    <Span Text="{Binding Open, StringFormat='{0:h:mm tt}'}" />
+                                    <Span Text=" - " />
+                                    <Span Text="{Binding Closed, StringFormat='{0:h:mm tt}'}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

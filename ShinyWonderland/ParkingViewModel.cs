@@ -4,16 +4,13 @@ namespace ShinyWonderland;
 
 
 public partial class ParkingViewModel(
-    IGpsManager gpsManager,
-    AppSettings appSettings,
-    INavigator navigator,
-    IOptions<ParkOptions> parkOptions,
+    CoreServices services,
     ILogger<ParkingViewModel> logger
 ) : ObservableObject
 {
     [ObservableProperty] 
     [NotifyPropertyChangedFor(nameof(CommandText))]
-    Position? parkLocation = appSettings.ParkingLocation;
+    Position? parkLocation = services.AppSettings.ParkingLocation;
 
     [ObservableProperty] bool isBusy;
     
@@ -21,22 +18,22 @@ public partial class ParkingViewModel(
         ? "Set Parking Location to Current Location" 
         : "Remove Parking Location";
 
-    public Position CenterOfPark => parkOptions.Value.CenterOfPark;
-    public int MapStartZoomDistanceMeters => parkOptions.Value.MapStartZoomDistanceMeters;
+    public Position CenterOfPark => services.ParkOptions.Value.CenterOfPark;
+    public int MapStartZoomDistanceMeters => services.ParkOptions.Value.MapStartZoomDistanceMeters;
     
     [RelayCommand]
     async Task ToggleSetLocation()
     {
-        if (appSettings.ParkingLocation == null)
+        if (services.AppSettings.ParkingLocation == null)
         {
-            var result = await gpsManager.RequestAccess(GpsRequest.Realtime(true));
+            var result = await services.Gps.RequestAccess(GpsRequest.Realtime(true));
             if (result is AccessState.Restricted or AccessState.Available)
             {
                 await this.DoLocation();
             }
             else
             {
-                var confirm = await navigator.Confirm(
+                var confirm = await services.Navigator.Confirm(
                     "Permission Denied",
                     "Do you wish to open app settings to change to the necessary permissions?"
                 );
@@ -46,13 +43,13 @@ public partial class ParkingViewModel(
         }
         else
         {
-            var confirm = await navigator.Confirm(
+            var confirm = await services.Navigator.Confirm(
                 "Reset?", 
                 "Are you sure you want to reset the parking location?"
             );
             if (confirm)
             {
-                appSettings.ParkingLocation = null;
+                services.AppSettings.ParkingLocation = null;
                 this.ParkLocation = null;
             }
         }
@@ -64,25 +61,23 @@ public partial class ParkingViewModel(
         try
         {
             this.IsBusy = true;
-            var reading = await gpsManager.GetCurrentPosition().ToTask();
+            var result = await services.TrySetParking(CancellationToken.None);
 
-            var dist = parkOptions.Value.CenterOfPark.GetDistanceTo(reading.Position);
-            if (dist.TotalKilometers > 2)
+            if (result.IsWithinPark)
             {
-                await navigator.Alert(
+                await services.Navigator.Alert(
                     "ERROR",
                     "You aren't close enough to the park to use the parking function"
                 );
             }
             else
             {
-                appSettings.ParkingLocation = reading.Position;
-                this.ParkLocation = reading.Position;
+                this.ParkLocation = result.Position!;
             }
         }
         catch (Exception e)
         {
-            await navigator.Alert("ERROR", "Error retrieving current position");
+            await services.Navigator.Alert("ERROR", "Error retrieving current position");
             logger.LogError(e, "Error retrieving current position");
         }
         finally

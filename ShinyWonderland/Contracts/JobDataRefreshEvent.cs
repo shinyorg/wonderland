@@ -1,3 +1,3 @@
-namespace ShinyWonderland;
+namespace ShinyWonderland.Contracts;
 
 public record JobDataRefreshEvent : IEvent;

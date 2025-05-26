@@ -43,7 +43,7 @@
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center"
                                          HorizontalOptions="Center">
-                        <Image Source="shiny.svg" 
+                        <Image Source="shiny.png" 
                                HeightRequest="100"
                                WidthRequest="100"
                                Opacity="0.6"
@@ -60,7 +60,7 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="local:RideInfo">
+                    <DataTemplate x:DataType="local:RideTimeViewModel">
                         <Border Margin="16,8"
                                Padding="0"
                                Stroke="Transparent"

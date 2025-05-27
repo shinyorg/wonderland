@@ -29,23 +29,23 @@ public class MyJob(
     }
     
     
+    
     protected override async Task Run(CancellationToken cancelToken)
     {
-        // TODO: shiny foreground services execute immediately on startup - we don't want that
-        this.MinimumTime = TimeSpan.FromMinutes(5); 
-
         if (!services.AppSettings.EnableNotifications)
         {
             logger.LogInformation("Job notifications is disabled");
             return;
         }
         
-        var within = await services.IsUserWithinPark(cancelToken);
-        if (!within)
-        {
-            logger.LogInformation("Outside Wonderland, background job will not run");
+        if (!this.IsTimeToRun())
             return;
-        }
+
+        if (!await this.IsInPark(cancelToken))
+            return;
+
+        // if (this.LastRunTime)
+        // TODO: if the last snapshot is null, we'll let the mainpage pick it up first
         this.EnsureLastSnapshot();
         var current = await services.Mediator.Request(
             new GetCurrentRideTimes(), 
@@ -62,7 +62,7 @@ public class MyJob(
     }
 
 
-    void EnsureLastSnapshot()
+    internal void EnsureLastSnapshot()
     {
         if (this.LastSnapshotTime == null)
         {
@@ -87,7 +87,7 @@ public class MyJob(
     }
 
     
-    async Task IterateDiff(List<RideTime> previous, List<RideTime> current)
+    internal async Task IterateDiff(List<RideTime> previous, List<RideTime> current)
     {
         foreach (var ride in previous)
         {
@@ -106,6 +106,39 @@ public class MyJob(
                     Message = $"{ride.Name} is now a {currentWait} minute wait.  Down {waitDiff} minutes"
                 });
             }
+        }
+    }
+
+
+    internal bool IsTimeToRun()
+    {
+        if (this.LastSnapshotTime == null)
+            return true;
+
+        var ts = this.LastSnapshotTime.Value.Subtract(services.TimeProvider.GetUtcNow());
+        logger.LogInformation("Job last ran {mins} mins ago", ts.TotalMinutes);
+        return ts.TotalMinutes >= 5;
+    }
+
+    
+    internal async Task<bool> IsInPark(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var within = await services.IsUserWithinPark(cancellationToken);
+            logger.LogInformation("User is near/within park: {flag}", within);
+            if (!within)
+            {
+                logger.LogInformation("Outside Wonderland, background job will not run");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Could not get GPS coordinates in job");
+            return false;
         }
     }
 }

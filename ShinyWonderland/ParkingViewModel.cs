@@ -35,7 +35,9 @@ public partial class ParkingViewModel(
             {
                 var confirm = await services.Navigator.Confirm(
                     "Permission Denied",
-                    "Do you wish to open app settings to change to the necessary permissions?"
+                    "Do you wish to open app settings to change to the necessary permissions?",
+                    "Yes", 
+                    "No"
                 );
                 if (confirm)
                     AppInfo.ShowSettingsUI();
@@ -45,7 +47,9 @@ public partial class ParkingViewModel(
         {
             var confirm = await services.Navigator.Confirm(
                 "Reset?", 
-                "Are you sure you want to reset the parking location?"
+                "Are you sure you want to reset the parking location?",
+                "Yes",
+                "No"
             );
             if (confirm)
             {
@@ -71,13 +75,14 @@ public partial class ParkingViewModel(
             {
                 await services.Navigator.Alert(
                     "ERROR",
-                    "You aren't close enough to the park to use the parking function"
+                    "You aren't close enough to the park to use the parking function",
+                    "OK"
                 );
             }
         }
         catch (Exception e)
         {
-            await services.Navigator.Alert("ERROR", "Error retrieving current position");
+            await services.Navigator.Alert("ERROR", "Error retrieving current position", "OK");
             logger.LogError(e, "Error retrieving current position");
         }
         finally

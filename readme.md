@@ -12,12 +12,14 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Smart HTTP client generation](https://shinylib.net/mediator/extensions/http/)
   * [Persistent app cache](https://shinylib.net/mediator/middleware/caching/#persistent-cache)
   * [Event Broadcasting](https://shinylib.net/mediator/events/) with [MAUI support](https://shinylib.net/mediator/extensions/maui/)
+  * [HTTP Calls](https://shinylib.net/mediator/extensions/http)
 * [Shiny Mobile Libraries](https://github.com/shinyorg/shiny) - [Documentation](https://shinylib.net)
-  * Periodic Background Jobs - Shiny.Jobs
-  * Background GPS - Shiny.Locations
-  * Geofencing - Shiny.Locations
-  * Local Notifications - Shiny.Notifications
-  * Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration - Shiny.Extensions.Configuration
+  * [Periodic Background Jobs](https://shinylib.net/client/jobs/) using Shiny.Jobs
+  * [Background GPS](https://shinylib.net/client/locations/gps/) using Shiny.Locations
+  * [Geofencing](https://shinylib.net/client/locations/geofencing/) using Shiny.Locations
+  * [Local Notifications](https://shinylib.net/client/notifications/) using Shiny.Notifications
+  * [Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration](https://shinylib.net/client/other/configuration/) using Shiny.Extensions.Configuration
+* [Shiny MAUI Shell Extensions](https://github.com/shinyorg/maui) using Shiny.Maui.Shell - Shell navigation made pleasant
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
 
@@ -39,7 +41,7 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Park Hours of Operation
 * Geofence notification reminder for entering to remind user to open app (so GPS is enabled) and to set parking area
 * GPS based notifications while in the park notifying you if ride times have been reduced - GPS shuts off once outside of park
-* Easy example of a navigation service based on Shell without ViewModel lifecycle
+* Easy example of a navigation service based on Shell without ViewModel lifecycle [Shiny MAUI Shell](https://github.com/shinyorg/maui)
 
 ## KNOWN ISSUES
 * New Geofence API for iOS 18 is not yet working in Shiny v4 beta

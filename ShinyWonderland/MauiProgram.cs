@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using Shiny.Jobs;
+﻿using Shiny.Jobs;
 using ShinyWonderland.Delegates;
 using ShinyWonderland.ThemeParksApi;
 
@@ -14,9 +13,8 @@ public static class MauiProgram
         var builder = MauiApp
             .CreateBuilder()
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .UseShiny()
             .UseMauiMaps()
+            .UseShiny()
             .UseShinyShell(x => x
                 .Add<MainPage, MainViewModel>(registerRoute: false) // registered in Shell XAML
                 .Add<SettingsPage, SettingsViewModel>()

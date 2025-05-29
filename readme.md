@@ -4,7 +4,7 @@ This app does serve a functional purpose in that it shows available ride times t
 This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 
 This app works offline without issue.
-  
+
 ## Technology
 This app uses several .NET open source technologies from [Shiny](https://github.com/shinyorg)
 
@@ -76,3 +76,13 @@ Mediator can cache data with nothing more than configuration in appsettings.json
 > What is the purpose of CoreServices?  This is over complicated dependency injection stuff!
 
 Is it?  Those services are used in pretty much every major class in the app.  This helps alleviate the pain of injecting a TON of services in every constructor
+
+
+## SCREENSHOTS
+
+It isn't super pretty, but AI built it.  This is about functionality and making shiny code!
+
+![image1](assets/1.PNG)
+![image2](assets/2.PNG)
+![image3](assets/3.PNG)
+![image4](assets/4.PNG)

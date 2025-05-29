@@ -21,10 +21,7 @@
         <ApplicationVersion>1</ApplicationVersion>
 
         <MauiVersion>9.0.70</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0075</ShinyVersion>
-        <MediatorVersion>4.4.0-beta-0004</MediatorVersion>
-        <!--slower build, faster runtime in DEBUG-->
-        <!-- <_MauiForceXamlCForDebug Condition="'$(Configuration)' == 'Debug'">true</_MauiForceXamlCForDebug> -->
+        <ShinyVersion>4.0.0-beta-0079</ShinyVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
@@ -110,7 +107,7 @@
         <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" Condition="'$(Configuration)' == 'Debug'" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0-beta-0006" />
+        <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0-beta-0010" />
         <PackageReference Include="Shiny.Mediator.Maui" Version="4.4.0-beta-0017" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>

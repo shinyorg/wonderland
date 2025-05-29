@@ -10,7 +10,6 @@ public class MyJob(
     CoreServices services
 ) : Job(logger)
 {
-    // how old though? - should be a max of 10 mins
     public List<RideTime>? LastSnapshot
     {
         get;
@@ -44,20 +43,13 @@ public class MyJob(
         if (!await this.IsInPark(cancelToken))
             return;
 
-        // if (this.LastRunTime)
-        // TODO: if the last snapshot is null, we'll let the mainpage pick it up first
         this.EnsureLastSnapshot();
-        var current = await services.Mediator.Request(
-            new GetCurrentRideTimes(), 
-            cancelToken, 
-            ctx => ctx.ForceCacheRefresh()
-        );
-        await services.Mediator.Publish(new JobDataRefreshEvent(), cancelToken);
+        var current = await GetCurrentData(cancelToken).ConfigureAwait(false);
 
         if (this.LastSnapshot != null)
-            await IterateDiff(this.LastSnapshot, current.Result);
+            await IterateDiff(this.LastSnapshot, current);
         
-        this.LastSnapshot = current.Result;
+        this.LastSnapshot = current;
         this.LastSnapshotTime = services.TimeProvider.GetUtcNow();
     }
 
@@ -132,7 +124,6 @@ public class MyJob(
                 logger.LogInformation("Outside Wonderland, background job will not run");
                 return false;
             }
-
             return true;
         }
         catch (Exception ex)
@@ -140,5 +131,46 @@ public class MyJob(
             logger.LogWarning(ex, "Could not get GPS coordinates in job");
             return false;
         }
+    }
+
+
+    internal async Task<List<RideTime>> GetCurrentData(CancellationToken cancellationToken)
+    {
+        var current = await services.Mediator.Request(
+            new GetCurrentRideTimes(), 
+            cancellationToken
+        );
+        var list = current.Result;
+        var fireEvent = true;
+        var cacheInfo = current.Context.Cache();
+
+        if (cacheInfo == null)
+        {
+            logger.LogInformation("Data is fresh and not from cache");
+        }
+        else
+        {
+            fireEvent = false;
+            
+            var age = services.TimeProvider.GetUtcNow().Subtract(cacheInfo.Timestamp);
+            if (age.TotalMinutes >= 5)
+            {
+                logger.LogInformation("Cache data is too old - {age}", age);
+                current = await services.Mediator.Request(
+                    new GetCurrentRideTimes(), 
+                    cancellationToken,
+                    ctx => ctx.ForceCacheRefresh()
+                );
+                list = current.Result;
+            }
+        }
+
+        if (fireEvent)
+        {
+            logger.LogInformation("Firing data refresh event");
+            await services.Mediator.Publish(new JobDataRefreshEvent(), cancellationToken);
+        }
+
+        return list;
     }
 }

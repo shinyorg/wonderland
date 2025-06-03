@@ -5,6 +5,7 @@ using ShinyWonderland.Contracts;
 namespace ShinyWonderland;
 
 
+[ShellMap<MainPage>(registerRoute: false)]
 public partial class MainViewModel(
     CoreServices services,
     ILogger<MainViewModel> logger,
@@ -30,8 +31,8 @@ public partial class MainViewModel(
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
-    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateTo("SettingsPage", ("Test", "HELLO"));
-    [RelayCommand] Task NavToParking() => services.Navigator.NavigateTo("ParkingPage");
+    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateToSettings();
+    [RelayCommand] Task NavToParking() => services.Navigator.NavigateToParking();
     
 
     public async void OnAppearing()

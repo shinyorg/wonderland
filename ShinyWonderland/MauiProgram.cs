@@ -15,12 +15,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiMaps()
             .UseShiny()
-            .UseShinyShell(x => x
-                .Add<MainPage, MainViewModel>(registerRoute: false) // registered in Shell XAML
-                .Add<SettingsPage, SettingsViewModel>()
-                .Add<ParkingPage, ParkingViewModel>()
-                .Add<HoursPage, HoursViewModel>()
-            )
+            .UseShinyShell(x => x.AddGeneratedMaps())
             .AddShinyMediator(x => x
                 .AddMauiPersistentCache()
                 .AddConnectivityBroadcaster()

@@ -1,8 +1,7 @@
-
-
 namespace ShinyWonderland;
 
 
+[ShellMap<ParkingPage>]
 public partial class ParkingViewModel(
     CoreServices services,
     ILogger<ParkingViewModel> logger
@@ -35,9 +34,7 @@ public partial class ParkingViewModel(
             {
                 var confirm = await services.Navigator.Confirm(
                     "Permission Denied",
-                    "Do you wish to open app settings to change to the necessary permissions?",
-                    "Yes", 
-                    "No"
+                    "Do you wish to open app settings to change to the necessary permissions?"
                 );
                 if (confirm)
                     AppInfo.ShowSettingsUI();
@@ -47,9 +44,7 @@ public partial class ParkingViewModel(
         {
             var confirm = await services.Navigator.Confirm(
                 "Reset?", 
-                "Are you sure you want to reset the parking location?",
-                "Yes",
-                "No"
+                "Are you sure you want to reset the parking location?"
             );
             if (confirm)
             {

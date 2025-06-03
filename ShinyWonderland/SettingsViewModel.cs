@@ -1,10 +1,7 @@
-using System.ComponentModel;
-using Shiny.Locations;
-using ShinyWonderland.Services;
-
 namespace ShinyWonderland;
 
 
+[ShellMap<SettingsPage>]
 public partial class SettingsViewModel(
     AppSettings appSettings,
     IGpsManager gpsManager,

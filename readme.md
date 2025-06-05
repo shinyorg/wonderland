@@ -37,6 +37,7 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Decent AI Generated .NET MAUI pure control set with light & dark modes
 * Show ride times (including paid times if available) for Canada's Wonderland whether you are inside the park or now
 * Ability to filter out closed rides, & rides that don't have an estimated time
+* Smart & Cross Session Persistent Cache for those time your phone goes offline
 * Basic parking locator
 * Park Hours of Operation
 * Geofence notification reminder for entering to remind user to open app (so GPS is enabled) and to set parking area
@@ -44,7 +45,6 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Easy example of a navigation service based on Shell without ViewModel lifecycle [Shiny MAUI Shell](https://github.com/shinyorg/maui)
 
 ## KNOWN ISSUES
-* New Geofence API for iOS 18 is not yet working in Shiny v4 beta
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed
 * Distance - Sorting and Display (WIP)

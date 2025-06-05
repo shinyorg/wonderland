@@ -107,7 +107,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" Condition="'$(Configuration)' == 'Debug'" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0-beta-0021" />
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.4.0-beta-0023" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="4.4.0" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

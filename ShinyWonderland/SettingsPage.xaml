@@ -34,11 +34,6 @@
             <Setter Property="Margin" Value="0, 10" />
         </Style>
     </ContentPage.Resources>
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Hours" 
-                     Command="{Binding NavToHoursCommand}"/>
-    </ContentPage.ToolbarItems>
     
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="0, 20">

@@ -1,7 +1,7 @@
 namespace ShinyWonderland;
 
 
-[ShellMap<ParkingPage>]
+[ShellMap<ParkingPage>(registerRoute: false)]
 public partial class ParkingViewModel(
     CoreServices services,
     ILogger<ParkingViewModel> logger

@@ -6,13 +6,8 @@
              x:Class="ShinyWonderland.MainPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="{Binding Title}">
-    
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Settings" 
-                     Command="{Binding NavToSettingsCommand}"/>
-    </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto, Auto, *, Auto"
+    <Grid RowDefinitions="Auto, Auto, *"
           RowSpacing="0"
           Padding="0">
         <Label Text="You are currently offline"
@@ -129,9 +124,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-        
-        <Button Text="Parking" 
-                Command="{Binding NavToParkingCommand}"
-                Grid.Row="3"/>
     </Grid>
 </ContentPage>

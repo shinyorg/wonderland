@@ -3,7 +3,7 @@ using ShinyWonderland.Contracts;
 namespace ShinyWonderland;
 
 
-[ShellMap<HoursPage>]
+[ShellMap<HoursPage>(registerRoute: false)]
 public partial class HoursViewModel(
     IMediator mediator, 
     TimeProvider timeProvider

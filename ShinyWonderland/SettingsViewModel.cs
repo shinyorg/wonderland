@@ -1,14 +1,13 @@
 namespace ShinyWonderland;
 
 
-[ShellMap<SettingsPage>]
+[ShellMap<SettingsPage>(registerRoute: false)]
 public partial class SettingsViewModel(
     AppSettings appSettings,
     IGpsManager gpsManager,
     INavigator navigator
 ) : ObservableObject
 {
-    [RelayCommand] Task NavToHours() => navigator.NavigateTo("HoursPage");
     public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time", "Distance"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
     {

@@ -31,10 +31,7 @@ public partial class MainViewModel(
     public partial bool IsConnected { get; private set; }
     public bool IsNotConnected => !IsConnected;
     
-    [RelayCommand] Task NavToSettings() => services.Navigator.NavigateToSettings();
-    [RelayCommand] Task NavToParking() => services.Navigator.NavigateToParking();
     
-
     public async void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);
@@ -109,8 +106,9 @@ public partial class MainViewModel(
             logger.LogError(ex, "Failed to start GPS");
         }
     }
-    
 
+
+    const string GEOFENCE_ID = "ThemePark";
     async Task TryGeofencing()
     {
         var access = await geofenceManager.RequestAccess();
@@ -118,12 +116,12 @@ public partial class MainViewModel(
         {
             var exists = geofenceManager
                 .GetMonitorRegions()
-                .Any(x => x.Identifier == "Wonderland");
+                .Any(x => x.Identifier == GEOFENCE_ID);
             
             if (!exists)
             {
                 await geofenceManager.StartMonitoring(new GeofenceRegion(
-                    "Wonderland",
+                    GEOFENCE_ID,
                     services.ParkOptions.Value.CenterOfPark,
                     services.ParkOptions.Value.NotificationDistance
                 ));

@@ -1,8 +1,8 @@
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
-using Distance = Shiny.Distance;
 
 namespace ShinyWonderland;
+
 
 public partial class ParkingPage : ContentPage
 {
@@ -17,24 +17,18 @@ public partial class ParkingPage : ContentPage
     protected override void OnBindingContextChanged()
     {
         var vm = (ParkingViewModel)this.BindingContext;
+        if (vm.ParkLocation != null)
+            this.SetPin(vm.ParkLocation);
+        
         this.sub = vm
             .WhenAnyProperty()
             .Where(x => x.PropertyName == nameof(ParkingViewModel.ParkLocation))
             .Subscribe(_ =>
             {
                 if (vm.ParkLocation == null)
-                {
                     this.ParkingMap.Pins.Clear();
-                }
                 else
-                {
-                    this.ParkingMap.Pins.Add(new Pin
-                    {
-                        Label = "YOU PARKED HERE",
-                        Type = PinType.SavedPin,
-                        Location = new Location(vm.ParkLocation.Latitude, vm.ParkLocation.Longitude)
-                    });
-                }
+                    this.SetPin(vm.ParkLocation);
             });
 
         var mapSpan = MapSpan.FromCenterAndRadius(
@@ -45,9 +39,21 @@ public partial class ParkingPage : ContentPage
         base.OnBindingContextChanged();
     }
 
+    
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         this.sub?.Dispose();
+    }
+
+
+    void SetPin(Position position)
+    {
+        this.ParkingMap.Pins.Add(new Pin
+        {
+            Label = "YOU PARKED HERE",
+            Type = PinType.SavedPin,
+            Location = new Location(position.Latitude, position.Longitude)
+        });
     }
 }

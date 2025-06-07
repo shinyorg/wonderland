@@ -70,14 +70,13 @@ public partial class ParkingViewModel(
             {
                 await services.Navigator.Alert(
                     "ERROR",
-                    "You aren't close enough to the park to use the parking function",
-                    "OK"
+                    "You aren't close enough to the park to use the parking function"
                 );
             }
         }
         catch (Exception e)
         {
-            await services.Navigator.Alert("ERROR", "Error retrieving current position", "OK");
+            await services.Navigator.Alert("ERROR", "Error retrieving current position");
             logger.LogError(e, "Error retrieving current position");
         }
         finally

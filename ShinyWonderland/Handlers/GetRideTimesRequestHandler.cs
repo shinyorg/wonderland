@@ -52,7 +52,7 @@ public class GetRideTimesRequestHandler(
 
             if (live != null)
             {
-                var wt = live.Queue?.PaidStandby?.WaitTime;
+                var wt = live.Queue?.Standby?.WaitTime;
                 if (wt != null)
                     waitTime = Convert.ToInt32(wt);
 

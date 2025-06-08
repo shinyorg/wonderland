@@ -1,6 +1,6 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-  <polyline points="12,6 12,12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  <text x="12" y="16" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="currentColor">HRS</text>
+  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+  <polyline points="12,6 12,12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="12" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="currentColor">HRS</text>
   <circle cx="12" cy="12" r="1" fill="currentColor"/>
 </svg>

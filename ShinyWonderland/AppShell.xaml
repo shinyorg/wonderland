@@ -6,16 +6,16 @@
        x:DataType="local:AppShell">
     
     <TabBar>
-        <Tab Title="Ride Time" Icon="ride_time.png">
+        <Tab Title="Ride Time" Icon="ride_time">
             <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
-        <Tab Title="Settings" Icon="settings.png">
+        <Tab Title="Settings" Icon="settings">
             <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
-        <Tab Title="Parking" Icon="parking.png">
+        <Tab Title="Parking" Icon="parking">
             <ShellContent ContentTemplate="{DataTemplate local:ParkingPage}" />
         </Tab>
-        <Tab Title="Hours" Icon="hours.png">
+        <Tab Title="Hours" Icon="hours">
             <ShellContent ContentTemplate="{DataTemplate local:HoursPage}" />
         </Tab>
     </TabBar>

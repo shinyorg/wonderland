@@ -44,6 +44,15 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * GPS based notifications while in the park notifying you if ride times have been reduced - GPS shuts off once outside of park
 * Easy example of a navigation service based on Shell without ViewModel lifecycle [Shiny MAUI Shell](https://github.com/shinyorg/maui)
 
+## WIP
+* Meal Time (Notify on timer passed?) - use Notification Timer (what about distance)
+  * Link in tabs IF enabled?
+  * Separate drink & food passes
+  * Maybe turn this option on in settings instead
+* Ride History
+  * Button on Ride Times to say "rode"
+  * Toolbar button to ride history
+
 ## KNOWN ISSUES
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             x:DataType="shinyWonderland:MealTimeViewModel"
+             x:Class="ShinyWonderland.MealTimePage"
+             Title="Meal Times">
+    <Grid>
+        <Button Text="Time Remaining OR Use Drink Pass" />
+        <Button Text="Time Remaining OR Use Food Pass" />
+        <CollectionView>
+            <CollectionView.EmptyView>
+                <Label Text="No Meal Time History" />
+            </CollectionView.EmptyView>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

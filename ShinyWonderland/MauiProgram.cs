@@ -29,6 +29,9 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
+        builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealTime"));
+        
         builder.Configuration.AddJsonPlatformBundle();
 #if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
@@ -36,7 +39,7 @@ public static class MauiProgram
 #endif
         builder.Services.AddDiscoveredMediatorHandlersFromShinyWonderland();
         builder.Services.AddSingleton<CoreServices>();
-        builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
+        
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddNotifications();

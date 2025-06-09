@@ -15,7 +15,7 @@ public class MyGeofenceDelegate(
         switch (newStatus)
         {
             case GeofenceState.Entered:
-                if (appSettings.EnableGeofenceReminder)
+                if (appSettings.EnableGeofenceNotifications)
                 {
                     await notifications.Send(
                         "Wonderland Reminder",

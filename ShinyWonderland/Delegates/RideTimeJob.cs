@@ -5,8 +5,8 @@ using Notification = Shiny.Notifications.Notification;
 namespace ShinyWonderland.Delegates;
 
 
-public class MyJob(
-    ILogger<MyJob> logger,
+public class RideTimeJob(
+    ILogger<RideTimeJob> logger,
     CoreServices services
 ) : Job(logger)
 {
@@ -31,7 +31,7 @@ public class MyJob(
     
     protected override async Task Run(CancellationToken cancelToken)
     {
-        if (!services.AppSettings.EnableNotifications)
+        if (!services.AppSettings.EnableTimeRideNotifications)
         {
             logger.LogInformation("Job notifications is disabled");
             return;

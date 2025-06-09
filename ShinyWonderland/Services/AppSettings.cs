@@ -5,8 +5,10 @@ namespace ShinyWonderland.Services;
 
 public partial class AppSettings : ObservableObject
 {
-    [ObservableProperty] bool enableNotifications = true;
-    [ObservableProperty] bool enableGeofenceReminder = true;
+    [ObservableProperty] bool enableTimeRideNotifications = true;
+    [ObservableProperty] bool enableGeofenceNotifications = true;
+    [ObservableProperty] bool enableDrinkNotifications = true;
+    [ObservableProperty] bool enableMealNotifications = true;
     [ObservableProperty] bool showOpenOnly = true;
     [ObservableProperty] bool showTimedOnly = true;
     [ObservableProperty] RideOrder ordering = RideOrder.Name;

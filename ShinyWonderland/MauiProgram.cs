@@ -52,8 +52,12 @@ public static class MauiProgram
         builder.Services.AddGeofencing<MyGeofenceDelegate>();
         builder.Services.AddGps<MyGpsDelegate>();
         builder.Services.AddJob(
-            typeof(MyJob),
+            typeof(RideTimeJob),
             requiredNetwork: InternetAccess.Any,
+            runInForeground: true
+        );
+        builder.Services.AddJob(
+            typeof(MealTimeJob),
             runInForeground: true
         );
         var app = builder.Build();

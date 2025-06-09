@@ -47,8 +47,8 @@
             <Border Style="{StaticResource SettingsCardStyle}">
                 <VerticalStackLayout Spacing="20">
                     <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Enable Notifications" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableNotifications}" 
+                        <Label Text="Enable Time Ride Notifications" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding EnableTimeRideNotifications}" 
                                  VerticalOptions="Center"
                                  Color="{StaticResource Primary}" />
                     </HorizontalStackLayout>
@@ -58,8 +58,41 @@
                              HorizontalOptions="Fill" />
                     
                     <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Show Open Only" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding ShowOpenOnly}" 
+                                  VerticalOptions="Center"
+                                  Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
                         <Label Text="Enable Park Arrival Notification" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableGeofenceReminder}" 
+                        <CheckBox IsChecked="{Binding EnableGeofenceNotifications}" 
+                                  VerticalOptions="Center"
+                                  Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Enable Drink Notification" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding EnableDrinkNotifications}" 
+                                  VerticalOptions="Center"
+                                  Color="{StaticResource Primary}" />
+                    </HorizontalStackLayout>
+                    
+                    <BoxView HeightRequest="1" 
+                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
+                             HorizontalOptions="Fill" />
+                    
+                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
+                        <Label Text="Enable Meal Notification" Style="{StaticResource SettingLabelStyle}" />
+                        <CheckBox IsChecked="{Binding EnableMealNotifications}" 
                                   VerticalOptions="Center"
                                   Color="{StaticResource Primary}" />
                     </HorizontalStackLayout>
@@ -84,18 +117,6 @@
                         <CheckBox IsChecked="{Binding ShowOpenOnly}" 
                                  VerticalOptions="Center"
                                  Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Notifications Active" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding IsNotificationActive}" 
-                                  IsEnabled="False"
-                                  VerticalOptions="Center"
-                                  Color="{StaticResource Primary}" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Border>

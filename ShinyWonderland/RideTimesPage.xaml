@@ -61,8 +61,8 @@
                                Stroke="Transparent"
                                StrokeShape="RoundRectangle 10"
                                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
-                            <Grid RowDefinitions="Auto, Auto"
-                                  ColumnDefinitions="1*, 1*, 1*, 1*"
+                            <Grid RowDefinitions="Auto, Auto, Auto"
+                                  ColumnDefinitions="2*, 2*, 1*"
                                   Padding="16">
 
                                 <Label Text="{Binding Name}"
@@ -90,16 +90,17 @@
 
                                 <Label Text="{Binding DistanceText}"
                                        TextColor="{StaticResource Blue100Accent}"
+                                       IsVisible="{Binding IsOpen}"
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Start"
-                                       Grid.Row="1"
+                                       Grid.Row="3"
                                        Grid.Column="2" />
-                                <!-- <Label Text="{Binding PaidAmount}" -->
-                                <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
+
                                 <Button Text="Add Ride"
                                         Command="{Binding AddRideCommand}" 
-                                        IsVisible="{Binding IsOpen}"
-                                        Grid.Row="1"
+                                        IsVisible="{Binding CanAddRide}"
+                                        HorizontalOptions="Center"
+                                        Grid.RowSpan="3"
                                         Grid.Column="3" />
                                 
                                 <Border IsVisible="{Binding IsClosed}"

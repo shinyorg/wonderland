@@ -239,10 +239,11 @@ public partial class RideTimeViewModel(
     public bool HasWaitTime => rideTime.WaitTimeMinutes.HasValue;
     public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
     public int? DistanceMeters { get; private set; }
+    public bool CanAddRide => this.IsOpen && this.DistanceMeters != null;
     
     [ObservableProperty] string distanceText;
 
-    [RelayCommand(CanExecute = nameof(CanAddRide))]
+    [RelayCommand]
     async Task AddRide()
     {
         var confirm = await navigator.Confirm("History?", $"Add a new ride history for '{this.Name}'?");
@@ -252,7 +253,7 @@ public partial class RideTimeViewModel(
             await mediator.Send(new AddRideCommand(rideTime.Id, this.Name));
         }
     }
-    bool CanAddRide() => this.IsOpen && this.DistanceMeters != null;
+    
     
     public void UpdateDistance(Position position)
     {
@@ -260,16 +261,9 @@ public partial class RideTimeViewModel(
             return;
 
         var dist = rideTime.Position.GetDistanceTo(position);
-        if (dist.TotalKilometers > 2)
-        { 
-            this.DistanceText = "TOO FAR";
-            this.DistanceMeters = null;
-        }
-        else
-        {
-            this.DistanceMeters = Convert.ToInt32(Math.Round(dist.TotalMeters, 0));
-            this.DistanceText = $"{this.DistanceMeters} m";
-        }
+        this.DistanceMeters = Convert.ToInt32(Math.Round(dist.TotalMeters, 0));
+        this.DistanceText = $"{this.DistanceMeters} m";
+
         this.AddRideCommand.NotifyCanExecuteChanged();
     }
 }

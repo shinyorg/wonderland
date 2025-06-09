@@ -42,7 +42,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<CoreServices>();
         
         builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddSingleton(() =>
+        builder.Services.AddSingleton<SQLiteAsyncConnection>(_ =>
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));

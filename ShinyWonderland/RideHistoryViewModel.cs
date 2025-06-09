@@ -1,13 +1,18 @@
+using ShinyWonderland.Handlers;
+
 namespace ShinyWonderland;
 
 
-[ShellMap<MealTimePage>]
+[ShellMap<RideHistoryPage>]
 public partial class RideHistoryViewModel(
     IMediator mediator
 ) : ObservableObject, IPageLifecycleAware
 {
-    public void OnAppearing()
+    [ObservableProperty] List<RideHistoryRecord> history;
+    
+    public async void OnAppearing()
     {
+        this.History = (await mediator.Request(new GetRideHistory())).Result;
     }
 
     

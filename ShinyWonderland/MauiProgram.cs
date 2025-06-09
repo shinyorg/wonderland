@@ -1,6 +1,7 @@
 ﻿using Shiny.Jobs;
 using ShinyWonderland.Delegates;
 using ShinyWonderland.ThemeParksApi;
+using SQLite;
 
 namespace ShinyWonderland;
 
@@ -41,6 +42,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<CoreServices>();
         
         builder.Services.AddSingleton(TimeProvider.System);
+        builder.Services.AddSingleton(() =>
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));
+        });
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddNotifications();
         builder.Services.AddGeofencing<MyGeofenceDelegate>();

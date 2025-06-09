@@ -14,7 +14,7 @@ public class GetRideTimesRequestHandler(
         // these calls are done sequentially as themepark api doesn't like multiple requests at the same time
         
         // these http calls are not cached - the outcome of this handler is which is why we don't do any filters or sorts here
-        var liveData = await context.Request(
+        var liveDataTask = context.Request(
             new GetEntityLiveDataHttpRequest
             {
                 EntityID = parkOptions.Value.EntityId
@@ -22,7 +22,7 @@ public class GetRideTimesRequestHandler(
             cancellationToken
         );
 
-        var childData = await context.Request(
+        var childDataTask = context.Request(
             new GetEntityChildrenHttpRequest
             {
                 EntityID = parkOptions.Value.EntityId
@@ -30,10 +30,15 @@ public class GetRideTimesRequestHandler(
             cancellationToken
         );
 
-        return MergeData(liveData, childData);
-    }
+        var lastRidesTask = context.Request(new GetParkLastRiddenTimes(), cancellationToken);
+        
+        await Task.WhenAll(liveDataTask, childDataTask, lastRidesTask).ConfigureAwait(false);
 
-    static List<RideTime> MergeData(EntityLiveDataResponse liveData, EntityChildrenResponse childData)
+        return MergeData(liveDataTask.Result, childDataTask.Result, lastRidesTask.Result);
+    }
+    
+
+    static List<RideTime> MergeData(EntityLiveDataResponse liveData, EntityChildrenResponse childData, List<LastRideTime> lastRides)
     {
         var list = new List<RideTime>();
         foreach (var rideInfo in childData.Children)
@@ -63,13 +68,16 @@ public class GetRideTimesRequestHandler(
                 open = live.Status == LiveStatusType.OPERATING;
             }
 
+            var lastRide = lastRides.FirstOrDefault(x => x.RideId == rideInfo.Id)?.Timestamp;
+            
             list.Add(new RideTime(
                 rideInfo.Id,
                 rideInfo.Name,
                 waitTime,
                 paidWaitTime,
                 position,
-                open
+                open,
+                lastRide
             ));
         }
 

@@ -25,6 +25,7 @@ public class MealTimeHandlers : ICommandHandler<AddMealTime>, IRequestHandler<Ge
         this.timeProvider = timeProvider;
         this.notifications = notifications;
         this.options = options.Value;
+        this.data.GetConnection().CreateTable<MealTimeHistoryRecord>();
     }
     
 
@@ -37,12 +38,20 @@ public class MealTimeHandlers : ICommandHandler<AddMealTime>, IRequestHandler<Ge
     }
     
 
-    public Task<List<MealTimeHistoryRecord>> Handle(GetMealTimeHistory request, IMediatorContext context, CancellationToken cancellationToken)
+    public async Task<List<MealTimeHistoryRecord>> Handle(GetMealTimeHistory request, IMediatorContext context, CancellationToken cancellationToken)
     {
-        return this.data
+        var result = await this.data
             .Table<MealTimeHistoryRecord>()
             .OrderBy(x => x.Timestamp)
             .ToListAsync();
+
+        return result
+            .Select(x =>
+            {
+                x.Timestamp = x.Timestamp.LocalDateTime;
+                return x;
+            })
+            .ToList();
     }
 }
 

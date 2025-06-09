@@ -1,8 +1,9 @@
 ﻿namespace ShinyWonderland;
 
-public partial class MainPage : ContentPage
+
+public partial class RideTimesPage : ContentPage
 {
-    public MainPage()
+    public RideTimesPage()
     {
         this.InitializeComponent();
     }

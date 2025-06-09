@@ -9,5 +9,6 @@ public record RideTime(
     int? WaitTimeMinutes,
     int? PaidWaitTimeMinutes,
     Position? Position,
-    bool IsOpen
+    bool IsOpen,
+    DateTimeOffset? LastRidden
 );

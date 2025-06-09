@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:handlers="clr-namespace:ShinyWonderland.Handlers"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
              Title="Ride History">
@@ -11,8 +12,11 @@
         </CollectionView.EmptyView>
         
         <CollectionView.ItemTemplate>
-            <DataTemplate>
-                
+            <DataTemplate x:DataType="handlers:RideHistoryRecord">
+                <VerticalStackLayout>
+                    <Label Text="" />
+                    <Label Text="" />
+                </VerticalStackLayout>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

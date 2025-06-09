@@ -1,14 +1,15 @@
 ﻿using System.Reactive.Disposables;
 using Humanizer;
 using ShinyWonderland.Contracts;
+using ShinyWonderland.Handlers;
 
 namespace ShinyWonderland;
 
 
-[ShellMap<MainPage>(registerRoute: false)]
-public partial class MainViewModel(
+[ShellMap<RideTimesPage>(registerRoute: false)]
+public partial class RideTimesViewModel(
     CoreServices services,
-    ILogger<MainViewModel> logger,
+    ILogger<RideTimesViewModel> logger,
     IGeofenceManager geofenceManager
 ) : 
     ObservableObject, 
@@ -166,7 +167,7 @@ public partial class MainViewModel(
         var query = rides
             .Select(x =>
             {
-                var vm = new RideTimeViewModel(x);
+                var vm = new RideTimeViewModel(x, services.Navigator, services.Mediator);
                 if (this.currentPosition != null)
                     vm.UpdateDistance(this.currentPosition);
                 
@@ -224,7 +225,11 @@ public partial class MainViewModel(
 }
 
 
-public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
+public partial class RideTimeViewModel(
+    RideTime rideTime,
+    INavigator navigator,
+    IMediator mediator
+) : ObservableObject
 {
     public string Name => rideTime.Name;
     public int? WaitTimeMinutes => rideTime.WaitTimeMinutes;
@@ -237,6 +242,18 @@ public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
     
     [ObservableProperty] string distanceText;
 
+    [RelayCommand(CanExecute = nameof(CanAddRide))]
+    async Task AddRide()
+    {
+        var confirm = await navigator.Confirm("History?", $"Add a new ride history for '{this.Name}'?");
+        if (confirm)
+        {
+            // TODO: could have a last ridden time
+            await mediator.Send(new AddRideCommand(rideTime.Id, this.Name));
+        }
+    }
+    bool CanAddRide() => this.IsOpen && this.DistanceMeters != null;
+    
     public void UpdateDistance(Position position)
     {
         if (rideTime.Position == null)
@@ -246,11 +263,13 @@ public partial class RideTimeViewModel(RideTime rideTime) : ObservableObject
         if (dist.TotalKilometers > 2)
         { 
             this.DistanceText = "TOO FAR";
+            this.DistanceMeters = null;
         }
         else
         {
             this.DistanceMeters = Convert.ToInt32(Math.Round(dist.TotalMeters, 0));
             this.DistanceText = $"{this.DistanceMeters} m";
         }
+        this.AddRideCommand.NotifyCanExecuteChanged();
     }
 }

@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ShinyWonderland"
-             x:DataType="local:MainViewModel"
-             x:Class="ShinyWonderland.MainPage"
+             x:DataType="local:RideTimesViewModel"
+             x:Class="ShinyWonderland.RideTimesPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="{Binding Title}">
 
@@ -62,7 +62,7 @@
                                StrokeShape="RoundRectangle 10"
                                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
                             <Grid RowDefinitions="Auto, Auto"
-                                  ColumnDefinitions="1*, 1*, 1*"
+                                  ColumnDefinitions="1*, 1*, 1*, 1*"
                                   Padding="16">
 
                                 <Label Text="{Binding Name}"
@@ -96,7 +96,12 @@
                                        Grid.Column="2" />
                                 <!-- <Label Text="{Binding PaidAmount}" -->
                                 <!--        IsVisible="{x:Bind PaidAmount ne null}" /> -->
-
+                                <Button Text="Add Ride"
+                                        Command="{Binding AddRideCommand}" 
+                                        IsVisible="{Binding IsOpen}"
+                                        Grid.Row="1"
+                                        Grid.Column="3" />
+                                
                                 <Border IsVisible="{Binding IsClosed}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 4"

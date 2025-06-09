@@ -7,7 +7,7 @@
     
     <TabBar>
         <Tab Title="Ride Time" Icon="ride_time">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:RideTimesPage}" />
         </Tab>
         <Tab Title="Settings" Icon="settings">
             <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />

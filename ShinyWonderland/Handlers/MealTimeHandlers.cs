@@ -55,39 +55,42 @@ public class MealTimeHandlers :
 
     public async Task<MealTimeAvailability> Handle(GetMealTimeAvailability request, IMediatorContext context, CancellationToken cancellationToken)
     {
-        var results = await this.data.QueryAsync<MealTimeHistoryRecord>(
+        var results = await this.data.QueryAsync<MealTimeValue>(
             """
             SELECT
-                
+                Type,
+                MAX(Timestamp)
+            FROM 
+                MealTimeHistoryRecord
+            GROUP BY
+                Type
             """
         );
-
         
         var food = results.FirstOrDefault(x => x.Type == MealTimeType.Food)?.Timestamp;
-        var foodNext = CalcNextTime(food, this.options.FoodTimeWait);
+        var foodNext = this.CalcNextTime(food, this.options.FoodTimeWait);
 
         var drink = results.FirstOrDefault(x => x.Type == MealTimeType.Drink)?.Timestamp;
-        var drinkNext = CalcNextTime(drink, this.options.DrinkTimeWait);
+        var drinkNext = this.CalcNextTime(drink, this.options.DrinkTimeWait);
 
-        // TODO: when available or is available
         return new MealTimeAvailability(
-            food, drink
+            food, foodNext, drink, drinkNext
         );
     }
 
 
-    static TimeSpan? CalcNextTime(DateTimeOffset? last, TimeSpan waitTime)
+    TimeSpan? CalcNextTime(DateTimeOffset? last, TimeSpan waitTime)
     {
+        TimeSpan? result = null;
         if (last != null)
         {
             var now = this.timeProvider.GetUtcNow();
             var dt = last.Value.Add(waitTime);
             if (dt > now)
-            {
-            }
+                result = now.Subtract(dt);
         }
 
-        return null;
+        return result;
     }
 }
 
@@ -96,6 +99,11 @@ public record AddMealTime(MealTimeType Type) : ICommand;
 
 public record GetMealTimeAvailability : IRequest<MealTimeAvailability>;
 
+class MealTimeValue
+{
+    public MealTimeType Type { get; set; }
+    public DateTimeOffset? Timestamp { get; set; }
+}
 public record MealTimeAvailability(
     DateTimeOffset? LastDrink,
     TimeSpan? DrinkAvailableIn,

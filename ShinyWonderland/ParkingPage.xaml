@@ -8,16 +8,20 @@
              Title="Parking">
     
     <ContentPage.Content>
-        <Grid RowDefinitions="*, Auto">
+        <Grid>
             <maps:Map x:Name="ParkingMap" 
                       IsShowingUser="True" 
                       IsZoomEnabled="True"
-                      IsScrollEnabled="True"
-                      Grid.Row="0"/>
+                      IsScrollEnabled="True" 
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Fill" />
             
             <Button Text="{Binding CommandText}"
                     Command="{Binding ToggleSetLocationCommand}"
-                    Grid.Row="1" />
+                    HeightRequest="50"
+                    WidthRequest="300"
+                    VerticalOptions="End"
+                    Margin="20" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -15,6 +15,9 @@
         <Tab Title="Parking" Icon="parking">
             <ShellContent ContentTemplate="{DataTemplate local:ParkingPage}" />
         </Tab>
+        <Tab Title="Meal Times" Icon="meal">
+            <ShellContent ContentTemplate="{DataTemplate local:MealTimePage}" />
+        </Tab>
         <Tab Title="Hours" Icon="hours">
             <ShellContent ContentTemplate="{DataTemplate local:HoursPage}" />
         </Tab>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fork -->
+  <path d="M7 2V8C7 9.1 7.9 10 9 10S11 9.1 11 8V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M7 2V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M9 2V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M11 2V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M9 10V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Knife -->
+  <path d="M17 2L17 8C17 9.1 16.1 10 15 10C13.9 10 13 9.1 13 8V2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M15 10V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Plate -->
+  <circle cx="12" cy="18" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+</svg>
+

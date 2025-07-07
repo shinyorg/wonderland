@@ -24,6 +24,7 @@ public class RideHistoryHandlers :
     public Task Handle(AddRideCommand command, IMediatorContext context, CancellationToken cancellationToken)
         => this.data.InsertAsync(new RideHistoryRecord
         {
+            Id = Guid.NewGuid(),
             RideName = command.RideName,
             Timestamp = this.timeProvider.GetUtcNow()
         });
@@ -61,7 +62,7 @@ public class RideHistoryHandlers :
 }
 
 public record AddRideCommand(string RideId, string RideName) : ICommand;
-public record GetRideHistory : IRequest<List<RideHistoryRecord>>;
+public record GetRideHistory(Guid? Ride) : IRequest<List<RideHistoryRecord>>;
 public record GetParkLastRiddenTimes : IRequest<List<LastRideTime>>;
 
 public class LastRideTime

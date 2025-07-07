@@ -126,7 +126,8 @@ public record GetMealTimeHistory : IRequest<List<MealTimeHistoryRecord>>;
 public class MealTimeHistoryRecord
 {
     [PrimaryKey]
-    public Guid Id { get; set; }
+    [AutoIncrement]
+    public int Id { get; set; }
     public MealTimeType Type { get; set; }
     public DateTimeOffset Timestamp { get; set; }
 }

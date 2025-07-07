@@ -21,7 +21,8 @@
                     HeightRequest="50"
                     WidthRequest="300"
                     VerticalOptions="End"
-                    Margin="20" />
+                    Margin="20" 
+                    Shadow="#000000 4 4"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

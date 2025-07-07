@@ -6,6 +6,7 @@
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
              Title="Ride History">
+    
     <CollectionView>
         <CollectionView.EmptyView>
             <Label Text="No Ride History" />
@@ -14,8 +15,8 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="handlers:RideHistoryRecord">
                 <VerticalStackLayout>
-                    <Label Text="" />
-                    <Label Text="" />
+                    <Label Text="{Binding RideName}" />
+                    <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}" />
                 </VerticalStackLayout>
             </DataTemplate>
         </CollectionView.ItemTemplate>

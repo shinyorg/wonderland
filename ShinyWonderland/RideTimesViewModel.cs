@@ -51,6 +51,9 @@ public partial class RideTimesViewModel(
 
 
     [RelayCommand]
+    Task GoToHistory() => services.Navigator.NavigateToRideHistory();
+
+    [RelayCommand]
     async Task Load()
     {
         if (!this.IsBusy)
@@ -167,7 +170,7 @@ public partial class RideTimesViewModel(
         var query = rides
             .Select(x =>
             {
-                var vm = new RideTimeViewModel(x, services.Navigator, services.Mediator);
+                var vm = new RideTimeViewModel(x, services);
                 if (this.currentPosition != null)
                     vm.UpdateDistance(this.currentPosition);
                 
@@ -227,8 +230,7 @@ public partial class RideTimesViewModel(
 
 public partial class RideTimeViewModel(
     RideTime rideTime,
-    INavigator navigator,
-    IMediator mediator
+    CoreServices services
 ) : ObservableObject
 {
     public string Name => rideTime.Name;
@@ -241,16 +243,20 @@ public partial class RideTimeViewModel(
     public int? DistanceMeters { get; private set; }
     public bool CanAddRide => this.IsOpen && this.DistanceMeters != null;
     
-    [ObservableProperty] string distanceText;
-
+    DateTimeOffset? lastRidden;
+    public DateTimeOffset? LastRidden => lastRidden ?? rideTime.LastRidden;
+    
+    [ObservableProperty] string distanceText = "Unknown Distance";
+    
     [RelayCommand]
     async Task AddRide()
     {
-        var confirm = await navigator.Confirm("History?", $"Add a new ride history for '{this.Name}'?");
+        var confirm = await services.Navigator.Confirm("History?", $"Add a new ride history for '{this.Name}'?");
         if (confirm)
         {
-            // TODO: could have a last ridden time
-            await mediator.Send(new AddRideCommand(rideTime.Id, this.Name));
+            await services.Mediator.Send(new AddRideCommand(rideTime.Id, this.Name));
+            this.lastRidden = services.TimeProvider.GetUtcNow();
+            this.OnPropertyChanged(nameof(this.LastRidden));
         }
     }
     

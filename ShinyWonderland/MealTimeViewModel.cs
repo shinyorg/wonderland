@@ -3,7 +3,7 @@ using ShinyWonderland.Handlers;
 namespace ShinyWonderland;
 
 
-[ShellMap<MealTimePage>]
+[ShellMap<MealTimePage>(registerRoute: false)]
 public partial class MealTimeViewModel(
     IMediator mediator,
     INavigator navigator,

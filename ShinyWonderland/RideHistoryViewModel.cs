@@ -9,10 +9,11 @@ public partial class RideHistoryViewModel(
 ) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] List<RideHistoryRecord> history;
+    public Guid? RideId { get; set; }
     
     public async void OnAppearing()
     {
-        this.History = (await mediator.Request(new GetRideHistory())).Result;
+        this.History = (await mediator.Request(new GetRideHistory(this.RideId))).Result;
     }
 
     

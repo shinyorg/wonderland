@@ -52,11 +52,13 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Ride History
   * Button on Ride Times to say "rode"
   * Toolbar button to ride history
+* Ride Map with popup displaying ride times and distance from you
+* Distance - Sorting and Display (WIP)
 
 ## KNOWN ISSUES
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed
-* Distance - Sorting and Display (WIP)
+
 
 ## FEATURE IDEAS
 * Peak times - requires server
@@ -65,7 +67,6 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Restaurant Points with Menu & Prices
   * This data does not come back
   * Could do manual pins?
-* Drink & Food Pass Timers
   
 ## FAQ
 

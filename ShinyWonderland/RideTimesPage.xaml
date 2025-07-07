@@ -7,6 +7,11 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="{Binding Title}">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="History" 
+                     Command="{Binding GoToHistoryCommand}"/>
+    </ContentPage.ToolbarItems>
+    
     <Grid RowDefinitions="Auto, Auto, *"
           RowSpacing="0"
           Padding="0">
@@ -60,6 +65,7 @@
                                Padding="0"
                                Stroke="Transparent"
                                StrokeShape="RoundRectangle 10"
+                               Shadow="#000000 0 3"
                                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
                             <Grid RowDefinitions="Auto, Auto, Auto"
                                   ColumnDefinitions="2*, 2*, 1*"
@@ -88,18 +94,27 @@
                                        Grid.Row="1"
                                        Grid.Column="1" />
 
+                                <Label Text="{Binding LastRidden, Converter={StaticResource Humanize}, StringFormat='Last Ride: {0}'}" 
+                                       HorizontalTextAlignment="Start"
+                                       VerticalTextAlignment="Start"
+                                       TextColor="{StaticResource Blue100Accent}"
+                                       Grid.Row="2"
+                                       Grid.Column="1" 
+                                       Grid.ColumnSpan="2"/>
+                                
+                                <!--IsVisible="{Binding IsOpen}"-->
                                 <Label Text="{Binding DistanceText}"
                                        TextColor="{StaticResource Blue100Accent}"
-                                       IsVisible="{Binding IsOpen}"
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Start"
                                        Grid.Row="3"
-                                       Grid.Column="2" />
+                                       Grid.Column="0" />
 
+                                <!--IsVisible="{Binding CanAddRide}"-->
                                 <Button Text="Add Ride"
                                         Command="{Binding AddRideCommand}" 
-                                        IsVisible="{Binding CanAddRide}"
                                         HorizontalOptions="Center"
+                                        Grid.Row="0"
                                         Grid.RowSpan="3"
                                         Grid.Column="3" />
                                 

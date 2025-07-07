@@ -3,21 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
              xmlns:handlers="clr-namespace:ShinyWonderland.Handlers"
+             xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
              Title="Ride History">
     
-    <CollectionView>
+    <CollectionView ItemsSource="{Binding History}">
         <CollectionView.EmptyView>
-            <Label Text="No Ride History" />
+            <controls:NoItemsView />
         </CollectionView.EmptyView>
         
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="handlers:RideHistoryRecord">
-                <VerticalStackLayout>
-                    <Label Text="{Binding RideName}" />
-                    <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}" />
-                </VerticalStackLayout>
+                <controls:ListItemView>
+                    <VerticalStackLayout>
+                        <Label Text="{Binding RideName}" />
+                        <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}" />
+                    </VerticalStackLayout>
+                </controls:ListItemView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

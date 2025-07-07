@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:HoursViewModel"
              x:Class="ShinyWonderland.HoursPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
@@ -10,32 +11,12 @@
     <CollectionView ItemsSource="{Binding Schedule}"
                     Margin="0,8,0,0">
         <CollectionView.EmptyView>
-            <VerticalStackLayout VerticalOptions="Center"
-                                 HorizontalOptions="Center">
-                <Image Source="shiny.png" 
-                       HeightRequest="100"
-                       WidthRequest="100"
-                       Opacity="0.6"
-                       HorizontalOptions="Center" />
-                <Label Text="No Upcoming Schedule Found"
-                       FontSize="Large"
-                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"
-                       VerticalOptions="Center"
-                       VerticalTextAlignment="Center"
-                       Margin="0,16,0,0" />
-            </VerticalStackLayout>
+            <controls:NoItemsView />
         </CollectionView.EmptyView>
         
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="shinyWonderland:VmParkSchedule">
-                <Border Margin="16,8"
-                        Padding="0"
-                        Stroke="Transparent"
-                        StrokeShape="RoundRectangle 10"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}"
-                        Shadow="#000000 4 4">
+                <controls:ListItemView>
                     
                     <Grid RowDefinitions="Auto, Auto"
                           Padding="16">
@@ -61,7 +42,7 @@
                                    FontSize="Small" />
                         </VerticalStackLayout>
                     </Grid>
-                </Border>
+                </controls:ListItemView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

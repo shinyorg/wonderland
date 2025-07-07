@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ShinyWonderland"
+             xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="local:RideTimesViewModel"
              x:Class="ShinyWonderland.RideTimesPage"
              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
@@ -41,32 +42,12 @@
             <CollectionView ItemsSource="{Binding Rides}"
                            Margin="0,8,0,0">
                 <CollectionView.EmptyView>
-                    <VerticalStackLayout VerticalOptions="Center"
-                                         HorizontalOptions="Center">
-                        <Image Source="shiny.png" 
-                               HeightRequest="100"
-                               WidthRequest="100"
-                               Opacity="0.6"
-                               HorizontalOptions="Center" />
-                        <Label Text="No Open Rides"
-                               FontSize="Large"
-                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
-                               HorizontalOptions="Center"
-                               HorizontalTextAlignment="Center"
-                               VerticalOptions="Center"
-                               VerticalTextAlignment="Center"
-                               Margin="0,16,0,0" />
-                    </VerticalStackLayout>
+                    <controls:NoItemsView />
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RideTimeViewModel">
-                        <Border Margin="16,8"
-                               Padding="0"
-                               Stroke="Transparent"
-                               StrokeShape="RoundRectangle 10"
-                               Shadow="#000000 0 3"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
+                        <controls:ListItemView>
                             <Grid RowDefinitions="Auto, Auto, Auto"
                                   ColumnDefinitions="2*, 2*, 1*"
                                   Padding="16">
@@ -132,7 +113,7 @@
                                            HorizontalTextAlignment="Center" />
                                 </Border>
                             </Grid>
-                        </Border>
+                        </controls:ListItemView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

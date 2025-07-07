@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VerticalStackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     x:Class="ShinyWonderland.Controls.NoItemsView"
+                     VerticalOptions="Center"
+                     HorizontalOptions="Center">
+    <Image Source="shiny.png" 
+           HeightRequest="100"
+           WidthRequest="100"
+           Opacity="0.6"
+           HorizontalOptions="Center" />
+    <Label Text="No Open Rides"
+           FontSize="Large"
+           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+           HorizontalOptions="Center"
+           HorizontalTextAlignment="Center"
+           VerticalOptions="Center"
+           VerticalTextAlignment="Center"
+           Margin="0,16,0,0" />
+</VerticalStackLayout>

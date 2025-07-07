@@ -2,15 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:MealTimeViewModel"
              x:Class="ShinyWonderland.MealTimePage"
              Title="Meal Times">
-    <Grid>
-        <Button Text="Time Remaining OR Use Drink Pass" />
-        <Button Text="Time Remaining OR Use Food Pass" />
-        <CollectionView>
+    <Grid RowDefinitions="Auto, Auto, *">
+        <Button Text="Time Remaining OR Use Drink Pass" 
+                Grid.Row="0"/>
+        <Button Text="Time Remaining OR Use Food Pass" 
+                Grid.Row="1"/>
+        
+        <CollectionView Grid.Row="2">
             <CollectionView.EmptyView>
-                <Label Text="No Meal Time History" />
+                <controls:NoItemsView />
             </CollectionView.EmptyView>
             
             <CollectionView.ItemTemplate>

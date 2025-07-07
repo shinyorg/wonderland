@@ -131,14 +131,6 @@
                                            FontAttributes="Bold"
                                            HorizontalTextAlignment="Center" />
                                 </Border>
-
-                                <!-- <BoxView HeightRequest="1" -->
-                                <!--          BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" -->
-                                <!--          HorizontalOptions="Fill" -->
-                                <!--          VerticalOptions="End" -->
-                                <!--          Grid.Row="2" -->
-                                <!--          Margin="0,8,0,0" -->
-                                <!--          Grid.ColumnSpan="2" /> -->
                             </Grid>
                         </Border>
                     </DataTemplate>

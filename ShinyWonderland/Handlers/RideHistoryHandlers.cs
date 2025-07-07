@@ -3,7 +3,7 @@ using SQLite;
 namespace ShinyWonderland.Handlers;
 
 
-[SingletonHandler]
+[Service(ServiceLifetime.Singleton)]
 public class RideHistoryHandlers : 
     ICommandHandler<AddRideCommand>, 
     IRequestHandler<GetRideHistory, List<RideHistoryRecord>>, 
@@ -24,7 +24,7 @@ public class RideHistoryHandlers :
     public Task Handle(AddRideCommand command, IMediatorContext context, CancellationToken cancellationToken)
         => this.data.InsertAsync(new RideHistoryRecord
         {
-            Id = Guid.NewGuid(),
+            RideId = command.RideId,
             RideName = command.RideName,
             Timestamp = this.timeProvider.GetUtcNow()
         });
@@ -75,7 +75,8 @@ public class LastRideTime
 public class RideHistoryRecord
 {
     [PrimaryKey]
-    public Guid Id { get; set; }
+    [AutoIncrement]
+    public int Id { get; set; }
     public string RideId { get; set; }
     public string RideName { get; set; }
     public DateTimeOffset Timestamp { get; set; }

@@ -1,10 +1,9 @@
-using Shiny.Notifications;
 using SQLite;
 
 namespace ShinyWonderland.Handlers;
 
 
-[SingletonHandler]
+[Service(ServiceLifetime.Singleton)]
 public class MealTimeHandlers : 
     ICommandHandler<AddMealTime>, 
     IRequestHandler<GetMealTimeHistory, List<MealTimeHistoryRecord>>,

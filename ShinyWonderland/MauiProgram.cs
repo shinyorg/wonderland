@@ -42,7 +42,7 @@ public static class MauiProgram
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddDiscoveredMediatorHandlersFromShinyWonderland();
+        builder.Services.AddGeneratedServices();
         builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddSingleton<CoreServices>();
         builder.Services.AddPersistentService<AppSettings>();

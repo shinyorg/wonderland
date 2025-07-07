@@ -111,7 +111,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Shiny.Extensions.Stores" Version="1.0.2"/>
+        <PackageReference Include="Shiny.Extensions.Stores" Version="1.0.3"/>
+        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.0.3"/>
         <PackageReference Include="Shiny.Reflector" Version="1.6.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0"/>
         <PackageReference Include="Shiny.Mediator.Maui" Version="4.7.0"/>

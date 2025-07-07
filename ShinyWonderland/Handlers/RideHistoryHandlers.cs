@@ -34,7 +34,7 @@ public class RideHistoryHandlers :
     {
         var result = await this.data
             .Table<RideHistoryRecord>()
-            .OrderBy(x => x.Timestamp)
+            .OrderByDescending(x => x.Timestamp)
             .ToListAsync();
 
         return result
@@ -69,7 +69,6 @@ public class LastRideTime
 {
     public string RideId { get; set; }
     public DateTimeOffset Timestamp { get; set; }
-    
 }
 
 public class RideHistoryRecord

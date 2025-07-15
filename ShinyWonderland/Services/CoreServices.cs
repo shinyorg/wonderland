@@ -3,7 +3,7 @@ using Shiny.Notifications;
 namespace ShinyWonderland.Services;
 
 
-[Service(ServiceLifetime.Singleton)]
+[Singleton]
 public record CoreServices(
     IMediator Mediator,
     IOptions<ParkOptions> ParkOptions,

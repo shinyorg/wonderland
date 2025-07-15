@@ -7,22 +7,40 @@
              x:Class="ShinyWonderland.ParkingPage"
              Title="Parking">
     
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button" BaseResourceKey="BaseButtonStyle">
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="WidthRequest" Value="300"/>
+                <Setter Property="VerticalOptions" Value="End"/>
+                <Setter Property="Margin" Value="20" />
+                <Setter Property="Shadow" Value="#000000 4 4" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>
         <Grid>
+            <Image Source="{Binding ImageUri}" 
+                   IsVisible="{Binding HasParkedImage}" 
+                   Shadow="#000000 4 4"/>
+            
             <maps:Map x:Name="ParkingMap" 
+                      MapType="Street"
                       IsShowingUser="True" 
                       IsZoomEnabled="True"
                       IsScrollEnabled="True" 
                       HorizontalOptions="Fill"
                       VerticalOptions="Fill" />
             
+            <!--
+            <Button Text="Take Photo" 
+                    Command="{Binding TakePhotoCommand}"
+                    IsVisible="{Binding IsParked}" />
+            -->
+            
             <Button Text="{Binding CommandText}"
-                    Command="{Binding ToggleSetLocationCommand}"
-                    HeightRequest="50"
-                    WidthRequest="300"
-                    VerticalOptions="End"
-                    Margin="20" 
-                    Shadow="#000000 4 4"/>
+                    Command="{Binding ToggleSetLocationCommand}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

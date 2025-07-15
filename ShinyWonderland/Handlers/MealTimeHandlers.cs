@@ -3,7 +3,7 @@ using SQLite;
 namespace ShinyWonderland.Handlers;
 
 
-[Service(ServiceLifetime.Singleton)]
+[Singleton]
 public class MealTimeHandlers : 
     ICommandHandler<AddMealTime>, 
     IRequestHandler<GetMealTimeHistory, List<MealTimeHistoryRecord>>,

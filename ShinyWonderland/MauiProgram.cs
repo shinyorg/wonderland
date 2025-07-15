@@ -1,7 +1,4 @@
-﻿using System.IO;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Maui.Controls.Hosting;
-using Microsoft.Maui.Hosting;
+﻿using Microsoft.Extensions.Configuration;
 using Shiny.Extensions.Stores;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
@@ -44,16 +41,15 @@ public static class MauiProgram
 #endif
         builder.Services.AddGeneratedServices();
         builder.Services.AddStronglyTypedLocalizations();
-        builder.Services.AddSingleton<CoreServices>();
         builder.Services.AddPersistentService<AppSettings>();
-        
+
+        builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddSingleton<SQLiteAsyncConnection>(_ =>
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));
         });
-        
         
         builder.Services.AddNotifications();
         builder.Services.AddGeofencing<MyGeofenceDelegate>();

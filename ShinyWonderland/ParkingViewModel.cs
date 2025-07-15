@@ -4,14 +4,27 @@ namespace ShinyWonderland;
 [ShellMap<ParkingPage>(registerRoute: false)]
 public partial class ParkingViewModel(
     CoreServices services,
+    IMediaPicker mediaPicker,
     ILogger<ParkingViewModel> logger
-) : ObservableObject
+) : ObservableObject, IPageLifecycleAware
 {
-    [ObservableProperty] 
+    const string PhotoFileName = "parked_photo.png";
+    
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsParked))]
     [NotifyPropertyChangedFor(nameof(CommandText))]
-    Position? parkLocation = services.AppSettings.ParkingLocation;
+    Position? parkLocation;
 
     [ObservableProperty] bool isBusy;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasParkedImage))]
+    string imageUri;
+
+    public bool HasParkedImage => ImageUri != null;
+    public bool IsParked => this.ParkLocation != null;
+    
     
     public string CommandText => this.ParkLocation == null 
         ? "Set Parking Location to Current Location" 
@@ -50,10 +63,36 @@ public partial class ParkingViewModel(
             {
                 services.AppSettings.ParkingLocation = null;
                 this.ParkLocation = null;
+                
+                // TODO: delete photo
             }
         }
     }
 
+
+    [RelayCommand]
+    async Task TogglePhotoZoom()
+    {
+        // TODO: zoom in or out on photo
+    }
+
+    [RelayCommand]
+    async Task TakePhoto()
+    {
+        try
+        {
+            var result = await mediaPicker.CapturePhotoAsync();
+            if (result != null)
+            {
+                // TODO: save photo to local storage
+                // TODO: change imageUri to the saved photo path
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }
+    }
 
     async Task DoLocation()
     {
@@ -84,4 +123,12 @@ public partial class ParkingViewModel(
             this.IsBusy = false;
         }
     }
+
+    public void OnAppearing()
+    {
+        ParkLocation = services.AppSettings.ParkingLocation;
+        // TODO: load imageUri from local storage if exists
+    }
+
+    public void OnDisappearing() {}
 }

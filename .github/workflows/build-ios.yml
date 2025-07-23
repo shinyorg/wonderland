@@ -1,0 +1,112 @@
+name: Build iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        
+#  push:
+#    branches:
+#      - main
+#      - v*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+env:
+  XCODE_VERSION: 16.4
+  DOTNET_TFM: 'net9.0'
+  DOTNET_VERSION: '9.0.x'
+  APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
+  APP_VERSION: '1.0'
+  PACKAGE_NAME: 'com.shinysoft.wonderland'
+    
+jobs:
+  build:
+    runs-on: macos-15
+    
+    steps:
+    - name: '✅ Checkout'
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Setup XCode ${{ env.XCODE_VERSION }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: ${{ env.XCODE_VERSION }}
+        
+    - name: Add .NET Workloads
+      run: dotnet workload install maui-ios maui-android
+
+    # https://github.com/Apple-Actions/download-provisioning-profiles
+    - name: Download Apple Provisioning Profiles
+      uses: Apple-Actions/download-provisioning-profiles@v4
+      with:
+        bundle-id: ${{ env.PACKAGE_NAME }}
+        issuer-id: ${{ secrets.APP_STORE_ISSUER_ID }}
+        api-key-id: ${{ secrets.APP_STORE_KEY_ID }}
+        api-private-key: ${{ secrets.APP_STORE_PRIVATE_KEY }}
+    
+    # https://github.com/Apple-Actions/import-codesign-certs
+    - name: '🔑 Import iOS Codesign Certificates'
+      uses: apple-actions/import-codesign-certs@v3
+      with:
+        p12-file-base64: ${{ secrets.APP_STORE_CERTIFICATES_FILE_BASE64 }}
+        p12-password: ${{ secrets.APP_STORE_CERTIFICATES_PASSWORD }}
+      
+    - name: '🔢 Generate Build Number'
+      id: build-number
+      run: |
+        BUILD_NUMBER=${{ github.run_number }}
+        echo "build-number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+        echo "Build number: $BUILD_NUMBER"
+      
+    - name: '🛠️ Build iOS'
+      run: |
+        dotnet publish \
+          -f ${{ env.DOTNET_TFM }}-ios \
+          -p:ApplicationVersion=${{ steps.build-number.outputs.build-number }} \
+          -p:ApplicationDisplayVersion=${{ env.APP_VERSION }}.${{ steps.build-number.outputs.build-number }} \
+          -p:Configuration=Release \
+          -p:RuntimeIdentifier=ios-arm64 \
+          -p:ArchiveOnBuild=true \
+          -p:CodesignProvision='Automatic:AppStore' \
+          -p:CodesignKey='${{ secrets.APP_STORE_CODESIGN_KEY }}' \
+          -o ${{ github.workspace }}/artifacts/ \
+          -p:IpaPackageName=app.ipa \
+          -bl:${{ github.workspace}}/artifacts/ios.binlog \
+          "${{ env.APP_PROJECT }}"
+
+    - name: Upload iOS Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts
+        path: ./artifacts/*.*
+        
+  deploy:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/v') }}
+    runs-on: macos-latest
+
+    steps:
+      - name: Download iOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts
+          path: ./artifacts
+
+      - name: Upload app to TestFlight
+        uses: Apple-Actions/upload-testflight-build@v3
+        with:
+          app-path: './artifacts/app.ipa'
+          issuer-id: ${{ secrets.APP_STORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APP_STORE_KEY_ID }}
+          api-private-key: ${{ secrets.APP_STORE_PRIVATE_KEY }}

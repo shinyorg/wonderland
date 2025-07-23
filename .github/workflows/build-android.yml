@@ -1,0 +1,95 @@
+name: Build Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+  
+#  push:
+#    branches:
+#      - main
+#      - v*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+env:
+  APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
+  APP_VERSION: '1.0'
+  DOTNET_TFM: 'net9.0'
+  DOTNET_VERSION: '9.0.x'
+  PACKAGE_NAME: 'com.shinysoft.wonderland'
+ 
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: '✅ Checkout'
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Add .NET Workloads
+      run: dotnet workload install maui-ios maui-android
+
+    - name: Write Keystore to file
+      run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app.keystore
+        
+    - name: '🔢 Generate Build Number'
+      id: build-number
+      run: |
+        BUILD_NUMBER=${{ github.run_number }}
+        echo "build-number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+        echo "Build number: $BUILD_NUMBER"
+        
+    - name: '🛠️Build Android'
+      run: |
+        dotnet publish \
+          -f ${{ env.DOTNET_TFM }}-android \
+          -p:ApplicationVersion=${{ steps.build-number.outputs.build-number }} \
+          -p:ApplicationDisplayVersion=${{ env.APP_VERSION }}.${{ steps.build-number.outputs.build-number }} \
+          -p:Configuration=Release \
+          -p:AndroidKeyStore=True \
+          -p:AndroidSigningKeyStore='${{ github.workspace }}/app.keystore' \
+          -p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} \
+          -p:AndroidSigningKeyPass='${{ secrets.ANDROID_KEYSTORE_PASS }}' \
+          -p:AndroidSigningStorePass='${{ secrets.ANDROID_KEYSTORE_PASS }}' \
+          -o ${{ github.workspace }}/artifacts/ \
+          -bl:${{ github.workspace}}/artifacts/android.binlog \
+          "${{ env.APP_PROJECT }}"
+        
+    - name: Upload Android Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts
+        path: ./artifacts/*.aab
+        
+  deploy:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/v') }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifacts
+          path: ./artifacts
+  
+      # https://github.com/marketplace/actions/upload-android-release-to-play-store
+#      - name: Deploy to Google Play
+#        uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJson: ${{ secrets.GOOGLE_PLAY_JSON }}
+#          packageName: ${{ env.PACKAGE_NAME }}
+#          releaseFiles: ./artifacts/.*.aab
+#          track: internal
+#          status: completed

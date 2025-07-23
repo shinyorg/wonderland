@@ -2,6 +2,8 @@
   <Folder Name="/Solution/">
     <File Path="readme.md" />
     <File Path="themeparkapi.http" />
+    <File Path=".github\workflows\build-android.yml" />
+    <File Path=".github\workflows\build-ios.yml" />
   </Folder>
   <Project Path="ShinyWonderland\ShinyWonderland.csproj" Type="Classic C#" />
 </Solution>

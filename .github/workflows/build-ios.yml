@@ -23,7 +23,7 @@ env:
   DOTNET_VERSION: '9.0.x'
   APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
-  PACKAGE_NAME: 'com.shinysoft.wonderland'
+  PACKAGE_NAME: 'org.shiny.wonderland'
     
 jobs:
   build:

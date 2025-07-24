@@ -49,6 +49,9 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Track Ride History
 * Distance - Sorting and Display
 
+## Known Issues
+* AppSetting filters not being saved
+
 ## WIP
 * Meal Time (Notify on timer passed?) - use Notification Timer (what about distance)
   * Link in tabs IF enabled?

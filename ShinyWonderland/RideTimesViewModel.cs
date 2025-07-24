@@ -103,13 +103,9 @@ public partial class RideTimesViewModel(
             // only check GPS if background is running and user has granted permissions
             if (access == AccessState.Available && services.Gps.CurrentListener == null)
             {
-#if DEBUG
-                await services.Gps.StartListener(GpsRequest.Realtime(true));
-#else
                 var start = await services.IsUserWithinPark();
                 if (start)
                     await services.Gps.StartListener(GpsRequest.Realtime(true));
-#endif
             }
         }
         catch (Exception ex)

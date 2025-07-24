@@ -33,7 +33,6 @@ public class MyGpsDelegate : GpsDelegate
         }
         else
         {
-#if RELEASE
             // shutter down
             this.Logger.LogInformation("Outside Wonderland, shutting down GPS");
 
@@ -43,7 +42,6 @@ public class MyGpsDelegate : GpsDelegate
                 "Wonderland",
                 "Hope you had fun.  GPS has been turned off to save battery, you will not receive real time ride updates, and parking has been cleared"
             );
-#endif
         }
     }
 }

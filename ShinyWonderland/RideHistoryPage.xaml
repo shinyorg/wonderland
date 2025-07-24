@@ -6,9 +6,11 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="Ride History">
     
-    <CollectionView ItemsSource="{Binding History}">
+    <CollectionView ItemsSource="{Binding History}"
+                    Margin="0,8,0,0">
         <CollectionView.EmptyView>
             <controls:NoItemsView />
         </CollectionView.EmptyView>
@@ -16,9 +18,16 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="handlers:RideHistoryRecord">
                 <controls:ListItemView>
-                    <VerticalStackLayout>
-                        <Label Text="{Binding RideName}" />
-                        <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}" />
+                    <VerticalStackLayout Padding="16">
+                        <Label Text="{Binding RideName}" 
+                               FontSize="Medium"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
+                               FontAttributes="Bold" />
+                        <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}"
+                               TextColor="{StaticResource Blue100Accent}"
+                               FontAttributes="Bold"
+                               FontSize="Small"
+                               Margin="0,8,0,0" />
                     </VerticalStackLayout>
                 </controls:ListItemView>
             </DataTemplate>

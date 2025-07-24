@@ -91,7 +91,6 @@
                                        Grid.Row="3"
                                        Grid.Column="0" />
 
-                                <!--IsVisible="{Binding CanAddRide}"-->
                                 <Button Text="Add Ride"
                                         Command="{Binding AddRideCommand}" 
                                         HorizontalOptions="Center"

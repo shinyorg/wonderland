@@ -75,8 +75,9 @@ public partial class RideTimesViewModel(
 
     
     [MainThread]
-    public async Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+    public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
+        logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
         foreach (var ride in this.Rides)
             ride.UpdateDistance(@event.Position);
         
@@ -88,6 +89,8 @@ public partial class RideTimesViewModel(
                 .ThenBy(x => x.Name)
                 .ToList();
         }
+
+        return Task.CompletedTask;
     }
     
 
@@ -100,9 +103,13 @@ public partial class RideTimesViewModel(
             // only check GPS if background is running and user has granted permissions
             if (access == AccessState.Available && services.Gps.CurrentListener == null)
             {
+#if DEBUG
+                await services.Gps.StartListener(GpsRequest.Realtime(true));
+#else
                 var start = await services.IsUserWithinPark();
                 if (start)
                     await services.Gps.StartListener(GpsRequest.Realtime(true));
+#endif
             }
         }
         catch (Exception ex)
@@ -178,12 +185,19 @@ public partial class RideTimesViewModel(
             })
             .AsQueryable();
         
+        logger.LogDebug("Received {Count} rides from API", query.Count());
         if (services.AppSettings.ShowOpenOnly)
+        {
+            logger.LogDebug("Adding open only filter");
             query = query.Where(x => x.IsOpen);
+        }
 
         if (services.AppSettings.ShowTimedOnly)
+        {
+            logger.LogDebug("Adding timed only filter");
             query = query.Where(x => x.PaidWaitTimeMinutes != null || x.WaitTimeMinutes != null);
-            
+        }
+
         switch (services.AppSettings.Ordering)
         {
             case RideOrder.Name:
@@ -209,6 +223,7 @@ public partial class RideTimesViewModel(
                 break;
         }
         this.Rides = query.ToList();
+        logger.LogDebug("Rides Output: {Count}", this.Rides.Count);
     }
     
 
@@ -240,13 +255,12 @@ public partial class RideTimeViewModel(
     public bool IsClosed => !rideTime.IsOpen;
     public bool HasWaitTime => rideTime.WaitTimeMinutes.HasValue;
     public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
-    public int? DistanceMeters { get; private set; }
-    public bool CanAddRide => this.IsOpen && this.DistanceMeters != null;
     
     DateTimeOffset? lastRidden;
     public DateTimeOffset? LastRidden => lastRidden ?? rideTime.LastRidden;
     
     [ObservableProperty] string distanceText = "Unknown Distance";
+    [ObservableProperty] double? distanceMeters;
     
     [RelayCommand]
     async Task AddRide()
@@ -267,9 +281,15 @@ public partial class RideTimeViewModel(
             return;
 
         var dist = rideTime.Position.GetDistanceTo(position);
-        this.DistanceMeters = Convert.ToInt32(Math.Round(dist.TotalMeters, 0));
-        this.DistanceText = $"{this.DistanceMeters} m";
-
-        this.AddRideCommand.NotifyCanExecuteChanged();
+        this.DistanceMeters = Math.Round(dist.TotalMeters, 0);
+        if (dist.TotalMeters > 1000)
+        {
+            var km = Math.Round(dist.TotalKilometers, 1);
+            this.DistanceText = $"{km} km";
+        }
+        else
+        {
+            this.DistanceText = $"{this.DistanceMeters} m";
+        }
     }
 }

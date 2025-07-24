@@ -7,7 +7,7 @@ public class HumanizeValueConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is DateTimeOffset date)
+        if (value is DateTimeOffset date && date != DateTimeOffset.MinValue)
             return date.ToLocalTime().Humanize();
 
         if (value == null)

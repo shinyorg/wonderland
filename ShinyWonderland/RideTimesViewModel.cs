@@ -123,7 +123,7 @@ public partial class RideTimesViewModel(
         {
             var exists = geofenceManager
                 .GetMonitorRegions()
-                .Any(x => x.Identifier == GEOFENCE_ID);
+                .Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase));
             
             if (!exists)
             {
@@ -253,7 +253,7 @@ public partial class RideTimeViewModel(
     public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
     
     DateTimeOffset? lastRidden;
-    public DateTimeOffset? LastRidden => lastRidden ?? rideTime.LastRidden;
+    public DateTimeOffset? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime();
     
     [ObservableProperty] string distanceText = "Unknown Distance";
     [ObservableProperty] double? distanceMeters;

@@ -52,8 +52,8 @@ public class GetRideTimesRequestHandler(
             int? paidWaitTime = null;
             Position? position = null;
 
-            if (rideInfo.Location != null)
-                position = new Position(0, 0);
+            if (rideInfo.Location is { Latitude: not null, Longitude: not null })
+                position = new Position(rideInfo.Location.Latitude!.Value, rideInfo.Location.Longitude!.Value);
 
             if (live != null)
             {

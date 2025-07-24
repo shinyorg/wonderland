@@ -5,6 +5,9 @@ This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 
 This app works offline without issue.
 
+> [!NOTE]
+> This app is under constant evolution.  I use it as a test ground for many new features I'm creating for my libraries!
+
 ## Technology
 This app uses several .NET open source technologies from [Shiny](https://github.com/shinyorg)
 
@@ -43,22 +46,19 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Geofence notification reminder for entering to remind user to open app (so GPS is enabled) and to set parking area
 * GPS based notifications while in the park notifying you if ride times have been reduced - GPS shuts off once outside of park
 * Easy example of a navigation service based on Shell without ViewModel lifecycle [Shiny MAUI Shell](https://github.com/shinyorg/maui)
+* Track Ride History
+* Distance - Sorting and Display
 
 ## WIP
 * Meal Time (Notify on timer passed?) - use Notification Timer (what about distance)
   * Link in tabs IF enabled?
   * Separate drink & food passes
   * Maybe turn this option on in settings instead
-* Ride History
-  * Button on Ride Times to say "rode"
-  * Toolbar button to ride history
 * Ride Map with popup displaying ride times and distance from you
-* Distance - Sorting and Display (WIP)
 
 ## KNOWN ISSUES
 * Android maps not setup - users need to setup their own keys and stuff
 * Theme park API returns data even park is closed
-
 
 ## FEATURE IDEAS
 * Peak times - requires server

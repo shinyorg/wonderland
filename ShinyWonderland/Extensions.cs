@@ -9,12 +9,16 @@ public static class Extensions
         CancellationToken cancellationToken = default
     )
     {
+#if DEBUG
+        return true;
+#else
         var reading = await gpsManager
             .GetCurrentPosition()
             .Timeout(TimeSpan.FromSeconds(15))
             .ToTask(cancellationToken);
 
         return reading.IsWithinPark(parkOptions);
+#endif
     }
 
 

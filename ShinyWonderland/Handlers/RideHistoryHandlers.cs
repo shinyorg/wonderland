@@ -52,7 +52,7 @@ public class RideHistoryHandlers :
             """
             SELECT 
                 RideId, 
-                MAX(Timestamp) AS LatestTimestamp
+                MAX(Timestamp) AS Timestamp
             FROM 
                 RideHistoryRecord
             GROUP 

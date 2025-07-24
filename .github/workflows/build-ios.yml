@@ -8,10 +8,10 @@ on:
         required: true
         default: 'warning'
         
-#  push:
-#    branches:
-#      - main
-#      - v*
+  push:
+    branches:
+      - main
+      - v*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

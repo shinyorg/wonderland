@@ -1,6 +1,7 @@
 namespace ShinyWonderland.Services;
 
 
+[Reflector]
 public partial class AppSettings : ObservableObject
 {
     [ObservableProperty] bool enableTimeRideNotifications = true;

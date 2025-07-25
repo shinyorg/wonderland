@@ -4,6 +4,8 @@ namespace ShinyWonderland;
 [ShellMap<SettingsPage>(registerRoute: false)]
 public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject
 {
+    public string AppVersion => AssemblyInfo.ApplicationDisplayVersion;
+    
     public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time", "Distance"];
     [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
     {
@@ -39,6 +41,10 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
             
             case nameof(ShowTimedOnly):
                 appSettings.ShowTimedOnly = this.ShowTimedOnly;
+                break;
+            
+            case nameof(EnableGeofenceNotifications):
+                appSettings.EnableGeofenceNotifications = this.EnableGeofenceNotifications;
                 break;
             
             case nameof(EnableMealNotifications):

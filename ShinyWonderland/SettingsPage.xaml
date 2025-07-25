@@ -141,6 +141,9 @@
                 </VerticalStackLayout>
             </Border>
             
+            <Label Text="{Binding AppVersion, StringFormat='Version: {0}'}" 
+                   HorizontalOptions="Fill"
+                   HorizontalTextAlignment="Center"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

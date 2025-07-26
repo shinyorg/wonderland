@@ -23,6 +23,7 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Local Notifications](https://shinylib.net/client/notifications/) using Shiny.Notifications
   * [Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration](https://shinylib.net/client/other/configuration/) using Shiny.Extensions.Configuration
 * [Shiny MAUI Shell Extensions](https://github.com/shinyorg/maui) using Shiny.Maui.Shell - Shell navigation made pleasant
+* [Shiny Extensions](https://github.com/shinyorg/extensions) - Tools for making dependency injection and save state easy
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
 
@@ -49,15 +50,11 @@ The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI sour
 * Track Ride History
 * Distance - Sorting and Display
 
-## Known Issues
-* AppSetting filters not being saved
-
 ## WIP
 * Meal Time (Notify on timer passed?) - use Notification Timer (what about distance)
   * Link in tabs IF enabled?
   * Separate drink & food passes
   * Maybe turn this option on in settings instead
-* Ride Map with popup displaying ride times and distance from you
 
 ## KNOWN ISSUES
 * Android maps not setup - users need to setup their own keys and stuff

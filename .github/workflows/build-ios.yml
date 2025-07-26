@@ -27,7 +27,8 @@ env:
     
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: [self-hosted, macOS]
+    # runs-on: macos-15
     
     steps:
     - name: '✅ Checkout'

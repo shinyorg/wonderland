@@ -12,7 +12,7 @@
 
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
-        <ApplicationId Condition="'$(Configuration)' == 'Debug'">$(ApplicationId).dev</ApplicationId>
+        
         <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
         <LangVersion>preview</LangVersion>
 
@@ -23,6 +23,11 @@
         <ShinyVersion>4.0.0-beta-0086</ShinyVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <ApplicationId>$(ApplicationId).dev</ApplicationId>
+        <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
+    </PropertyGroup>
+    
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
@@ -102,7 +107,7 @@
         <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.0-beta-0006"/>
         <PackageReference Include="Shiny.Reflector" Version="1.6.1"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0"/>
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.9.0-beta-0005"/>
+        <PackageReference Include="Shiny.Mediator.Maui" Version="4.9.0"/>
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

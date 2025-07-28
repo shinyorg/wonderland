@@ -86,9 +86,6 @@
 
         <MauiImage Include="Resources\Images\*"/>
         <MauiFont Include="Resources\Fonts\*"/>
-        <MauiAsset Include="appsettings.release.json">
-          <LogicalName>appsettings.json</LogicalName>
-        </MauiAsset>
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
         <MauiAsset Include="appsettings.json" LogicalName="appsettings.json"/>
 

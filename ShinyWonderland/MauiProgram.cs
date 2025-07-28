@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Shiny.Extensions.Stores;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
@@ -14,12 +13,11 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-#if DEBUG
+        
         builder.Configuration.AddJsonPlatformBundle();
+#if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
-#else
-        builder.Configuration.AddJsonPlatformBundle("release");
 #endif
         
         builder
@@ -52,7 +50,6 @@ public static class MauiProgram
 
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealTime"));
-       
 
         builder.Services.AddGeneratedServices();
         builder.Services.AddStronglyTypedLocalizations();

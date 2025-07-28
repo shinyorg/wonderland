@@ -20,7 +20,7 @@ concurrency:
 env:
   APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
-  APPSETTINGS_JSON_FILE: './ShinyWonderland/appsettings.release.json'
+  APPSETTINGS_JSON_FILE: './ShinyWonderland/appsettings.json'
   DOTNET_TFM: 'net9.0'
   DOTNET_VERSION: '9.0.x'
   PACKAGE_NAME: 'org.shiny.wonderland'

@@ -12,12 +12,28 @@ public static class MauiProgram
     #if PLATFORM
     public static MauiApp CreateMauiApp()
     {
-        var builder = MauiApp
-            .CreateBuilder()
+        var builder = MauiApp.CreateBuilder();
+#if DEBUG
+        builder.Configuration.AddJsonPlatformBundle();
+        builder.Logging.SetMinimumLevel(LogLevel.Trace);
+        builder.Logging.AddDebug();
+#else
+        builder.Configuration.AddJsonPlatformBundle("release");
+#endif
+        
+        builder
             .UseMauiApp<App>()
             .UseMauiMaps()
             .UseShiny()
             .UseShinyShell(x => x.AddGeneratedMaps())
+            .UseSentry(opts =>
+            {
+                opts.Dsn = builder.Configuration["Sentry:Dsn"]!;
+                opts.AddDiagnosticSourceIntegration();
+#if DEBUG
+                opts.Debug = true;
+#endif
+            })
             .AddShinyMediator(x => x
                 .AddMauiPersistentCache()
                 .AddConnectivityBroadcaster()
@@ -33,12 +49,8 @@ public static class MauiProgram
 
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealTime"));
-        
-        builder.Configuration.AddJsonPlatformBundle();
-#if DEBUG
-        builder.Logging.SetMinimumLevel(LogLevel.Trace);
-        builder.Logging.AddDebug();
-#endif
+       
+
         builder.Services.AddGeneratedServices();
         builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddPersistentService<AppSettings>();

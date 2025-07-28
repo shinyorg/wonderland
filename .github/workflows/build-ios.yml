@@ -23,6 +23,7 @@ env:
   DOTNET_VERSION: '9.0.x'
   APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
+  APPSETTINGS_JSON_FILE: './ShinyWonderland/appsettings.release.json'
   PACKAGE_NAME: 'org.shiny.wonderland'
     
 jobs:
@@ -43,7 +44,15 @@ jobs:
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
-        
+          
+    # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
+    - name: Configure From Secrets
+      uses: Lambdaspire/action-substitute-secrets-in-file@v1.1.0
+      with:
+        file: ${{ env.APPSETTINGS_JSON_FILE }}
+        tokenPattern: ${TOKEN}
+        secretsJson: ${{ toJSON(secrets) }}
+          
     - name: Add .NET Workloads
       run: dotnet workload install maui-ios maui-android
 

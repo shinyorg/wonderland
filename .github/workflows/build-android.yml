@@ -20,6 +20,7 @@ concurrency:
 env:
   APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
+  APPSETTINGS_JSON_FILE: './ShinyWonderland/appsettings.release.json'
   DOTNET_TFM: 'net9.0'
   DOTNET_VERSION: '9.0.x'
   PACKAGE_NAME: 'org.shiny.wonderland'
@@ -40,7 +41,15 @@ jobs:
         
     - name: Add .NET Workloads
       run: dotnet workload install maui-ios maui-android
-
+      
+      # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
+    - name: Configure From Secrets
+      uses: Lambdaspire/action-substitute-secrets-in-file@v1.1.0
+      with:
+        file: ${{ env.APPSETTINGS_JSON_FILE }}
+        tokenPattern: ${TOKEN}
+        secretsJson: ${{ toJSON(secrets) }}
+        
     - name: Write Keystore to file
       run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > app.keystore
         

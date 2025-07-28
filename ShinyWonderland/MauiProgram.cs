@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Shiny.Extensions.Stores;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
@@ -29,7 +30,9 @@ public static class MauiProgram
             .UseSentry(opts =>
             {
                 opts.Dsn = builder.Configuration["Sentry:Dsn"]!;
-                opts.AddDiagnosticSourceIntegration();
+                // DiagnosticListener.AllListeners.Subscribe(
+                //     x => x.Subscribe()
+                // );
 #if DEBUG
                 opts.Debug = true;
 #endif

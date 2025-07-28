@@ -4,14 +4,14 @@ namespace ShinyWonderland.Services;
 [Reflector]
 public partial class AppSettings : ObservableObject
 {
-    [ObservableProperty] bool enableTimeRideNotifications = true;
-    [ObservableProperty] bool enableGeofenceNotifications = true;
-    [ObservableProperty] bool enableDrinkNotifications = true;
-    [ObservableProperty] bool enableMealNotifications = true;
-    [ObservableProperty] bool showOpenOnly = true;
-    [ObservableProperty] bool showTimedOnly = true;
-    [ObservableProperty] RideOrder ordering = RideOrder.Name;
-    [ObservableProperty] Position? parkingLocation;
+    [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; } = true;
+    [ObservableProperty] public partial bool EnableGeofenceNotifications { get; set; } = true;
+    [ObservableProperty] public partial bool EnableDrinkNotifications { get; set; } = true;
+    [ObservableProperty] public partial bool EnableMealNotifications { get; set; } = true;
+    [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = true;
+    [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = true;
+    [ObservableProperty] public partial RideOrder Ordering { get; set; } = RideOrder.Name;
+    [ObservableProperty] public partial Position? ParkingLocation { get; set; }
 }
 
 public enum RideOrder

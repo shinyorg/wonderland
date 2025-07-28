@@ -6,8 +6,7 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-             Title="Ride History">
+             Title="{Binding Localize.Title}">
     
     <CollectionView ItemsSource="{Binding History}"
                     Margin="0,8,0,0">

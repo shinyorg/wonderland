@@ -5,18 +5,17 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="local:RideTimesViewModel"
              x:Class="ShinyWonderland.RideTimesPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="History" 
+        <ToolbarItem Text="{Binding Localize.History}" 
                      Command="{Binding GoToHistoryCommand}"/>
     </ContentPage.ToolbarItems>
     
     <Grid RowDefinitions="Auto, Auto, *"
           RowSpacing="0"
           Padding="0">
-        <Label Text="You are currently offline"
+        <Label Text="{Binding Localize.YouAreOffline}"
                IsVisible="{Binding IsNotConnected}"
                VerticalTextAlignment="Center"
                BackgroundColor="{StaticResource Yellow100Accent}"
@@ -26,7 +25,7 @@
                Margin="0"
                Grid.Row="0" />
 
-        <Label Text="{Binding DataTimestamp, StringFormat='Data is from {0}'}"
+        <Label Text="{Binding DataTimestamp, StringFormat='{Binding Localize.DataFrom}'}"
                BackgroundColor="{StaticResource Primary}"
                TextColor="{StaticResource White}"
                FontAttributes="Bold"
@@ -59,7 +58,7 @@
                                        Grid.Row="0"
                                        Grid.ColumnSpan="3" />
 
-                                <Label Text="{Binding WaitTimeMinutes, StringFormat='{0} minutes'}"
+                                <Label Text="{Binding WaitTimeMinutes, StringFormat='{Binding Localize.WaitMinutes}'}"
                                        IsVisible="{Binding HasWaitTime}"
                                        TextColor="{StaticResource Blue100Accent}"
                                        FontAttributes="Bold"
@@ -67,7 +66,7 @@
                                        Grid.Row="1"
                                        Grid.Column="0" />
 
-                                <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='PAID: {0} minutes'}"
+                                <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='{Binding Localize.PaidWaitMinutes}'}"
                                        IsVisible="{Binding HasPaidWaitTime}"
                                        TextColor="{StaticResource Blue100Accent}"
                                        FontAttributes="Bold"
@@ -75,7 +74,7 @@
                                        Grid.Row="1"
                                        Grid.Column="1" />
 
-                                <Label Text="{Binding LastRidden, Converter={StaticResource Humanize}, StringFormat='Last Ride: {0}'}" 
+                                <Label Text="{Binding LastRidden, Converter={StaticResource Humanize}, StringFormat='{Binding Localize.LastRide}'}" 
                                        HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Start"
                                        TextColor="{StaticResource Blue100Accent}"
@@ -91,7 +90,7 @@
                                        Grid.Row="3"
                                        Grid.Column="0" />
 
-                                <Button Text="Add Ride"
+                                <Button Text="{Binding Localize.AddRide}"
                                         Command="{Binding AddRideCommand}" 
                                         HorizontalOptions="Center"
                                         Grid.Row="0"
@@ -106,7 +105,7 @@
                                         HorizontalOptions="Center"
                                         Grid.Row="1"
                                         Grid.Column="0">
-                                    <Label Text="CLOSED"
+                                    <Label Text="{Binding Localize.Closed}"
                                            TextColor="White"
                                            FontAttributes="Bold"
                                            HorizontalTextAlignment="Center" />

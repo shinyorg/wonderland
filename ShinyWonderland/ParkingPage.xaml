@@ -5,7 +5,7 @@
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
              x:DataType="shinyWonderland:ParkingViewModel"
              x:Class="ShinyWonderland.ParkingPage"
-             Title="Parking">
+             Title="{Binding Localize.Title}">
     
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -14,7 +14,13 @@
                 <Setter Property="WidthRequest" Value="300"/>
                 <Setter Property="VerticalOptions" Value="End"/>
                 <Setter Property="Margin" Value="20" />
-                <Setter Property="Shadow" Value="#000000 4 4" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Opacity="0.25" 
+                                Radius="4"
+                                Brush="#000000"/>
+                        </Setter.Value>
+                </Setter>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -22,8 +28,13 @@
     <ContentPage.Content>
         <Grid>
             <Image Source="{Binding ImageUri}" 
-                   IsVisible="{Binding HasParkedImage}" 
-                   Shadow="#000000 4 4"/>
+                   IsVisible="{Binding HasParkedImage}">
+                <Image.Shadow>
+                    <Shadow Opacity="0.25" 
+                            Radius="4"
+                            Brush="#000000"/>
+                </Image.Shadow>
+            </Image>
             
             <maps:Map x:Name="ParkingMap" 
                       MapType="Street"

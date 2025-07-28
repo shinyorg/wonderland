@@ -25,16 +25,15 @@ public static class MauiProgram
             .UseMauiMaps()
             .UseShiny()
             .UseShinyShell(x => x.AddGeneratedMaps())
+#if RELEASE
             .UseSentry(opts =>
             {
                 opts.Dsn = builder.Configuration["Sentry:Dsn"]!;
                 // DiagnosticListener.AllListeners.Subscribe(
                 //     x => x.Subscribe()
                 // );
-#if DEBUG
-                opts.Debug = true;
-#endif
             })
+#endif
             .AddShinyMediator(x => x
                 .AddMauiPersistentCache()
                 .AddConnectivityBroadcaster()

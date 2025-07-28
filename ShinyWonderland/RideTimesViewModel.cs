@@ -10,7 +10,8 @@ namespace ShinyWonderland;
 public partial class RideTimesViewModel(
     CoreServices services,
     ILogger<RideTimesViewModel> logger,
-    IGeofenceManager geofenceManager
+    IGeofenceManager geofenceManager,
+    RideTimesViewModelLocalized localize
 ) : 
     ObservableObject, 
     IPageLifecycleAware, 
@@ -21,7 +22,8 @@ public partial class RideTimesViewModel(
     CancellationTokenSource? cancellationTokenSource;
     CompositeDisposable? disposer;
     Position? currentPosition;
-    
+
+    public RideTimesViewModelLocalized Localize => localize;
     public string Title => services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = null!;
     [ObservableProperty] public partial bool IsBusy { get; private set; }
@@ -121,11 +123,8 @@ public partial class RideTimesViewModel(
         var access = await geofenceManager.RequestAccess();
         if (access == AccessState.Available)
         {
-            var exists = geofenceManager
-                .GetMonitorRegions()
-                .Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase));
-            
-            if (!exists)
+            var regions = geofenceManager.GetMonitorRegions();
+            if (!regions.Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase)))
             {
                 await geofenceManager.StartMonitoring(new GeofenceRegion(
                     GEOFENCE_ID,
@@ -159,7 +158,7 @@ public partial class RideTimesViewModel(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
-            await services.Navigator.Alert("ERROR", "There was an error loading the data", "OK");
+            await services.Navigator.Alert(localize.Error, localize.GeneralError, localize.Ok);
         }
         finally
         {
@@ -173,7 +172,7 @@ public partial class RideTimesViewModel(
         var query = rides
             .Select(x =>
             {
-                var vm = new RideTimeViewModel(x, services);
+                var vm = new RideTimeViewModel(x, localize, services);
                 if (this.currentPosition != null)
                     vm.UpdateDistance(this.currentPosition);
                 
@@ -241,10 +240,12 @@ public partial class RideTimesViewModel(
 
 public partial class RideTimeViewModel(
     RideTime rideTime,
+    RideTimesViewModelLocalized localize,
     CoreServices services
 ) : ObservableObject
 {
     public string Name => rideTime.Name;
+    public RideTimesViewModelLocalized Localize => localize;
     public int? WaitTimeMinutes => rideTime.WaitTimeMinutes;
     public int? PaidWaitTimeMinutes => rideTime.PaidWaitTimeMinutes;
     public bool IsOpen => rideTime.IsOpen;
@@ -255,13 +256,16 @@ public partial class RideTimeViewModel(
     DateTimeOffset? lastRidden;
     public DateTimeOffset? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime();
     
-    [ObservableProperty] string distanceText = "Unknown Distance";
+    [ObservableProperty] string distanceText = localize.UnknownDistance;
     [ObservableProperty] double? distanceMeters;
     
     [RelayCommand]
     async Task AddRide()
     {
-        var confirm = await services.Navigator.Confirm("History?", $"Add a new ride history for '{this.Name}'?");
+        var confirm = await services.Navigator.Confirm(
+            localize.HistoryDialogTitle, 
+            String.Format(localize.AddRideHistoryQuestion, this.Name)
+        );
         if (confirm)
         {
             await services.Mediator.Send(new AddRideCommand(rideTime.Id, this.Name));

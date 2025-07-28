@@ -5,11 +5,13 @@ namespace ShinyWonderland;
 public partial class ParkingViewModel(
     CoreServices services,
     IMediaPicker mediaPicker,
-    ILogger<ParkingViewModel> logger
+    ILogger<ParkingViewModel> logger,
+    ParkingViewModelLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
     const string PhotoFileName = "parked_photo.png";
     
+    public ParkingViewModelLocalized Localize => localize;
     
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsParked))]
@@ -27,8 +29,8 @@ public partial class ParkingViewModel(
     
     
     public string CommandText => this.ParkLocation == null 
-        ? "Set Parking Location to Current Location" 
-        : "Remove Parking Location";
+        ? Localize.SetParking
+        : Localize.RemoveParking;
 
     public Position CenterOfPark => services.ParkOptions.Value.CenterOfPark;
     public int MapStartZoomDistanceMeters => services.ParkOptions.Value.MapStartZoomDistanceMeters;
@@ -46,8 +48,8 @@ public partial class ParkingViewModel(
             else
             {
                 var confirm = await services.Navigator.Confirm(
-                    "Permission Denied",
-                    "Do you wish to open app settings to change to the necessary permissions?"
+                    Localize.PermissionDenied,
+                    Localize.OpenSettings
                 );
                 if (confirm)
                     AppInfo.ShowSettingsUI();
@@ -56,8 +58,8 @@ public partial class ParkingViewModel(
         else
         {
             var confirm = await services.Navigator.Confirm(
-                "Reset?", 
-                "Are you sure you want to reset the parking location?"
+                Localize.Reset, 
+                Localize.ConfirmReset
             );
             if (confirm)
             {
@@ -108,14 +110,14 @@ public partial class ParkingViewModel(
             else
             {
                 await services.Navigator.Alert(
-                    "ERROR",
-                    "You aren't close enough to the park to use the parking function"
+                    Localize.Error,
+                    Localize.NotCloseEnough
                 );
             }
         }
         catch (Exception e)
         {
-            await services.Navigator.Alert("ERROR", "Error retrieving current position");
+            await services.Navigator.Alert(Localize.Error, Localize.ErrorRetrievingLocation);
             logger.LogError(e, "Error retrieving current position");
         }
         finally

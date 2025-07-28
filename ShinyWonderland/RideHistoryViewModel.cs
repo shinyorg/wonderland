@@ -5,9 +5,11 @@ namespace ShinyWonderland;
 
 [ShellMap<RideHistoryPage>]
 public partial class RideHistoryViewModel(
-    IMediator mediator
+    IMediator mediator,
+    RideHistoryViewModelLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
+    public RideHistoryViewModelLocalized Localize => localize;
     [ObservableProperty] List<RideHistoryRecord> history;
     public Guid? RideId { get; set; }
     

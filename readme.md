@@ -1,9 +1,10 @@
 # Canada's Wonderland Ride Times
 
 This app does serve a functional purpose in that it shows available ride times to Canada's Wonderland
-This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 
-This app works offline without issue.
+The code within this application is used to show best practices using .NET MAUI & many of the Shiny .NET Libraries.
+
+This data is pulled from [ThemeParks WIKI](https://themeparks.wiki/)
 
 > [!NOTE]
 > This app is under constant evolution.  I use it as a test ground for many new features I'm creating for my libraries!
@@ -16,6 +17,7 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Persistent app cache](https://shinylib.net/mediator/middleware/caching/#persistent-cache)
   * [Event Broadcasting](https://shinylib.net/mediator/events/) with [MAUI support](https://shinylib.net/mediator/extensions/maui/)
   * [HTTP Calls](https://shinylib.net/mediator/extensions/http)
+  * [Offline Data](https://shinylib.net/mediator/middleware/offline/)
 * [Shiny Mobile Libraries](https://github.com/shinyorg/shiny) - [Documentation](https://shinylib.net)
   * [Periodic Background Jobs](https://shinylib.net/client/jobs/) using Shiny.Jobs
   * [Background GPS](https://shinylib.net/client/locations/gps/) using Shiny.Locations
@@ -24,6 +26,7 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration](https://shinylib.net/client/other/configuration/) using Shiny.Extensions.Configuration
 * [Shiny MAUI Shell Extensions](https://github.com/shinyorg/maui) using Shiny.Maui.Shell - Shell navigation made pleasant
 * [Shiny Extensions](https://github.com/shinyorg/extensions) - Tools for making dependency injection and save state easy
+* [Strongly Typed Localization for IStringLocalizer](https://github.com/shinyorg/localizegen)
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following
 

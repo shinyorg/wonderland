@@ -6,11 +6,12 @@ namespace ShinyWonderland;
 [ShellMap<HoursPage>(registerRoute: false)]
 public partial class HoursViewModel(
     IMediator mediator, 
-    TimeProvider timeProvider
+    TimeProvider timeProvider,
+    HoursViewModelLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] List<VmParkSchedule> schedule;
-
+    public HoursViewModelLocalized Localize => localize;
 
     public async void OnAppearing()
     {
@@ -22,7 +23,7 @@ public partial class HoursViewModel(
             .Select(x =>
             {
                 var today = x.Date == now;
-                return new VmParkSchedule(x, today);
+                return new VmParkSchedule(x, today, localize);
             })
             .ToList();
     }
@@ -35,11 +36,13 @@ public partial class HoursViewModel(
 
 public record VmParkSchedule(
     ParkHours Info,
-    bool IsToday
+    bool IsToday,
+    HoursViewModelLocalized localize
 )
 {
+    public HoursViewModelLocalized Localize => localize;
     public bool IsOpen => Info.IsOpen;
     public bool IsClosed => Info.IsClosed;
     public string HoursOfOperation => $"{Info.Hours?.Open:h:mm tt} - {Info.Hours?.Closed:h:mm tt}";
-    public string DateString => IsToday ? "Today" : this.Info.Date.ToString("dddd, MMMM dd");
+    public string DateString => IsToday ? localize.Today : this.Info.Date.ToString("dddd, MMMM dd");
 }

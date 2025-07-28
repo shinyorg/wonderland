@@ -5,8 +5,7 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:HoursViewModel"
              x:Class="ShinyWonderland.HoursPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-             Title="Hours of Operation">
+             Title="{Binding Localize.Title}">
 
     <CollectionView ItemsSource="{Binding Schedule}"
                     Margin="0,8,0,0">
@@ -35,7 +34,7 @@
                                    FontAttributes="Bold"
                                    FontSize="Small" />
                                    
-                            <Label Text="Park Closed"
+                            <Label Text="{Binding Localize.ParkClosed}"
                                    IsVisible="{Binding IsClosed}"
                                    TextColor="{StaticResource Yellow100Accent}"
                                    FontAttributes="Bold"

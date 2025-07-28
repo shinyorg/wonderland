@@ -5,7 +5,7 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:MealTimeViewModel"
              x:Class="ShinyWonderland.MealTimePage"
-             Title="Meal Times">
+             Title="{Binding Localize.Title}">
     <Grid RowDefinitions="Auto, Auto, *">
         <Button Text="Time Remaining OR Use Drink Pass" 
                 Grid.Row="0"/>

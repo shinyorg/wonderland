@@ -24,6 +24,17 @@
         <ShinyVersion>4.0.0-beta-0086</ShinyVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <SentryOrg>shiny-software</SentryOrg>
+        <SentryProject>wonderland</SentryProject>
+        
+        <SentryCreateRelease>false</SentryCreateRelease>
+        <SentrySetCommits>false</SentrySetCommits>
+        <SentryUploadSymbols>true</SentryUploadSymbols>
+        <SentryUploadSources>true</SentryUploadSources>
+        <SentryUploadAndroidProguardMapping>true</SentryUploadAndroidProguardMapping>
+    </PropertyGroup>
+    
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <ApplicationId>$(ApplicationId).dev</ApplicationId>
         <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
@@ -105,11 +116,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Shiny.Extensions.Stores" Version="1.3.0-beta-0006"/>
-        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.0-beta-0006"/>
+        <PackageReference Include="Shiny.Extensions.Stores" Version="1.2.2"/>
+        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.2.2"/>
         <PackageReference Include="Shiny.Reflector" Version="1.6.1"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0"/>
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.9.0"/>
+        <PackageReference Include="Shiny.Mediator.Maui" Version="4.9.1"/>
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
@@ -127,19 +138,8 @@
                       Namespace="ShinyWonderland.ThemeParksApi"
                       ContractPostfix="HttpRequest"
                       Visible="false"/>
+        
         <EmbeddedResource Update="**/*.resx"/>
-        <EmbeddedResource Update="HoursViewModel.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>HoursViewModel.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Update="MealTimeViewModel.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>MealTimeViewModel.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Update="AppShell.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>AppShell.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

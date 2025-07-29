@@ -24,6 +24,7 @@ env:
   DOTNET_TFM: 'net9.0'
   DOTNET_VERSION: '9.0.x'
   PACKAGE_NAME: 'org.shiny.wonderland'
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
  
 jobs:
   build:

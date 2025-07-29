@@ -25,7 +25,7 @@ public partial class RideTimesViewModel(
 
     public RideTimesViewModelLocalized Localize => localize;
     public string Title => services.ParkOptions.Value.Name;
-    [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = null!;
+    [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
     [ObservableProperty] public partial bool IsBusy { get; private set; }
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
 
@@ -80,13 +80,15 @@ public partial class RideTimesViewModel(
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
         logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
-        foreach (var ride in this.Rides)
-            ride.UpdateDistance(@event.Position);
+        var rides = this.Rides.ToList();
         
+        foreach (var ride in rides)
+            ride.UpdateDistance(@event.Position);
+
         this.currentPosition = @event.Position;
         if (services.AppSettings.Ordering == RideOrder.Distance)
         {
-            this.Rides = this.Rides
+            this.Rides = rides
                 .OrderBy(x => x.DistanceMeters ?? 999)
                 .ThenBy(x => x.Name)
                 .ToList();
@@ -224,6 +226,7 @@ public partial class RideTimesViewModel(
                     .ThenBy(x => x.Name);
                 break;
         }
+        
         this.Rides = query.ToList();
         logger.LogDebug("Rides Output: {Count}", this.Rides.Count);
     }

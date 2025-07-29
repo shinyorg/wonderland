@@ -7,6 +7,8 @@ namespace ShinyWonderland.Delegates;
 
 public class RideTimeJob(
     ILogger<RideTimeJob> logger,
+    IOptions<ParkOptions> parkOptions,
+    RideTimeJobLocalized localized,
     CoreServices services
 ) : Job(logger)
 {
@@ -93,9 +95,8 @@ public class RideTimeJob(
                 await services.Notifications.Send(new Notification
                 {
                     // TODO: would be nice if I could set the ID to the ride entity ID to prevent overlaps in notifications
-                    // Id = ride.Id - w
-                    Title = "Wonderland Ride Time",
-                    Message = $"{ride.Name} is now a {currentWait} minute wait.  Down {waitDiff} minutes"
+                    Title = $"{parkOptions.Value.Name} {localized.RideTime}",
+                    Message = String.Format(localized.NotificationMessageFormat, ride.Name, currentWait, waitDiff)
                 });
             }
         }

@@ -252,9 +252,10 @@ public partial class RideTimeViewModel(
     public bool IsClosed => !rideTime.IsOpen;
     public bool HasWaitTime => rideTime.WaitTimeMinutes.HasValue;
     public bool HasPaidWaitTime => rideTime.PaidWaitTimeMinutes.HasValue;
+    public bool HasLastRide => LastRidden != null;
     
     DateTimeOffset? lastRidden;
-    public DateTimeOffset? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime();
+    public string? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime().Humanize();
     
     [ObservableProperty] string distanceText = localize.UnknownDistance;
     [ObservableProperty] double? distanceMeters;
@@ -271,6 +272,7 @@ public partial class RideTimeViewModel(
             await services.Mediator.Send(new AddRideCommand(rideTime.Id, this.Name));
             this.lastRidden = services.TimeProvider.GetUtcNow();
             this.OnPropertyChanged(nameof(this.LastRidden));
+            this.OnPropertyChanged(nameof(this.HasLastRide));
         }
     }
     

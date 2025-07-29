@@ -11,7 +11,7 @@ public class HumanizeValueConverter : IValueConverter
             return date.ToLocalTime().Humanize();
 
         if (value == null)
-            return "Never";
+            return String.Empty;
 
         throw new InvalidOperationException("Invalid Type");
     }

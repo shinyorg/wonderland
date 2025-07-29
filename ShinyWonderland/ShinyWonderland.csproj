@@ -136,6 +136,10 @@
           <Generator>ResXFileCodeGenerator</Generator>
           <LastGenOutput>MealTimeViewModel.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Update="AppShell.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>AppShell.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

@@ -22,6 +22,7 @@
                                FontSize="Medium"
                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
                                FontAttributes="Bold" />
+                        
                         <Label Text="{Binding Timestamp, Converter={StaticResource Humanize}}"
                                TextColor="{StaticResource Blue100Accent}"
                                FontAttributes="Bold"

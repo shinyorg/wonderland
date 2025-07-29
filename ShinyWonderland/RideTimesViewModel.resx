@@ -22,16 +22,13 @@
         <value>You are currently offline</value>
     </data>
     <data name="DataFrom" xml:space="preserve">
-        <value>Data is from </value>
+        <value>Data is from</value>
     </data>
-    <data name="WaitMinutes" xml:space="preserve">
-        <value>{0} minutes</value>
-    </data>
-    <data name="PaidWaitMinutes" xml:space="preserve">
-        <value>PAID: {0} minutes</value>
+    <data name="Paid" xml:space="preserve">
+        <value>PAID</value>
     </data>
     <data name="LastRide" xml:space="preserve">
-        <value>Last Ride: {0}</value>
+        <value>Last Ride</value>
     </data>
     <data name="UnknownDistance" xml:space="preserve">
         <value>Unknown Distance</value>
@@ -59,5 +56,8 @@
     </data>
     <data name="Ok" xml:space="preserve">
         <value>Ok</value>
+    </data>
+    <data name="Mins" xml:space="preserve">
+        <value>mins</value>
     </data>
 </root>

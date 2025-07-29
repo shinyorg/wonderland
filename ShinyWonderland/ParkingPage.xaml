@@ -45,7 +45,7 @@
                       VerticalOptions="Fill" />
             
             <!--
-            <Button Text="Take Photo" 
+            <Button Text="{Binding Localize.TakePhoto}" 
                     Command="{Binding TakePhotoCommand}"
                     IsVisible="{Binding IsParked}" />
             -->

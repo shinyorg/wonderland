@@ -4,19 +4,4 @@
        xmlns:local="clr-namespace:ShinyWonderland"
        x:Class="ShinyWonderland.AppShell"
        x:DataType="local:AppShell">
-    
-    <TabBar>
-        <Tab Title="Ride Time" Icon="ride_time">
-            <ShellContent ContentTemplate="{DataTemplate local:RideTimesPage}" />
-        </Tab>
-        <Tab Title="Settings" Icon="settings">
-            <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
-        </Tab>
-        <Tab Title="Parking" Icon="parking">
-            <ShellContent ContentTemplate="{DataTemplate local:ParkingPage}" />
-        </Tab>
-        <Tab Title="Hours" Icon="hours">
-            <ShellContent ContentTemplate="{DataTemplate local:HoursPage}" />
-        </Tab>
-    </TabBar>
 </Shell>

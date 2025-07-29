@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ShinyWonderland"
@@ -8,10 +9,10 @@
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{Binding Localize.History}" 
-                     Command="{Binding GoToHistoryCommand}"/>
+        <ToolbarItem Text="{Binding Localize.History}"
+                     Command="{Binding GoToHistoryCommand}" />
     </ContentPage.ToolbarItems>
-    
+
     <Grid RowDefinitions="Auto, Auto, *"
           RowSpacing="0"
           Padding="0">
@@ -25,21 +26,28 @@
                Margin="0"
                Grid.Row="0" />
 
-        <Label Text="{Binding DataTimestamp, StringFormat='{Binding Localize.DataFrom}'}"
-               BackgroundColor="{StaticResource Primary}"
+        <Label BackgroundColor="{StaticResource Primary}"
                TextColor="{StaticResource White}"
                FontAttributes="Bold"
                HorizontalTextAlignment="Center"
                Padding="16,8"
                Margin="0"
-               Grid.Row="1" />
+               Grid.Row="1">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="{Binding Localize.DataFrom}" />
+                    <Span Text=" " />
+                    <Span Text="{Binding DataTimestamp}" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
 
         <RefreshView Command="{Binding LoadCommand}"
                      IsRefreshing="{Binding IsBusy}"
                      Grid.Row="2">
 
             <CollectionView ItemsSource="{Binding Rides}"
-                           Margin="0,8,0,0">
+                            Margin="0,8,0,0">
                 <CollectionView.EmptyView>
                     <controls:NoItemsView />
                 </CollectionView.EmptyView>
@@ -58,30 +66,54 @@
                                        Grid.Row="0"
                                        Grid.ColumnSpan="3" />
 
-                                <Label Text="{Binding WaitTimeMinutes, StringFormat='{Binding Localize.WaitMinutes}'}"
-                                       IsVisible="{Binding HasWaitTime}"
+                                <Label IsVisible="{Binding HasWaitTime}"
                                        TextColor="{StaticResource Blue100Accent}"
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Start"
                                        Grid.Row="1"
-                                       Grid.Column="0" />
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding WaitTimeMinutes}" />
+                                            <Span Text=" " />
+                                            <Span Text="{Binding Localize.Mins}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                                <Label Text="{Binding PaidWaitTimeMinutes, StringFormat='{Binding Localize.PaidWaitMinutes}'}"
-                                       IsVisible="{Binding HasPaidWaitTime}"
+                                <Label IsVisible="{Binding HasPaidWaitTime}"
                                        TextColor="{StaticResource Blue100Accent}"
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Start"
                                        Grid.Row="1"
-                                       Grid.Column="1" />
+                                       Grid.Column="1">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Localize.Paid}" />
+                                            <Span Text=": " />
+                                            <Span Text="{Binding PaidWaitTimeMinutes}" />
+                                            <Span Text=" " />
+                                            <Span Text="{Binding Localize.Mins}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                                <Label Text="{Binding LastRidden, Converter={StaticResource Humanize}, StringFormat='{Binding Localize.LastRide}'}" 
-                                       HorizontalTextAlignment="Start"
+                                <Label HorizontalTextAlignment="Start"
                                        VerticalTextAlignment="Start"
                                        TextColor="{StaticResource Blue100Accent}"
+                                       IsVisible="{Binding HasLastRide}"
                                        Grid.Row="2"
-                                       Grid.Column="1" 
-                                       Grid.ColumnSpan="2"/>
-                                
+                                       Grid.Column="1"
+                                       Grid.ColumnSpan="2">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Localize.LastRide}" />
+                                            <Span Text=": " />
+                                            <Span Text="{Binding LastRidden}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
                                 <!--IsVisible="{Binding IsOpen}"-->
                                 <Label Text="{Binding DistanceText}"
                                        TextColor="{StaticResource Blue100Accent}"
@@ -91,12 +123,12 @@
                                        Grid.Column="0" />
 
                                 <Button Text="{Binding Localize.AddRide}"
-                                        Command="{Binding AddRideCommand}" 
+                                        Command="{Binding AddRideCommand}"
                                         HorizontalOptions="Center"
                                         Grid.Row="0"
                                         Grid.RowSpan="3"
                                         Grid.Column="3" />
-                                
+
                                 <Border IsVisible="{Binding IsClosed}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 4"

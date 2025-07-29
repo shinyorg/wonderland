@@ -73,7 +73,9 @@ public partial class RideTimesViewModel(
     
     [MainThread]
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
-        => this.LoadData(false);
+    {
+        return Task.CompletedTask;
+    }   //=> this.LoadData(false);
 
     
     [MainThread]

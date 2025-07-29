@@ -69,6 +69,9 @@
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
+
+        <MtouchLink>SdkOnly</MtouchLink>
+        <AdditionalArgs>--linkskip=Humanizer</AdditionalArgs>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">

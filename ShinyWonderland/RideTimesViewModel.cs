@@ -112,7 +112,7 @@ public partial class RideTimesViewModel(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to start GPS");
+            logger.LogWarning(ex, "Failed to start GPS");
         }
     }
 
@@ -120,18 +120,25 @@ public partial class RideTimesViewModel(
     const string GEOFENCE_ID = "ThemePark";
     async Task TryGeofencing()
     {
-        var access = await geofenceManager.RequestAccess();
-        if (access == AccessState.Available)
+        try
         {
-            var regions = geofenceManager.GetMonitorRegions();
-            if (!regions.Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase)))
+            var access = await geofenceManager.RequestAccess();
+            if (access == AccessState.Available)
             {
-                await geofenceManager.StartMonitoring(new GeofenceRegion(
-                    GEOFENCE_ID,
-                    services.ParkOptions.Value.CenterOfPark,
-                    services.ParkOptions.Value.NotificationDistance
-                ));
+                var regions = geofenceManager.GetMonitorRegions();
+                if (!regions.Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    await geofenceManager.StartMonitoring(new GeofenceRegion(
+                        GEOFENCE_ID,
+                        services.ParkOptions.Value.CenterOfPark,
+                        services.ParkOptions.Value.NotificationDistance
+                    ));
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Error with geofencing");
         }
     }
     

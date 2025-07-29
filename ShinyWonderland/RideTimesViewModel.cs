@@ -79,20 +79,20 @@ public partial class RideTimesViewModel(
     [MainThread]
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
-        logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
-        var rides = this.Rides.ToList();
-        
-        foreach (var ride in rides)
-            ride.UpdateDistance(@event.Position);
-
-        this.currentPosition = @event.Position;
-        if (services.AppSettings.Ordering == RideOrder.Distance)
-        {
-            this.Rides = rides
-                .OrderBy(x => x.DistanceMeters ?? 999)
-                .ThenBy(x => x.Name)
-                .ToList();
-        }
+        // logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
+        // var rides = this.Rides.ToList();
+        //
+        // foreach (var ride in rides)
+        //     ride.UpdateDistance(@event.Position);
+        //
+        // this.currentPosition = @event.Position;
+        // if (services.AppSettings.Ordering == RideOrder.Distance)
+        // {
+        //     this.Rides = rides
+        //         .OrderBy(x => x.DistanceMeters ?? 999)
+        //         .ThenBy(x => x.Name)
+        //         .ToList();
+        // }
 
         return Task.CompletedTask;
     }

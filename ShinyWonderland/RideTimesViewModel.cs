@@ -1,5 +1,4 @@
 ﻿using System.Reactive.Disposables;
-using Humanizer;
 using ShinyWonderland.Contracts;
 using ShinyWonderland.Handlers;
 
@@ -236,11 +235,11 @@ public partial class RideTimesViewModel(
         this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
         this.disposer = new();
         from ??= services.TimeProvider.GetUtcNow();
-        this.DataTimestamp = from.Value.LocalDateTime.Humanize();
+        this.DataTimestamp = from.Value.LocalDateTime.ToString(); // TODO: .Humanize();
         
         Observable
             .Interval(TimeSpan.FromSeconds(1))
-            .Select(_ => from.Value.Humanize())
+            .Select(_ => from.Value.ToString()) // TODO: .Humanize())
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
@@ -264,7 +263,7 @@ public partial class RideTimeViewModel(
     public bool HasLastRide => LastRidden != null;
     
     DateTimeOffset? lastRidden;
-    public string? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime().Humanize();
+    public string? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime().ToString(); // TODO: .Humanize();
     
     [ObservableProperty] string distanceText = localize.UnknownDistance;
     [ObservableProperty] double? distanceMeters;

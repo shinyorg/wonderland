@@ -9,7 +9,7 @@ public partial class ParkingViewModel(
     ParkingViewModelLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
-    const string PhotoFileName = "parked_photo.png";
+    // const string PhotoFileName = "parked_photo.png";
     
     public ParkingViewModelLocalized Localize => localize;
     
@@ -72,11 +72,11 @@ public partial class ParkingViewModel(
     }
 
 
-    [RelayCommand]
-    async Task TogglePhotoZoom()
-    {
-        // TODO: zoom in or out on photo
-    }
+    // [RelayCommand]
+    // async Task TogglePhotoZoom()
+    // {
+    //     // TODO: zoom in or out on photo
+    // }
 
     [RelayCommand]
     async Task TakePhoto()

@@ -6,8 +6,8 @@ namespace ShinyWonderland;
 [ShellMap<MealTimePage>(registerRoute: false)]
 public partial class MealTimeViewModel(
     IMediator mediator,
-    INavigator navigator,
-    IOptions<MealTimeOptions> options,
+    // INavigator navigator,
+    // IOptions<MealTimeOptions> options,
     MealTimeViewModelLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {

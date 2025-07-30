@@ -10,18 +10,20 @@
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <UseMaui>true</UseMaui>
-
+        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
-
         <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
-        <LangVersion>preview</LangVersion>
-
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
         <MauiVersion>9.0.90</MauiVersion>
         <ShinyVersion>4.0.0-beta-0086</ShinyVersion>
+
+        <EnableAotAnalyzer>true</EnableAotAnalyzer>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
@@ -69,11 +71,8 @@
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
-
-        <MtouchLink>SdkOnly</MtouchLink>
-        <AdditionalArgs>--linkskip=Humanizer</AdditionalArgs>
     </PropertyGroup>
-
+    
     <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">
         <MauiXaml Remove="*.xaml"/>
         <None Remove="*.xaml"/>
@@ -93,7 +92,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <TrimmerRootDescriptor Include="Linker.xml" Condition="'$(Configuration)' == 'Release'"/>
 
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
@@ -114,7 +112,7 @@
         <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.7"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.7" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Sentry.Maui" Version="5.12.0"/>
+        <PackageReference Include="Sentry.Maui" Version="5.13.0" />
         <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="1.1.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

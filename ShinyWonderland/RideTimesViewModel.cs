@@ -73,28 +73,26 @@ public partial class RideTimesViewModel(
     
     [MainThread]
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }   //=> this.LoadData(false);
+        => this.LoadData(false);
 
     
     [MainThread]
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
-        // logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
-        // var rides = this.Rides.ToList();
-        //
-        // foreach (var ride in rides)
-        //     ride.UpdateDistance(@event.Position);
-        //
-        // this.currentPosition = @event.Position;
-        // if (services.AppSettings.Ordering == RideOrder.Distance)
-        // {
-        //     this.Rides = rides
-        //         .OrderBy(x => x.DistanceMeters ?? 999)
-        //         .ThenBy(x => x.Name)
-        //         .ToList();
-        // }
+        logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
+        var rides = this.Rides.ToList();
+        
+        foreach (var ride in rides)
+            ride.UpdateDistance(@event.Position);
+        
+        this.currentPosition = @event.Position;
+        if (services.AppSettings.Ordering == RideOrder.Distance)
+        {
+            this.Rides = rides
+                .OrderBy(x => x.DistanceMeters ?? 999)
+                .ThenBy(x => x.Name)
+                .ToList();
+        }
 
         return Task.CompletedTask;
     }
@@ -188,8 +186,7 @@ public partial class RideTimesViewModel(
                     vm.UpdateDistance(this.currentPosition);
                 
                 return vm;
-            })
-            .AsQueryable();
+            });
         
         logger.LogDebug("Received {Count} rides from API", query.Count());
         if (services.AppSettings.ShowOpenOnly)

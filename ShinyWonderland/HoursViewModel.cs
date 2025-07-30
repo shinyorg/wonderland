@@ -37,12 +37,11 @@ public partial class HoursViewModel(
 public record VmParkSchedule(
     ParkHours Info,
     bool IsToday,
-    HoursViewModelLocalized localize
+    HoursViewModelLocalized Localize
 )
 {
-    public HoursViewModelLocalized Localize => localize;
     public bool IsOpen => Info.IsOpen;
     public bool IsClosed => Info.IsClosed;
     public string HoursOfOperation => $"{Info.Hours?.Open:h:mm tt} - {Info.Hours?.Closed:h:mm tt}";
-    public string DateString => IsToday ? localize.Today : this.Info.Date.ToString("dddd, MMMM dd");
+    public string DateString => IsToday ? Localize.Today : this.Info.Date.ToString("dddd, MMMM dd");
 }

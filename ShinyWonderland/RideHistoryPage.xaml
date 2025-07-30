@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
-             xmlns:handlers="clr-namespace:ShinyWonderland.Handlers"
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
@@ -15,7 +14,7 @@
         </CollectionView.EmptyView>
         
         <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="handlers:RideHistoryRecord">
+            <DataTemplate x:DataType="shinyWonderland:RideHistoryItemViewModel">
                 <controls:ListItemView>
                     <VerticalStackLayout Padding="16">
                         <Label Text="{Binding RideName}" 
@@ -23,7 +22,7 @@
                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
                                FontAttributes="Bold" />
                         
-                        <Label Text="{Binding Timestamp}"
+                        <Label Text="{Binding TimeAgo}"
                                TextColor="{StaticResource Blue100Accent}"
                                FontAttributes="Bold"
                                FontSize="Small"

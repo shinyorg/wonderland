@@ -10,6 +10,7 @@ public partial class RideTimesViewModel(
     CoreServices services,
     ILogger<RideTimesViewModel> logger,
     IGeofenceManager geofenceManager,
+    Humanizer humanizer,
     RideTimesViewModelLocalized localize
 ) : 
     ObservableObject, 
@@ -180,7 +181,7 @@ public partial class RideTimesViewModel(
         var query = rides
             .Select(x =>
             {
-                var vm = new RideTimeViewModel(x, localize, services);
+                var vm = new RideTimeViewModel(x, localize, humanizer, services);
                 if (this.currentPosition != null)
                     vm.UpdateDistance(this.currentPosition);
                 
@@ -235,11 +236,11 @@ public partial class RideTimesViewModel(
         this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
         this.disposer = new();
         from ??= services.TimeProvider.GetUtcNow();
-        this.DataTimestamp = from.Value.LocalDateTime.ToString(); // TODO: .Humanize();
+        this.DataTimestamp = humanizer.TimeAgo(from.Value);
         
         Observable
             .Interval(TimeSpan.FromSeconds(1))
-            .Select(_ => from.Value.ToString()) // TODO: .Humanize())
+            .Select(_ => humanizer.TimeAgo(from.Value))
             .Subscribe(x => this.DataTimestamp = x)
             .DisposedBy(this.disposer);
     }
@@ -249,6 +250,7 @@ public partial class RideTimesViewModel(
 public partial class RideTimeViewModel(
     RideTime rideTime,
     RideTimesViewModelLocalized localize,
+    Humanizer humanizer,
     CoreServices services
 ) : ObservableObject
 {
@@ -263,7 +265,7 @@ public partial class RideTimeViewModel(
     public bool HasLastRide => LastRidden != null;
     
     DateTimeOffset? lastRidden;
-    public string? LastRidden => (lastRidden ?? rideTime.LastRidden)?.ToLocalTime().ToString(); // TODO: .Humanize();
+    public string? LastRidden => humanizer.TimeAgo(lastRidden ?? rideTime.LastRidden);
     
     [ObservableProperty] string distanceText = localize.UnknownDistance;
     [ObservableProperty] double? distanceMeters;

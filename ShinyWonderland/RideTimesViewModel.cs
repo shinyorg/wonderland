@@ -26,7 +26,7 @@ public partial class RideTimesViewModel(
     public RideTimesViewModelLocalized Localize => localize;
     public string Title => services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
-    [ObservableProperty] public partial bool IsBusy { get; private set; }
+    [ObservableProperty] public partial bool IsBusy { get; set; }
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
 
     [NotifyPropertyChangedFor(nameof(IsNotConnected))]

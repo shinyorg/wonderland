@@ -56,11 +56,7 @@ public partial class RideTimesViewModel(
     Task GoToHistory() => services.Navigator.NavigateToRideHistory();
 
     [RelayCommand]
-    async Task Load()
-    {
-        if (!this.IsBusy)
-            await this.LoadData(true);
-    }
+    Task Load() => this.LoadData(true);
 
     
     [MainThread]
@@ -150,8 +146,6 @@ public partial class RideTimesViewModel(
         try
         {
             this.cancellationTokenSource = new();
-            this.IsBusy = true;
-            
             var result = await services.Mediator.Request(
                 new GetCurrentRideTimes(), 
                 this.cancellationTokenSource.Token,
@@ -163,14 +157,12 @@ public partial class RideTimesViewModel(
             );
             this.StartDataTimer(result.Context.Cache()?.Timestamp);
             this.FilterSortBind(result.Result);
+            this.IsBusy = false;
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
             await services.Navigator.Alert(localize.Error, localize.GeneralError, localize.Ok);
-        }
-        finally
-        {
             this.IsBusy = false;
         }
     }

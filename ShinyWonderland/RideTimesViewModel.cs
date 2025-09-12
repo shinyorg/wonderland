@@ -267,7 +267,7 @@ public partial class RideTimeViewModel(
     {
         var confirm = await services.Navigator.Confirm(
             localize.HistoryDialogTitle, 
-            String.Format(localize.AddRideHistoryQuestion, this.Name)
+            localize.AddRideHistoryQuestionFormat(this.Name)
         );
         if (confirm)
         {

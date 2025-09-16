@@ -11,14 +11,14 @@
         <LangVersion>preview</LangVersion>
         <UseMaui>true</UseMaui>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
-        
+
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>9.0.100</MauiVersion>
+        <MauiVersion>9.0.110</MauiVersion>
         <ShinyVersion>4.0.0-beta-0091</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
@@ -29,14 +29,14 @@
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
         <SentryOrg>shiny-software</SentryOrg>
         <SentryProject>wonderland</SentryProject>
-        
+
         <SentryCreateRelease>false</SentryCreateRelease>
         <SentrySetCommits>false</SentrySetCommits>
         <SentryUploadSymbols>true</SentryUploadSymbols>
         <SentryUploadSources>true</SentryUploadSources>
         <SentryUploadAndroidProguardMapping>true</SentryUploadAndroidProguardMapping>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <ApplicationId>$(ApplicationId).dev</ApplicationId>
         <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
@@ -72,7 +72,7 @@
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
     </PropertyGroup>
-    
+
     <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">
         <MauiXaml Remove="*.xaml"/>
         <None Remove="*.xaml"/>
@@ -108,20 +108,20 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.8" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" Condition="'$(Configuration)' == 'Debug'" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.9"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Sentry.Maui" Version="5.14.1" />
+        <PackageReference Include="Sentry.Maui" Version="5.15.0"/>
         <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.0-beta-0001">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Shiny.Extensions.Stores" Version="1.2.2"/>
         <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.2.2"/>
-        <PackageReference Include="Shiny.Reflector" Version="1.6.1"/>
+        <PackageReference Include="Shiny.Reflector" Version="1.7.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0"/>
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.10.0-beta-0009" />
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="4.10.0-beta-0009" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="4.10.0-beta-0011" />
+        <PackageReference Include="Shiny.Mediator.Sentry" Version="4.10.0-beta-0011" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
@@ -138,8 +138,9 @@
                       Uri="https://api.themeparks.wiki/docs/v1.yaml"
                       Namespace="ShinyWonderland.ThemeParksApi"
                       ContractPostfix="HttpRequest"
+                      GenerateJsonConverters="true"
                       Visible="false"/>
-        
+
         <EmbeddedResource Update="**/*.resx"/>
     </ItemGroup>
 

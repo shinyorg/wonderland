@@ -19,7 +19,7 @@
         <ApplicationVersion>1</ApplicationVersion>
 
         <MauiVersion>9.0.110</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0091</ShinyVersion>
+        <ShinyVersion>4.0.0-beta-0092</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -112,16 +112,16 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="Sentry.Maui" Version="5.15.0"/>
-        <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.0-beta-0001">
+        <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Shiny.Extensions.Stores" Version="1.2.2"/>
-        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.2.2"/>
+        <PackageReference Include="Shiny.Extensions.Stores" Version="1.3.0" />
+        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.0" />
         <PackageReference Include="Shiny.Reflector" Version="1.7.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.0.0"/>
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.10.0-beta-0011" />
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="4.10.0-beta-0011" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="4.10.0-beta-0016" />
+        <PackageReference Include="Shiny.Mediator.Sentry" Version="4.10.0-beta-0016" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

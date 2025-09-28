@@ -26,8 +26,6 @@ public partial class ParkingViewModel(
 
     public bool HasParkedImage => ImageUri != null;
     public bool IsParked => this.ParkLocation != null;
-    
-    
     public string CommandText => this.ParkLocation == null 
         ? Localize.SetParking
         : Localize.RemoveParking;

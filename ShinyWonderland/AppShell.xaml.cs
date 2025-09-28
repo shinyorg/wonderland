@@ -8,6 +8,7 @@ public partial class AppShell : Shell
         this.InitializeComponent();
         
         this.AddTab<RideTimesPage>(localize.RideTimes, "ride_time");
+        this.AddTab<MapRideTimesPage>(localize.RideTimes, "ride_time");
         this.AddTab<SettingsPage>(localize.Settings, "settings");
         this.AddTab<ParkingPage>(localize.Parking, "parking");
         this.AddTab<HoursPage>(localize.Hours, "hours");

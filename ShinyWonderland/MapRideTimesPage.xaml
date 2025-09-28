@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
+             x:Class="ShinyWonderland.MapRideTimesPage"
+             x:DataType="shinyWonderland:MapRideTimesViewModel"
+             Title="Ride Times">
+    
+    <maps:Map x:Name="TheMap" 
+              ItemsSource="{Binding Rides}" 
+              IsShowingUser="True"
+              IsScrollEnabled="True"
+              IsZoomEnabled="True"
+              MapType="Street"
+              VerticalOptions="Fill"
+              HorizontalOptions="Fill">
+        <maps:Map.ItemTemplate>
+            <DataTemplate x:DataType="shinyWonderland:MapItem">
+                <maps:Pin Label="{Binding Text}"
+                          Location="{Binding Location}" />
+            </DataTemplate>
+        </maps:Map.ItemTemplate>
+    </maps:Map>
+</ContentPage>

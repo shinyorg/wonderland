@@ -3,7 +3,7 @@ using SQLite;
 namespace ShinyWonderland.Handlers;
 
 
-[Singleton]
+[MediatorSingleton]
 public class RideHistoryHandlers : 
     ICommandHandler<AddRideCommand>, 
     IRequestHandler<GetRideHistory, List<RideHistoryRecord>>, 

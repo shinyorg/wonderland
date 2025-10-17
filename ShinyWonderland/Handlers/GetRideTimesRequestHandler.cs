@@ -4,7 +4,7 @@ using ShinyWonderland.ThemeParksApi;
 namespace ShinyWonderland.Handlers;
 
 
-[Singleton]
+[MediatorSingleton]
 public class GetRideTimesRequestHandler(
     IOptions<ParkOptions> parkOptions
 ) : IRequestHandler<GetCurrentRideTimes, List<RideTime>>

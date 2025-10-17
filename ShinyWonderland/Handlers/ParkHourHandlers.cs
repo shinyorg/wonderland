@@ -4,7 +4,7 @@ using ShinyWonderland.ThemeParksApi;
 namespace ShinyWonderland.Handlers;
 
 
-[Singleton]
+[MediatorSingleton]
 public class ParkHourHandlers(
     IOptions<ParkOptions> parkOptions,
     TimeProvider timeProvider

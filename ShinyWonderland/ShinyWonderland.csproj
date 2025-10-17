@@ -18,8 +18,8 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>9.0.110</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0092</ShinyVersion>
+        <MauiVersion>9.0.120</MauiVersion>
+        <ShinyVersion>4.0.0-beta-0093</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -108,10 +108,10 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.9"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.10"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.10" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Sentry.Maui" Version="5.15.1" />
+        <PackageReference Include="Sentry.Maui" Version="5.16.1" />
         <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -120,8 +120,8 @@
         <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.1" />
         <PackageReference Include="Shiny.Reflector" Version="1.7.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.1.1"/>
-        <PackageReference Include="Shiny.Mediator.Maui" Version="4.10.0-beta-0020" />
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="4.10.0-beta-0020" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="5.0.0-beta-0006" />
+        <PackageReference Include="Shiny.Mediator.Sentry" Version="5.0.0-beta-0006" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
@@ -138,7 +138,7 @@
                       Uri="https://api.themeparks.wiki/docs/v1.yaml"
                       Namespace="ShinyWonderland.ThemeParksApi"
                       ContractPostfix="HttpRequest"
-                      GenerateJsonConverters="true"
+                      GenerateJsonConverters="false"
                       Visible="false"/>
 
         <EmbeddedResource Update="**/*.resx"/>

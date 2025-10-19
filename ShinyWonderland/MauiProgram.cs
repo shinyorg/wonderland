@@ -34,17 +34,15 @@ public static class MauiProgram
                 // );
             })
 #endif
-            .AddShinyMediator(x =>
-                {
-                    x
-                        .AddMauiPersistentCache()
-                        .AddConnectivityBroadcaster()
-                        .UseSentry()
-                        .AddHttpClient()
-                        .UseMaui(false);
-
-                    x.Services.AddDiscoveredMediatorHandlersFromShinyWonderland();
-                },
+            .AddShinyMediator(
+                x => x
+                    .AddRegistry()
+                    .AddMauiPersistentCache()
+                    .AddConnectivityBroadcaster()
+                    .UseSentry()
+                    .AddHttpClient()
+                    .UseMaui(false)
+                ,
                 false
             )
             .ConfigureFonts(fonts =>
@@ -56,7 +54,7 @@ public static class MauiProgram
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealTime"));
         
-        builder.Services.AddGeneratedServices();
+        builder.Services.AddShinyServiceRegistry();
         builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddPersistentService<AppSettings>();
 

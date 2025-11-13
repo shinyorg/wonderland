@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <BaseTargetFramework>net9.0</BaseTargetFramework>
+        <BaseTargetFramework>net10.0</BaseTargetFramework>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
         <OutputType Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">Exe</OutputType>
@@ -11,6 +11,7 @@
         <LangVersion>preview</LangVersion>
         <UseMaui>true</UseMaui>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        <MauiXamlInflator>SourceGen</MauiXamlInflator>
 
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
@@ -18,8 +19,8 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>9.0.120</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0093</ShinyVersion>
+        <MauiVersion>10.0.10</MauiVersion>
+        <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -108,10 +109,10 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.10" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Sentry.Maui" Version="5.16.1" />
+        <PackageReference Include="Sentry.Maui" Version="5.16.2" />
         <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -120,8 +121,8 @@
         <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.1" />
         <PackageReference Include="Shiny.Reflector" Version="1.7.0"/>
         <PackageReference Include="Shiny.Maui.Shell" Version="1.1.1" />
-        <PackageReference Include="Shiny.Mediator.Maui" Version="5.0.0-beta-0012" />
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="5.0.0-beta-0012" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="5.1.1" />
+        <PackageReference Include="Shiny.Mediator.Sentry" Version="5.1.1" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

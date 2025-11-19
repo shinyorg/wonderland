@@ -35,16 +35,14 @@ public static class MauiProgram
             })
 #endif
             .AddShinyMediator(
-                x =>
-                {
-                    x.Services.AddMediatorRegistry();
-                    x
-                        .AddMauiPersistentCache()
-                        .AddConnectivityBroadcaster()
-                        .UseSentry()
-                        .AddHttpClient()
-                        .UseMaui(false);
-                },
+                x => x
+                    .AddMediatorRegistry()
+                    .AddHttpClient()
+                    .AddMauiPersistentCache()
+                    .AddConnectivityBroadcaster()
+                    .UseSentry()
+                    .AddHttpClient()
+                    .UseMaui(false),
                 false
             )
             .ConfigureFonts(fonts =>

@@ -45,6 +45,9 @@ jobs:
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
+    
+    - name: Fix XCode Simulators
+      run: xcodebuild -downloadPlatform iOS -buildVersion ${{ env.XCODE_VERSION }} -architectureVariant universal
           
     # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
     - name: Configure From Secrets

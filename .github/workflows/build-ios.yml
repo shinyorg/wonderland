@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  XCODE_VERSION: 26.1
+  XCODE_VERSION: 26.1.1
   DOTNET_TFM: 'net10.0'
   DOTNET_VERSION: '10.0.x'
   APP_PROJECT: './ShinyWonderland/ShinyWonderland.csproj'
@@ -46,8 +46,8 @@ jobs:
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
     
-    - name: Fix XCode Simulators
-      run: xcodebuild -downloadPlatform iOS -buildVersion ${{ env.XCODE_VERSION }} -architectureVariant universal
+#    - name: Fix XCode Simulators
+#      run: xcodebuild -downloadPlatform iOS -buildVersion ${{ env.XCODE_VERSION }} -architectureVariant universal
           
     # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
     - name: Configure From Secrets

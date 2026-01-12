@@ -19,7 +19,7 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>10.0.10</MauiVersion>
+        <MauiVersion>10.0.20</MauiVersion>
         <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
@@ -27,6 +27,14 @@
         <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">
+        <UseMonoRuntime>false</UseMonoRuntime>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
+    
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
         <SentryOrg>shiny-software</SentryOrg>
         <SentryProject>wonderland</SentryProject>
@@ -54,14 +62,7 @@
         <AndroidLinkTool>proguard</AndroidLinkTool>
         -->
     </PropertyGroup>
-
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' AND '$(Configuration)' == 'Debug'">
-        <!--these help speed up android builds-->
-        <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
-        <AndroidEnableProfiler>true</AndroidEnableProfiler>
-        <AndroidPackageFormat>aab</AndroidPackageFormat>
-    </PropertyGroup>
-
+    
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' AND '$(Configuration)' == 'Debug'">
         <!--forces the simulator to pickup entitlements-->
         <EnableCodeSigning>true</EnableCodeSigning>

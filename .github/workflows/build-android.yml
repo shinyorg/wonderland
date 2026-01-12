@@ -81,7 +81,10 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: artifacts
-        path: ./artifacts/*.aab
+        path: |
+          ./artifacts/*.aab
+          ./artifacts/*.apk
+          ./artifacts/*.binlog
         
   deploy:
     needs: build

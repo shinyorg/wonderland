@@ -27,10 +27,12 @@
         <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
     </PropertyGroup>
 
+    <!--
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">
         <UseMonoRuntime>false</UseMonoRuntime>
     </PropertyGroup>
-
+    -->
+    
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">
         <PublishAot>true</PublishAot>
     </PropertyGroup>

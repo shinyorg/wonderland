@@ -19,7 +19,7 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>10.0.20</MauiVersion>
+        <MauiVersion>10.0.30</MauiVersion>
         <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>

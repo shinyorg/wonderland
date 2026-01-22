@@ -105,17 +105,22 @@ public class LastRideTime
 {
     public string RideId { get; set; }
     
-    [RoomSharp.Attributes.TypeConverter(ConverterType = typeof(DateTimeTicksConverter))]
+    [RoomSharp.Attributes.TypeConverter(ConverterType = typeof(DateTimeObjectConverter))]
     public DateTimeOffset Timestamp { get; set; }
 }
 
-public class DateTimeTicksConverter : TypeConverter<DateTimeOffset, long>
+public class DateTimeObjectConverter : TypeConverter<object, DateTimeOffset>
 {
-    public override long FromProvider(DateTimeOffset provider)
-        => provider.Ticks;
+    public override DateTimeOffset FromProvider(object provider)
+        => new((long)provider, TimeSpan.Zero);
 
-    public override DateTimeOffset ToProvider(long model)
-        => new(model, TimeSpan.Zero);
+    public override object ToProvider(DateTimeOffset value)
+        => value.Ticks;
+    // public override object FromProvider(DateTimeOffset provider)
+    //     => provider.Ticks;
+    //
+    // public override DateTimeOffset ToProvider(object model)
+    //     => new((long)model, TimeSpan.Zero);
 }
 
 public class EnumIntTypeConverter<TEnum> : TypeConverter<TEnum, int>
@@ -133,6 +138,8 @@ public class MealTimeValue
 {
     [RoomSharp.Attributes.TypeConverter(ConverterType = typeof(EnumIntTypeConverter<MealTimeType>))]
     public MealTimeType Type { get; set; }
+    
+    [RoomSharp.Attributes.TypeConverter(ConverterType = typeof(DateTimeObjectConverter))]
     public DateTimeOffset? Timestamp { get; set; }
 }
 

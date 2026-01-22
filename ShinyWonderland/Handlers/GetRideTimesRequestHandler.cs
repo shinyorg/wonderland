@@ -65,7 +65,7 @@ public class GetRideTimesRequestHandler(
                 if (pwt != null)
                     paidWaitTime = Convert.ToInt32(pwt);
 
-                open = live.Status == EntityLiveDataStatus.OPERATING;
+                open = live.Status == LiveStatusType.OPERATING;
             }
 
             var lastRide = lastRides.FirstOrDefault(x => x.RideId == rideInfo.Id)?.Timestamp;

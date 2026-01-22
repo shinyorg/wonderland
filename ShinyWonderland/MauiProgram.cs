@@ -37,11 +37,10 @@ public static class MauiProgram
             .AddShinyMediator(
                 x => x
                     .AddMediatorRegistry()
-                    .AddHttpClient()
+                    .AddGeneratedOpenApiClient()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
                     .UseSentry()
-                    .AddHttpClient()
                     .UseMaui(false),
                 false
             )

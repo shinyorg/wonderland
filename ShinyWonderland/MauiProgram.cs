@@ -2,7 +2,6 @@
 using Shiny.Extensions.Stores;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
-using SQLite;
 
 namespace ShinyWonderland;
 
@@ -37,11 +36,10 @@ public static class MauiProgram
             .AddShinyMediator(
                 x => x
                     .AddMediatorRegistry()
-                    .AddHttpClient()
+                    .AddGeneratedOpenApiClient()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
                     .UseSentry()
-                    .AddHttpClient()
                     .UseMaui(false),
                 false
             )
@@ -60,12 +58,13 @@ public static class MauiProgram
 
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddSingleton<SQLiteAsyncConnection>(_ =>
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));
-        });
-        
+        // builder.Services.AddSingleton<SQLiteAsyncConnection>(_ =>
+        // {
+        //     var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        //     return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));
+        // });
+        // Basic registration
+        builder.Services.AddDatabase();
         builder.Services.AddNotifications();
         builder.Services.AddGeofencing<MyGeofenceDelegate>();
         builder.Services.AddGps<MyGpsDelegate>();

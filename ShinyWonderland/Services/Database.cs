@@ -12,7 +12,9 @@ public static class Database
     {
         services.AddRoomSharpDatabase<AppDatabaseImpl>(ctx =>
         {
-            ctx.UseSqlite("app.db");
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var fullPath = Path.Combine(appData, "ShinyWonderland.db");
+            ctx.UseSqlite(fullPath);
     
             // ctx.Builder.SetVersion(1).AddMigrations(new InitialMigration());
         });

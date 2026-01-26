@@ -1,9 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <BaseTargetFramework>net10.0</BaseTargetFramework>
-        <TargetFrameworks>$(BaseTargetFramework)</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
+        <TargetFrameworks>net10.0;net10.0-ios;net10.0-android</TargetFrameworks>
         <OutputType Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">Exe</OutputType>
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
@@ -26,6 +23,10 @@
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == ''">
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">
@@ -87,7 +88,6 @@
     </ItemGroup>
 
     <ItemGroup>
-
         <MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.png" Color="#512BD4"/>
         <MauiSplashScreen Include="Resources\Splash\splash.png" Color="#512BD4" BaseSize="128,128"/>
 

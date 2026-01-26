@@ -58,12 +58,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);
-        // builder.Services.AddSingleton<SQLiteAsyncConnection>(_ =>
-        // {
-        //     var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        //     return new SQLiteAsyncConnection(Path.Combine(appData, "ShinyWonderland.db"));
-        // });
-        // Basic registration
+
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
         builder.Services.AddGeofencing<MyGeofenceDelegate>();

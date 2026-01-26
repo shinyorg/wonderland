@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <BaseTargetFramework>net10.0</BaseTargetFramework>
+        <TargetFrameworks>$(BaseTargetFramework)</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
         <OutputType Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">Exe</OutputType>
@@ -75,14 +76,6 @@
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">
-        <MauiXaml Remove="*.xaml"/>
-        <None Remove="*.xaml"/>
-        <None Remove="*.xaml.cs"/>
-        <Compile Remove="*.xaml"/>
-        <Compile Remove="*.xaml.cs"/>
-    </ItemGroup>
-
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy"/>
 
@@ -146,6 +139,7 @@
                       Visible="false"/>
 
         <EmbeddedResource Update="**/*.resx"/>
+        <InternalsVisibleTo Include="ShinyWonderland.Tests"/>
     </ItemGroup>
 
 </Project>

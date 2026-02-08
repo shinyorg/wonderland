@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net10.0;net10.0-ios;net10.0-android</TargetFrameworks>
+        <BaseTargetFramework>net10.0</BaseTargetFramework>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
+        <TargetFrameworks Condition="'$(CI)' != 'true'">$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
+
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -16,7 +20,7 @@
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
-        <MauiVersion>10.0.30</MauiVersion>
+        <MauiVersion>10.0.31</MauiVersion>
         <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
 
         <EnableAotAnalyzer>true</EnableAotAnalyzer>
@@ -31,6 +35,7 @@
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == ''">
         <OutputType>Library</OutputType>
+        <UseMaui>false</UseMaui>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">
@@ -55,6 +60,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <ApplicationId>$(ApplicationId).dev</ApplicationId>
         <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
+        <CodesignKey>Apple Development: Allan Ritchie (34FQ4253P2)</CodesignKey>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
@@ -107,8 +113,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.1" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" Condition="'$(Configuration)' == 'Debug'" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
         <PackageReference Include="RoomSharp" Version="0.4.7" />
         <PackageReference Include="RoomSharp.DependencyInjection" Version="0.4.7" />
@@ -121,9 +127,9 @@
         <PackageReference Include="Shiny.Extensions.Stores" Version="1.3.1" />
         <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.1" />
         <PackageReference Include="Shiny.Reflector" Version="1.7.1"/>
-        <PackageReference Include="Shiny.Maui.Shell" Version="1.1.1" />
-        <PackageReference Include="Shiny.Mediator.Maui" Version="6.1.1" />
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="6.1.1" />
+        <PackageReference Include="Shiny.Maui.Shell" Version="2.0.0" />
+        <PackageReference Include="Shiny.Mediator.Maui" Version="6.2.0-beta-0002" />
+        <PackageReference Include="Shiny.Mediator.Sentry" Version="6.2.0-beta-0002" />
         <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>

@@ -37,6 +37,7 @@ public static class MauiProgram
                 x => x
                     .AddMediatorRegistry()
                     .AddGeneratedOpenApiClient()
+                    .AddThrottleEventMiddleware()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
                     .UseSentry()

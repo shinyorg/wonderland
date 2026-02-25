@@ -26,6 +26,7 @@ This app uses several .NET open source technologies from [Shiny](https://github.
   * [Mobile Centric AppSettings.json for Microsoft.Extensions.Configuration](https://shinylib.net/client/other/configuration/) using Shiny.Extensions.Configuration
 * [Shiny MAUI Shell Extensions](https://github.com/shinyorg/maui) using Shiny.Maui.Shell - Shell navigation made pleasant
 * [Shiny Extensions](https://github.com/shinyorg/extensions) - Tools for making dependency injection and save state easy
+* [Shiny SqliteDocumentDb](https://github.com/shinyorg/sqlitedocumentdb) - Lightweight SQLite-backed document store for local persistence
 * [Strongly Typed Localization for IStringLocalizer](https://github.com/shinyorg/localizegen)
 
 The HTTP API to themeparks wiki is generated using [Shiny Mediators OpenAPI source generator](https://shinylib.net/client/mediator/extensions/http/).  Look in the csproj for the following

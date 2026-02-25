@@ -1,6 +1,13 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Shiny.SqliteDocumentDb;
 
 namespace ShinyWonderland;
+
+
+[JsonSerializable(typeof(RideHistoryRecord))]
+[JsonSerializable(typeof(MealTimeHistoryRecord))]
+public partial class AppJsonContext : JsonSerializerContext;
 
 public enum MealTimeType
 {
@@ -110,7 +117,15 @@ public static class DatabaseExtensions
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "wonderland.db"
         );
-        services.AddSqliteDocumentStore($"Data Source={dbPath}");
+        services.AddSqliteDocumentStore(opts =>
+        {
+            opts.ConnectionString = $"Data Source={dbPath}";
+            opts.UseReflectionFallback = false;
+            opts.JsonSerializerOptions = new AppJsonContext(new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }).Options;
+        });
         services.AddSingleton<IDataService, DataService>();
         return services;
     }

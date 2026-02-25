@@ -71,9 +71,9 @@ public partial class RideTimesViewModel(
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
 
-    
+
+    [Throttle(3000)]
     [MainThread]
-    [Cache(AbsoluteExpirationSeconds = 60)]
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
         logger.LogDebug("Received GPS event with position: {Position}", @event.Position);

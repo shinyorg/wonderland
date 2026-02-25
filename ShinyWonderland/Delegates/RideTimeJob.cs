@@ -28,8 +28,7 @@ public class RideTimeJob(
         get;
         set => this.Set(ref field, value);
     }
-    
-    
+
     
     protected override async Task Run(CancellationToken cancelToken)
     {

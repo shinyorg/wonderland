@@ -44,7 +44,7 @@ public class GetRideTimesRequestHandler(
         foreach (var rideInfo in childData.Children)
         {
             var live = liveData
-                .LiveData
+                .LiveData?
                 .FirstOrDefault(x => x.Id.Equals(rideInfo.Id, StringComparison.InvariantCultureIgnoreCase));
 
             var open = false;
@@ -68,7 +68,7 @@ public class GetRideTimesRequestHandler(
                 open = live.Status == LiveStatusType.OPERATING;
             }
 
-            var lastRide = lastRides.FirstOrDefault(x => x.RideId == rideInfo.Id)?.Timestamp;
+            var lastRide = lastRides?.FirstOrDefault(x => x.RideId == rideInfo.Id)?.Timestamp;
             
             list.Add(new RideTime(
                 rideInfo.Id,

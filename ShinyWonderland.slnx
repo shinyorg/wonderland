@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Folder Name="/Solution/">
+    <File Path="global.json" />
     <File Path="readme.md" />
     <File Path="themeparkapi.http" />
     <File Path=".editorconfig" />

@@ -1,5 +1,4 @@
-using RoomSharp.DependencyInjection;
-using Xunit.Abstractions;
+using Shiny.SqliteDocumentDb;
 
 namespace ShinyWonderland.Tests;
 
@@ -10,13 +9,10 @@ public class DataServiceTests
     public DataServiceTests()
     {
         var services = new ServiceCollection();
-        services.AddRoomSharpDatabase<AppDatabaseImpl>(ctx =>
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var fullPath = Path.Combine(appData, $"{Guid.NewGuid()}.db");
-            ctx.UseSqlite(fullPath);
-        });
-        services.AddRoomSharpDao<AppDatabaseImpl, IDataService>(db => db.Data);
+        var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var fullPath = Path.Combine(appData, $"{Guid.NewGuid()}.db");
+        services.AddSqliteDocumentStore($"Data Source={fullPath}");
+        services.AddSingleton<IDataService, DataService>();
         var sp = services.BuildServiceProvider();
         this.dataService = sp.GetRequiredService<IDataService>();
     }

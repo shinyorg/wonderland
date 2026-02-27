@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Shiny.Extensions.Stores;
 using Shiny.Jobs;
 using Shiny.Maui.TableView;
 using ShinyWonderland.Delegates;
@@ -57,7 +56,7 @@ public static class MauiProgram
         
         builder.Services.AddGeneratedServices();
         builder.Services.AddStronglyTypedLocalizations();
-        builder.Services.AddPersistentService<AppSettings>();
+        builder.Services.AddShinyService<AppSettings>();
 
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);

@@ -55,16 +55,10 @@ public interface IDataService
 public class DataService(IDocumentStore store) : IDataService
 {
     public Task AddRideHistory(RideHistoryRecord record)
-    {
-        store.Set(record);
-        return Task.CompletedTask;
-    }
+        => store.Insert(record);
 
     public Task AddMealTimeHistory(MealTimeHistoryRecord record)
-    {
-        store.Set(record);
-        return Task.CompletedTask;
-    }
+        => store.Insert(record);
 
     public async Task<List<RideHistoryRecord>> GetRideTimeHistory()
     {
@@ -121,10 +115,7 @@ public static class DatabaseExtensions
         {
             opts.ConnectionString = $"Data Source={dbPath}";
             opts.UseReflectionFallback = false;
-            opts.JsonSerializerOptions = new AppJsonContext(new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }).Options;
+            opts.JsonSerializerOptions = AppJsonContext.Default.Options;
         });
         services.AddSingleton<IDataService, DataService>();
         return services;

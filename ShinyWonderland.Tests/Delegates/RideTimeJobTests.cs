@@ -19,7 +19,7 @@ public class RideTimeJobTests
         logger = Substitute.For<ILogger<RideTimeJob>>();
         localized = Substitute.For<RideTimeJobLocalized>();
         localized.RideTime.Returns("Ride Time Alert");
-        localized.NotificationMessageFormatFormat(Arg.Any<string>(), Arg.Any<int?>(), Arg.Any<int?>())
+        localized.NotificationMessageFormat(Arg.Any<string>(), Arg.Any<int?>(), Arg.Any<int?>())
             .Returns(x => $"{x[0]} wait time is now {x[1]} min (down {x[2]} min)");
 
         options = new ParkOptions

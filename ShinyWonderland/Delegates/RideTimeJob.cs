@@ -95,7 +95,7 @@ public class RideTimeJob(
                 {
                     // TODO: would be nice if I could set the ID to the ride entity ID to prevent overlaps in notifications
                     Title = $"{parkOptions.Value.Name} {localized.RideTime}",
-                    Message = localized.NotificationMessageFormatFormat(ride.Name, currentWait, waitDiff)
+                    Message = localized.NotificationMessageFormat(ride.Name, currentWait, waitDiff)
                 });
             }
         }

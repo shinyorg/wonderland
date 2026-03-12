@@ -18,29 +18,18 @@ public class SettingsViewModelTests
         viewModel.AppVersion.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
-    public void Sorts_ShouldContainAllOptions()
-    {
-        // Assert
-        viewModel.Sorts.ShouldContain("Name");
-        viewModel.Sorts.ShouldContain("Wait Time");
-        viewModel.Sorts.ShouldContain("Paid Wait Time");
-        viewModel.Sorts.ShouldContain("Distance");
-        viewModel.Sorts.Length.ShouldBe(4);
-    }
-
     [Theory]
-    [InlineData(0, RideOrder.Name)]
-    [InlineData(1, RideOrder.WaitTime)]
-    [InlineData(2, RideOrder.PaidWaitTime)]
-    [InlineData(3, RideOrder.Distance)]
-    public void SortByIndex_ShouldUpdateAppSettings(int index, RideOrder expectedOrder)
+    [InlineData(RideOrder.Name)]
+    [InlineData(RideOrder.WaitTime)]
+    [InlineData(RideOrder.PaidWaitTime)]
+    [InlineData(RideOrder.Distance)]
+    public void Ordering_ShouldUpdateAppSettings(RideOrder order)
     {
         // Act
-        viewModel.SortByIndex = index;
+        viewModel.Ordering = order;
 
         // Assert
-        appSettings.Ordering.ShouldBe(expectedOrder);
+        appSettings.Ordering.ShouldBe(order);
     }
 
     [Fact]
@@ -126,13 +115,13 @@ public class SettingsViewModelTests
     }
 
     [Fact]
-    public void SortByIndex_InitialValue_ShouldMapFromAppSettings()
+    public void Ordering_InitialValue_ShouldMatchAppSettings()
     {
         // Arrange
         var settings = new AppSettings { Ordering = RideOrder.WaitTime };
         var vm = new SettingsViewModel(settings);
 
         // Assert
-        vm.SortByIndex.ShouldBe(1);
+        vm.Ordering.ShouldBe(RideOrder.WaitTime);
     }
 }

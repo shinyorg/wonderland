@@ -1,5 +1,7 @@
 ﻿<Solution>
   <Folder Name="/Solution/">
+    <File Path="Directory.build.props" />
+    <File Path="Directory.packages.props" />
     <File Path="global.json" />
     <File Path="readme.md" />
     <File Path="themeparkapi.http" />
@@ -7,6 +9,8 @@
     <File Path=".github\workflows\build-android.yml" />
     <File Path=".github\workflows\build-ios.yml" />
   </Folder>
+  <Project Path="ShinyWonderland.ApiClient/ShinyWonderland.ApiClient.csproj" />
+  <Project Path="ShinyWonderland.Localization/ShinyWonderland.Localization.csproj" />
   <Project Path="ShinyWonderland.Tests/ShinyWonderland.Tests.csproj" />
   <Project Path="ShinyWonderland\ShinyWonderland.csproj" />
 </Solution>

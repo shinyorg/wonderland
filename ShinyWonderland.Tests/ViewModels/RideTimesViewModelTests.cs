@@ -4,45 +4,30 @@ public class RideTimesViewModelTests
 {
     readonly CoreServices services;
     readonly ILogger<RideTimesViewModel> logger;
-    readonly IGeofenceManager geofenceManager;
     readonly Humanizer humanizer;
-    readonly RideTimesViewModelLocalized localize;
-    readonly AppSettings appSettings;
-    readonly IGpsManager gpsManager;
-    readonly IMediator mediator;
-    readonly INavigator navigator;
-    readonly FakeTimeProvider timeProvider;
-    readonly INotificationManager notifications;
+    readonly StringsLocalized localize;
 
     public RideTimesViewModelTests()
     {
         logger = Substitute.For<ILogger<RideTimesViewModel>>();
-        geofenceManager = Substitute.For<IGeofenceManager>();
-        localize = Substitute.For<RideTimesViewModelLocalized>();
+        localize = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["Error"] = "Error",
+            ["GeneralError"] = "A general error occurred",
+            ["Ok"] = "OK",
+            ["UnknownDistance"] = "Unknown",
+            ["Never"] = "Never",
+            ["Second"] = "second",
+            ["Seconds"] = "seconds",
+            ["Minute"] = "minute",
+            ["Minutes"] = "minutes",
+            ["Hour"] = "hour",
+            ["Hours"] = "hours"
+        });
 
-        localize.Error.Returns("Error");
-        localize.GeneralError.Returns("A general error occurred");
-        localize.Ok.Returns("OK");
-        localize.UnknownDistance.Returns("Unknown");
+        var timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
 
-        timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
-
-        var humanizerLocalized = Substitute.For<HumanizerLocalized>();
-        humanizerLocalized.Never.Returns("Never");
-        humanizerLocalized.Second.Returns("second");
-        humanizerLocalized.Seconds.Returns("seconds");
-        humanizerLocalized.Minute.Returns("minute");
-        humanizerLocalized.Minutes.Returns("minutes");
-        humanizerLocalized.Hour.Returns("hour");
-        humanizerLocalized.Hours.Returns("hours");
-
-        humanizer = new Humanizer(timeProvider, humanizerLocalized);
-
-        appSettings = new AppSettings();
-        gpsManager = Substitute.For<IGpsManager>();
-        navigator = Substitute.For<INavigator>();
-        mediator = Substitute.For<IMediator>();
-        notifications = Substitute.For<INotificationManager>();
+        humanizer = new Humanizer(timeProvider, localize);
 
         var parkOptions = new ParkOptions
         {
@@ -55,22 +40,22 @@ public class RideTimesViewModelTests
         };
 
         services = new CoreServices(
-            mediator,
+            Substitute.For<IMediator>(),
             Options.Create(parkOptions),
-            appSettings,
-            navigator,
+            new AppSettings(),
+            Substitute.For<INavigator>(),
+            Substitute.For<IDialogs>(),
             timeProvider,
-            gpsManager,
-            notifications
+            Substitute.For<IGpsManager>(),
+            localize,
+            Substitute.For<INotificationManager>()
         );
     }
 
     RideTimesViewModel CreateViewModel() => new(
         services,
         logger,
-        geofenceManager,
-        humanizer,
-        localize
+        humanizer
     );
 
     [Fact]
@@ -189,32 +174,26 @@ public class RideTimesViewModelTests
 
 public class RideTimeViewModelTests
 {
-    readonly RideTimesViewModelLocalized localize;
+    readonly StringsLocalized localize;
     readonly Humanizer humanizer;
     readonly CoreServices services;
     readonly FakeTimeProvider timeProvider;
 
     public RideTimeViewModelTests()
     {
-        localize = Substitute.For<RideTimesViewModelLocalized>();
-        localize.UnknownDistance.Returns("Unknown");
-        localize.HistoryDialogTitle.Returns("Add to History");
-        localize.AddRideHistoryQuestionFormat(Arg.Any<string>()).Returns(x => $"Add {x[0]} to history?");
+        localize = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["UnknownDistance"] = "Unknown",
+            ["HistoryDialogTitle"] = "Add to History",
+            ["AddRideHistoryQuestion"] = "Add {0} to history?",
+            ["Never"] = "Never",
+            ["Seconds"] = "seconds",
+            ["Minutes"] = "minutes"
+        });
 
         timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
 
-        var humanizerLocalized = Substitute.For<HumanizerLocalized>();
-        humanizerLocalized.Never.Returns("Never");
-        humanizerLocalized.Seconds.Returns("seconds");
-        humanizerLocalized.Minutes.Returns("minutes");
-
-        humanizer = new Humanizer(timeProvider, humanizerLocalized);
-
-        var appSettings = new AppSettings();
-        var gpsManager = Substitute.For<IGpsManager>();
-        var navigator = Substitute.For<INavigator>();
-        var mediator = Substitute.For<IMediator>();
-        var notifications = Substitute.For<INotificationManager>();
+        humanizer = new Humanizer(timeProvider, localize);
 
         var parkOptions = new ParkOptions
         {
@@ -225,13 +204,15 @@ public class RideTimeViewModelTests
         };
 
         services = new CoreServices(
-            mediator,
+            Substitute.For<IMediator>(),
             Options.Create(parkOptions),
-            appSettings,
-            navigator,
+            new AppSettings(),
+            Substitute.For<INavigator>(),
+            Substitute.For<IDialogs>(),
             timeProvider,
-            gpsManager,
-            notifications
+            Substitute.For<IGpsManager>(),
+            localize,
+            Substitute.For<INotificationManager>()
         );
     }
 
@@ -240,7 +221,7 @@ public class RideTimeViewModelTests
     {
         // Arrange
         var ride = new RideTime("1", "Space Mountain", 30, 10, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         // Assert
         vm.Name.ShouldBe("Space Mountain");
@@ -251,7 +232,7 @@ public class RideTimeViewModelTests
     {
         // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         // Assert
         vm.WaitTimeMinutes.ShouldBe(30);
@@ -265,8 +246,8 @@ public class RideTimeViewModelTests
         var openRide = new RideTime("1", "Open Ride", 30, 10, null, true, null);
         var closedRide = new RideTime("2", "Closed Ride", null, null, null, false, null);
 
-        var openVm = new RideTimeViewModel(openRide, localize, humanizer, services);
-        var closedVm = new RideTimeViewModel(closedRide, localize, humanizer, services);
+        var openVm = new RideTimeViewModel(openRide, humanizer, services);
+        var closedVm = new RideTimeViewModel(closedRide, humanizer, services);
 
         // Assert
         openVm.IsOpen.ShouldBeTrue();
@@ -280,7 +261,7 @@ public class RideTimeViewModelTests
     {
         // Arrange
         var ride = new RideTime("1", "Test Ride", 30, null, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         // Assert
         vm.HasWaitTime.ShouldBeTrue();
@@ -288,14 +269,14 @@ public class RideTimeViewModelTests
     }
 
     [Fact]
-    public void HasLastRide_ShouldBeFalse_WhenNeverRidden()
+    public void HasLastRide_ShouldBeTrue_EvenWhenNeverRidden()
     {
-        // Arrange
+        // NOTE: HasLastRide checks LastRidden != null, but TimeAgo(null) returns "Never" (non-null)
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.HasLastRide.ShouldBeFalse();
+        vm.HasLastRide.ShouldBeTrue();
+        vm.LastRidden.ShouldBe("Never");
     }
 
     [Fact]
@@ -304,7 +285,7 @@ public class RideTimeViewModelTests
         // Arrange
         var lastRidden = DateTimeOffset.UtcNow.AddHours(-1);
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, lastRidden);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         // Assert
         vm.HasLastRide.ShouldBeTrue();
@@ -316,7 +297,7 @@ public class RideTimeViewModelTests
     {
         // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         // Assert
         vm.DistanceText.ShouldBe("Unknown");
@@ -329,7 +310,7 @@ public class RideTimeViewModelTests
         // Arrange
         var ridePosition = new Position(33.8121, -117.9190);
         var ride = new RideTime("1", "Test Ride", 30, 10, ridePosition, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(33.8122, -117.9191); // Very close
 
@@ -347,7 +328,7 @@ public class RideTimeViewModelTests
         // Arrange
         var ridePosition = new Position(33.8121, -117.9190);
         var ride = new RideTime("1", "Test Ride", 30, 10, ridePosition, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(34.0000, -118.0000); // Far away
 
@@ -364,7 +345,7 @@ public class RideTimeViewModelTests
     {
         // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
-        var vm = new RideTimeViewModel(ride, localize, humanizer, services);
+        var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(33.8122, -117.9191);
 

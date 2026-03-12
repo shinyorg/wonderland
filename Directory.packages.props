@@ -1,0 +1,44 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.4"/>
+        <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+        <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageVersion Include="Sentry.Maui" Version="6.1.0"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.0"/>
+        <PackageVersion Include="Shiny.Maui.TableView" Version="1.0.2"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="3.1.0"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.2.1"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
+        <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.SqliteDocumentDb" Version="1.0.0"/>
+        <PackageVersion Include="Shiny.Reflector" Version="1.7.1"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageVersion Include="coverlet.collector" Version="8.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.3.0"/>
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0"/>
+        <PackageVersion Include="NSubstitute" Version="5.3.0"/>
+        <PackageVersion Include="Shouldly" Version="4.3.0"/>
+        <PackageVersion Include="xunit" Version="2.9.3"/>
+        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5"/>
+    </ItemGroup>
+</Project>

@@ -9,8 +9,10 @@ public record CoreServices(
     IOptions<ParkOptions> ParkOptions,
     AppSettings AppSettings,
     INavigator Navigator,
+    IDialogs Dialogs,
     TimeProvider TimeProvider,
     IGpsManager Gps,
+    StringsLocalized Localized,
     INotificationManager Notifications
 )
 {

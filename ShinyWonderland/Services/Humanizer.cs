@@ -3,7 +3,7 @@ namespace ShinyWonderland.Services;
 [Singleton]
 public class Humanizer(
     TimeProvider timeProvider,
-    HumanizerLocalized localized
+    StringsLocalized localized
 )
 {
     public string TimeAgo(DateTimeOffset? date)

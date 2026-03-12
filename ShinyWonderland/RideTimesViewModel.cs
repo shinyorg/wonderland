@@ -9,9 +9,7 @@ namespace ShinyWonderland;
 public partial class RideTimesViewModel(
     CoreServices services,
     ILogger<RideTimesViewModel> logger,
-    IGeofenceManager geofenceManager,
-    Humanizer humanizer,
-    RideTimesViewModelLocalized localize
+    Humanizer humanizer
 ) : 
     ObservableObject, 
     IPageLifecycleAware, 
@@ -23,7 +21,7 @@ public partial class RideTimesViewModel(
     CompositeDisposable? disposer;
     Position? currentPosition;
 
-    public RideTimesViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => services.Localized;
     public string Title => services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
     [ObservableProperty] public partial bool IsBusy { get; set; }
@@ -35,13 +33,9 @@ public partial class RideTimesViewModel(
     public bool IsNotConnected => !IsConnected;
     
     
-    public async void OnAppearing()
+    public void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);
-        
-        await services.Notifications.RequestAccess();
-        await this.TryGps();
-        await this.TryGeofencing();
     }
 
     
@@ -57,7 +51,6 @@ public partial class RideTimesViewModel(
 
     [RelayCommand]
     Task Load() => this.LoadData(true);
-
     
     [MainThread]
     public Task Handle(ConnectivityChanged @event, IMediatorContext context, CancellationToken cancellationToken)
@@ -70,7 +63,6 @@ public partial class RideTimesViewModel(
     [MainThread]
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
-
 
     [Throttle(3000)]
     [MainThread]
@@ -94,54 +86,6 @@ public partial class RideTimesViewModel(
         return Task.CompletedTask;
     }
     
-
-    async Task TryGps()
-    {
-        try
-        {
-            var access = await services.Gps.RequestAccess(GpsRequest.Realtime(true));
-            
-            // only check GPS if background is running and user has granted permissions
-            if (access == AccessState.Available && services.Gps.CurrentListener == null)
-            {
-                var start = await services.IsUserWithinPark();
-                if (start)
-                    await services.Gps.StartListener(GpsRequest.Realtime(true));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to start GPS");
-        }
-    }
-
-
-    const string GEOFENCE_ID = "ThemePark";
-    async Task TryGeofencing()
-    {
-        try
-        {
-            var access = await geofenceManager.RequestAccess();
-            if (access == AccessState.Available)
-            {
-                var regions = geofenceManager.GetMonitorRegions();
-                if (!regions.Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    await geofenceManager.StartMonitoring(new GeofenceRegion(
-                        GEOFENCE_ID,
-                        services.ParkOptions.Value.CenterOfPark,
-                        services.ParkOptions.Value.NotificationDistance
-                    ));
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Error with geofencing");
-        }
-    }
-    
-    
     async Task LoadData(bool forceRefresh)
     {
         try
@@ -163,7 +107,7 @@ public partial class RideTimesViewModel(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
-            await services.Navigator.Alert(localize.Error, localize.GeneralError, localize.Ok);
+            await services.Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
             this.IsBusy = false;
         }
     }
@@ -174,7 +118,7 @@ public partial class RideTimesViewModel(
         var query = rides
             .Select(x =>
             {
-                var vm = new RideTimeViewModel(x, localize, humanizer, services);
+                var vm = new RideTimeViewModel(x, humanizer, services);
                 if (this.currentPosition != null)
                     vm.UpdateDistance(this.currentPosition);
                 
@@ -242,13 +186,12 @@ public partial class RideTimesViewModel(
 
 public partial class RideTimeViewModel(
     RideTime rideTime,
-    RideTimesViewModelLocalized localize,
     Humanizer humanizer,
     CoreServices services
 ) : ObservableObject
 {
     public string Name => rideTime.Name;
-    public RideTimesViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => services.Localized;
     public int? WaitTimeMinutes => rideTime.WaitTimeMinutes;
     public int? PaidWaitTimeMinutes => rideTime.PaidWaitTimeMinutes;
     public bool IsOpen => rideTime.IsOpen;
@@ -260,15 +203,15 @@ public partial class RideTimeViewModel(
     DateTimeOffset? lastRidden;
     public string? LastRidden => humanizer.TimeAgo(lastRidden ?? rideTime.LastRidden);
     
-    [ObservableProperty] string distanceText = localize.UnknownDistance;
+    [ObservableProperty] string distanceText = services.Localized.UnknownDistance;
     [ObservableProperty] double? distanceMeters;
     
     [RelayCommand]
     async Task AddRide()
     {
-        var confirm = await services.Navigator.Confirm(
-            localize.HistoryDialogTitle, 
-            localize.AddRideHistoryQuestionFormat(this.Name)
+        var confirm = await services.Dialogs.Confirm(
+            services.Localized.HistoryDialogTitle, 
+            services.Localized.AddRideHistoryQuestionFormat(this.Name)
         );
         if (confirm)
         {

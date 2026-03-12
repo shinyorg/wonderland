@@ -5,32 +5,31 @@ public class RideHistoryViewModelTests
     readonly IMediator mediator;
     readonly FakeTimeProvider timeProvider;
     readonly Humanizer humanizer;
-    readonly RideHistoryViewModelLocalized localize;
+    readonly StringsLocalized localize;
     readonly RideHistoryViewModel viewModel;
 
     public RideHistoryViewModelTests()
     {
         mediator = Substitute.For<IMediator>();
-        localize = Substitute.For<RideHistoryViewModelLocalized>();
+        localize = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["Never"] = "Never",
+            ["Second"] = "second",
+            ["Seconds"] = "seconds",
+            ["Minute"] = "minute",
+            ["Minutes"] = "minutes",
+            ["Hour"] = "hour",
+            ["Hours"] = "hours",
+            ["Day"] = "day",
+            ["Days"] = "days",
+            ["Month"] = "month",
+            ["Months"] = "months",
+            ["Year"] = "year",
+            ["Years"] = "years"
+        });
 
         timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
-
-        var humanizerLocalized = Substitute.For<HumanizerLocalized>();
-        humanizerLocalized.Never.Returns("Never");
-        humanizerLocalized.Second.Returns("second");
-        humanizerLocalized.Seconds.Returns("seconds");
-        humanizerLocalized.Minute.Returns("minute");
-        humanizerLocalized.Minutes.Returns("minutes");
-        humanizerLocalized.Hour.Returns("hour");
-        humanizerLocalized.Hours.Returns("hours");
-        humanizerLocalized.Day.Returns("day");
-        humanizerLocalized.Days.Returns("days");
-        humanizerLocalized.Month.Returns("month");
-        humanizerLocalized.Months.Returns("months");
-        humanizerLocalized.Year.Returns("year");
-        humanizerLocalized.Years.Returns("years");
-
-        humanizer = new Humanizer(timeProvider, humanizerLocalized);
+        humanizer = new Humanizer(timeProvider, localize);
 
         viewModel = new RideHistoryViewModel(mediator, humanizer, localize);
     }
@@ -101,13 +100,13 @@ public class RideHistoryViewModelTests
     [Fact]
     public void RideHistoryItemViewModel_TimeAgo_ShouldReturnFormattedTime()
     {
-        // Arrange
+        // Arrange - use FakeTimeProvider time for deterministic results
         var record = new RideHistoryRecord
         {
             Id = 1,
             RideId = "ride1",
             RideName = "Thunder Mountain",
-            Timestamp = DateTimeOffset.UtcNow.AddMinutes(-5)
+            Timestamp = timeProvider.GetUtcNow().AddMinutes(-5)
         };
 
         var itemVm = new RideHistoryItemViewModel(humanizer, record);

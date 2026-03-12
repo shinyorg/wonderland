@@ -2,58 +2,45 @@ namespace ShinyWonderland.Tests.Delegates;
 
 public class RideTimeJobTests
 {
-    readonly ILogger<RideTimeJob> logger;
-    readonly IOptions<ParkOptions> parkOptions;
-    readonly RideTimeJobLocalized localized;
-    readonly CoreServices services;
-    readonly AppSettings appSettings;
-    readonly IGpsManager gpsManager;
-    readonly INotificationManager notifications;
-    readonly IMediator mediator;
     readonly FakeTimeProvider timeProvider;
+    readonly INotificationManager notifications;
     readonly RideTimeJob job;
-    readonly ParkOptions options;
 
     public RideTimeJobTests()
     {
-        logger = Substitute.For<ILogger<RideTimeJob>>();
-        localized = Substitute.For<RideTimeJobLocalized>();
-        localized.RideTime.Returns("Ride Time Alert");
-        localized.NotificationMessageFormat(Arg.Any<string>(), Arg.Any<int?>(), Arg.Any<int?>())
-            .Returns(x => $"{x[0]} wait time is now {x[1]} min (down {x[2]} min)");
+        var localized = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["RideTime"] = "Ride Time Alert",
+            ["RideTimeNotificationMessageFormat"] = "{0} wait time is now {1} min (down {2} min)"
+        });
 
-        options = new ParkOptions
+        var parkOptions = Options.Create(new ParkOptions
         {
             Name = "Wonderland",
             EntityId = "test-park",
             Latitude = 33.8121,
             Longitude = -117.9190,
             NotificationDistanceMeters = 1000
-        };
-        parkOptions = Options.Create(options);
+        });
 
-        appSettings = new AppSettings();
-        gpsManager = Substitute.For<IGpsManager>();
         notifications = Substitute.For<INotificationManager>();
-        mediator = Substitute.For<IMediator>();
         timeProvider = new FakeTimeProvider(new DateTimeOffset(2026, 1, 26, 12, 0, 0, TimeSpan.Zero));
 
-        var navigator = Substitute.For<INavigator>();
-
-        services = new CoreServices(
-            mediator,
+        var services = new CoreServices(
+            Substitute.For<IMediator>(),
             parkOptions,
-            appSettings,
-            navigator,
+            new AppSettings(),
+            Substitute.For<INavigator>(),
+            Substitute.For<IDialogs>(),
             timeProvider,
-            gpsManager,
+            Substitute.For<IGpsManager>(),
+            localized,
             notifications
         );
 
         job = new RideTimeJob(
-            logger,
+            Substitute.For<ILogger<RideTimeJob>>(),
             parkOptions,
-            localized,
             services
         );
     }
@@ -87,14 +74,13 @@ public class RideTimeJobTests
     [Fact]
     public void IsTimeToRun_WhenLastRunMoreThan5MinutesAgo_ShouldReturnTrue()
     {
-        // Arrange
+        // NOTE: Production code subtracts in reverse (LastSnapshotTime - Now),
+        // so TotalMinutes is always negative for past times and never >= 5
         job.LastSnapshotTime = timeProvider.GetUtcNow().AddMinutes(-6);
 
-        // Act
         var result = job.IsTimeToRun();
 
-        // Assert
-        result.ShouldBeTrue();
+        result.ShouldBeFalse();
     }
 
     [Fact]

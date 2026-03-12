@@ -1,13 +1,6 @@
-global using System;
-global using System.Collections.Generic;
-global using System.Threading;
-global using System.Threading.Tasks;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 global using Microsoft.Extensions.Time.Testing;
-global using NSubstitute;
-global using Shouldly;
-global using Xunit;
 global using Shiny;
 global using Shiny.Locations;
 global using Shiny.Mediator;

@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <BaseTargetFramework>net10.0</BaseTargetFramework>
+        
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
 
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
 
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
@@ -19,13 +17,6 @@
         <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
-
-        <MauiVersion>10.0.41</MauiVersion>
-        <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
-
-        <EnableAotAnalyzer>true</EnableAotAnalyzer>
-        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-        <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
@@ -38,13 +29,13 @@
         <UseMaui>false</UseMaui>
     </PropertyGroup>
 
-<!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">-->
-<!--        <UseMonoRuntime>false</UseMonoRuntime>-->
-<!--    </PropertyGroup>-->
+    <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">-->
+    <!--        <UseMonoRuntime>false</UseMonoRuntime>-->
+    <!--    </PropertyGroup>-->
 
-<!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">-->
-<!--        <PublishAot>true</PublishAot>-->
-<!--    </PropertyGroup>-->
+    <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">-->
+    <!--        <PublishAot>true</PublishAot>-->
+    <!--    </PropertyGroup>-->
 
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
         <SentryOrg>shiny-software</SentryOrg>
@@ -60,28 +51,15 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <ApplicationId>$(ApplicationId).dev</ApplicationId>
         <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
-<!--        <CodesignKey>Apple Development: Allan Ritchie (34FQ4253P2)</CodesignKey>-->
+        <!--        <CodesignKey>Apple Development: Allan Ritchie (34FQ4253P2)</CodesignKey>-->
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
         <TargetPlatformVersion>36</TargetPlatformVersion>
-        <!--
-        <EmbedAssembliesIntoApk Condition="'$(Configuration)' == 'Debug'">true</EmbedAssembliesIntoApk>
-        <AndroidPackageFormats Condition="'$(Configuration)' == 'Release'">aab</AndroidPackageFormats>
-        <AndroidLinkTool>r8</AndroidLinkTool>
-        <AndroidLinkTool>proguard</AndroidLinkTool>
-        -->
     </PropertyGroup>
-
-    <!--
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' AND '$(Configuration)' == 'Debug'">
-        <EnableCodeSigning>true</EnableCodeSigning>
-        <CodesignRequireProvisioningProfile>true</CodesignRequireProvisioningProfile>
-        <DisableCodesignVerification>true</DisableCodesignVerification>
-    </PropertyGroup>
--->
+    
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
@@ -91,10 +69,6 @@
         <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy"/>
 
         <CustomEntitlements Include="keychain-access-groups" Type="StringArray" Value="%24(AppIdentifierPrefix)$(ApplicationId)" Visible="false"/>
-        <!--
-        For scheduled notifications, you need to setup "Time Sensitive Notifications" in the Apple Developer Portal for your app provisioning and uncomment below
-        <CustomEntitlements Include="com.apple.developer.usernotifications.time-sensitive" Type="Boolean" Value="true" />
-        -->
     </ItemGroup>
 
     <ItemGroup>
@@ -111,43 +85,55 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" Condition="'$(Configuration)' == 'Debug'"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="Sentry.Maui" Version="6.1.0"/>
-        <PackageReference Include="Shiny.Extensions.Localization.Generator" Version="2.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Shiny.Extensions.DependencyInjection" Version="1.3.1"/>
-        <PackageReference Include="Shiny.Maui.TableView" Version="1.0.2" />
-        <PackageReference Include="Shiny.Reflector" Version="1.7.1"/>
-        <PackageReference Include="Shiny.Maui.Shell" Version="2.2.0" />
-        <PackageReference Include="Shiny.Mediator.Maui" Version="6.2.1"/>
-        <PackageReference Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
-        <PackageReference Include="Shiny.Locations" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.SqliteDocumentDb" Version="1.0.0-beta-0018" />
+        <PackageReference Include="Microsoft.Maui.Controls"/>
+        <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Condition="'$(Configuration)' == 'Debug'"/>
+        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="Sentry.Maui"/>
+        <PackageReference Include="Shiny.Extensions.MauiHosting"/>
+        <PackageReference Include="Shiny.Maui.TableView"/>
+        <PackageReference Include="Shiny.Reflector"/>
+        <PackageReference Include="Shiny.Maui.Shell"/>
+        <PackageReference Include="Shiny.Mediator.Maui"/>
+        <PackageReference Include="Shiny.Mediator.Sentry"/>
+        <PackageReference Include="Shiny.Locations"/>
+        <PackageReference Include="Shiny.Jobs"/>
+        <PackageReference Include="Shiny.Notifications"/>
+        <PackageReference Include="Shiny.SqliteDocumentDb"/>
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
-        <PackageReference Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
-        <PackageReference Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
+        <PackageReference Include="Shiny.Hosting.Maui"/>
+        <PackageReference Include="Shiny.Extensions.Configuration"/>
     </ItemGroup>
 
     <ItemGroup>
-        <MediatorHttp Include="OpenApiRemote"
-                      Uri="https://api.themeparks.wiki/docs/v1.yaml"
-                      Namespace="ShinyWonderland.ThemeParksApi"
-                      ContractPostfix="HttpRequest"
-                      GenerateJsonConverters="true"
-                      Visible="false"/>
-
-        <EmbeddedResource Update="**/*.resx"/>
         <InternalsVisibleTo Include="ShinyWonderland.Tests"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ShinyWonderland.ApiClient\ShinyWonderland.ApiClient.csproj"/>
+        <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="Shells\StartAppShell.xaml">
+        <SubType>Designer</SubType>
+      </MauiXaml>
+      <MauiXaml Update="Shells\AppShell.xaml">
+        <SubType>Designer</SubType>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Shells\StartAppShell.xaml.cs">
+        <DependentUpon>StartAppShell.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Shells\AppShell.xaml.cs">
+        <DependentUpon>AppShell.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

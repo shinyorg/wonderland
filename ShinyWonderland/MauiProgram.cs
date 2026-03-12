@@ -53,9 +53,9 @@ public static class MauiProgram
 
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealTime"));
+        builder.Services.AddWonderlandLocalization();
         
         builder.Services.AddGeneratedServices();
-        builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddShinyService<AppSettings>();
 
         builder.Services.AddSingleton(MediaPicker.Default);

@@ -1,20 +1,20 @@
-using System.ComponentModel;
-
 namespace ShinyWonderland.Tests.ViewModels;
 
 public class HoursViewModelTests
 {
     readonly IMediator mediator;
     readonly FakeTimeProvider timeProvider;
-    readonly HoursViewModelLocalized localize;
+    readonly StringsLocalized localize;
     readonly HoursViewModel viewModel;
 
     public HoursViewModelTests()
     {
         mediator = Substitute.For<IMediator>();
         timeProvider = new FakeTimeProvider(new DateTimeOffset(2026, 1, 26, 10, 0, 0, TimeSpan.Zero));
-        localize = Substitute.For<HoursViewModelLocalized>();
-        localize.Today.Returns("Today");
+        localize = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["Today"] = "Today"
+        });
 
         viewModel = new HoursViewModel(mediator, timeProvider, localize);
     }

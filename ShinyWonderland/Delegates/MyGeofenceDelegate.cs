@@ -5,7 +5,7 @@ namespace ShinyWonderland.Delegates;
 public class MyGeofenceDelegate(
     ILogger<MyGeofenceDelegate> logger,
     AppSettings appSettings,
-    MyGeofenceDelegateLocalized localized,
+    StringsLocalized localized,
     IOptions<ParkOptions> parkOptions,
     INotificationManager notifications
 ) : IGeofenceDelegate
@@ -21,7 +21,7 @@ public class MyGeofenceDelegate(
                 {
                     await notifications.Send(
                         $"{parkOptions.Value.Name} {localized.Reminder}",
-                        localized.NotificationMessage
+                        localized.EnterParkNotificationMessage
                     );
                 }
                 break;

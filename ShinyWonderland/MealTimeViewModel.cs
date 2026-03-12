@@ -8,11 +8,11 @@ public partial class MealTimeViewModel(
     IMediator mediator,
     // INavigator navigator,
     // IOptions<MealTimeOptions> options,
-    MealTimeViewModelLocalized localize
+    StringsLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] List<MealTimeHistoryRecord> history;
-    public MealTimeViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => localize;
     
     public async void OnAppearing()
     {

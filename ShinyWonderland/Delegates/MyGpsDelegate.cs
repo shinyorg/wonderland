@@ -7,20 +7,14 @@ namespace ShinyWonderland.Delegates;
 public class MyGpsDelegate : GpsDelegate
 {
     readonly CoreServices services;
-    readonly MyGpsDelegateLocalized localized;
-    readonly IOptions<ParkOptions> parkOptions;
     
     public MyGpsDelegate(
         ILogger<MyGpsDelegate> logger,
-        MyGpsDelegateLocalized localized,
-        IOptions<ParkOptions> parkOptions,
         CoreServices services
     ) : base(logger)
     {
         this.MinimumDistance = Distance.FromMeters(10);
         this.MinimumTime = TimeSpan.FromSeconds(10);
-        this.localized = localized;
-        this.parkOptions = parkOptions;
         this.services = services;
     }
 
@@ -46,8 +40,8 @@ public class MyGpsDelegate : GpsDelegate
                 this.services.AppSettings.ParkingLocation = null;
                 await this.services.Gps.StopListener();
                 await this.services.Notifications.Send(
-                    this.parkOptions.Value.Name,
-                    this.localized.NotificationMessage
+                    this.services.ParkOptions.Value.Name,
+                    this.services.Localized.LeaveParkNotificationMessage
                 );
             }
         }

@@ -5,13 +5,12 @@ namespace ShinyWonderland;
 public partial class ParkingViewModel(
     CoreServices services,
     IMediaPicker mediaPicker,
-    ILogger<ParkingViewModel> logger,
-    ParkingViewModelLocalized localize
+    ILogger<ParkingViewModel> logger
 ) : ObservableObject, IPageLifecycleAware
 {
     // const string PhotoFileName = "parked_photo.png";
     
-    public ParkingViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => services.Localized;
     
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsParked))]
@@ -38,14 +37,14 @@ public partial class ParkingViewModel(
     {
         if (services.AppSettings.ParkingLocation == null)
         {
-            var result = await services.Gps.RequestAccess(GpsRequest.Realtime(true));
+            var result = services.Gps.GetCurrentStatus(GpsRequest.Realtime(true));
             if (result is AccessState.Restricted or AccessState.Available)
             {
                 await this.DoLocation();
             }
             else
             {
-                var confirm = await services.Navigator.Confirm(
+                var confirm = await services.Dialogs.Confirm(
                     Localize.PermissionDenied,
                     Localize.OpenSettings
                 );
@@ -55,7 +54,7 @@ public partial class ParkingViewModel(
         }
         else
         {
-            var confirm = await services.Navigator.Confirm(
+            var confirm = await services.Dialogs.Confirm(
                 Localize.Reset, 
                 Localize.ConfirmReset
             );
@@ -107,7 +106,7 @@ public partial class ParkingViewModel(
             }
             else
             {
-                await services.Navigator.Alert(
+                await services.Dialogs.Alert(
                     Localize.Error,
                     Localize.NotCloseEnough
                 );
@@ -115,7 +114,7 @@ public partial class ParkingViewModel(
         }
         catch (Exception e)
         {
-            await services.Navigator.Alert(Localize.Error, Localize.ErrorRetrievingLocation);
+            await services.Dialogs.Alert(Localize.Error, Localize.ErrorRetrievingLocation);
             logger.LogError(e, "Error retrieving current position");
         }
         finally

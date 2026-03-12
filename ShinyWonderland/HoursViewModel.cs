@@ -7,11 +7,11 @@ namespace ShinyWonderland;
 public partial class HoursViewModel(
     IMediator mediator, 
     TimeProvider timeProvider,
-    HoursViewModelLocalized localize
+    StringsLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
     [ObservableProperty] List<VmParkSchedule> schedule;
-    public HoursViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => localize;
 
     public async void OnAppearing()
     {
@@ -37,7 +37,7 @@ public partial class HoursViewModel(
 public record VmParkSchedule(
     ParkHours Info,
     bool IsToday,
-    HoursViewModelLocalized Localize
+    StringsLocalized Localize
 )
 {
     public bool IsOpen => Info.IsOpen;

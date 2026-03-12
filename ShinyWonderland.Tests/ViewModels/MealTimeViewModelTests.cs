@@ -3,13 +3,13 @@ namespace ShinyWonderland.Tests.ViewModels;
 public class MealTimeViewModelTests
 {
     readonly IMediator mediator;
-    readonly MealTimeViewModelLocalized localize;
+    readonly StringsLocalized localize;
     readonly MealTimeViewModel viewModel;
 
     public MealTimeViewModelTests()
     {
         mediator = Substitute.For<IMediator>();
-        localize = Substitute.For<MealTimeViewModelLocalized>();
+        localize = TestLocalization.Create();
 
         viewModel = new MealTimeViewModel(mediator, localize);
     }

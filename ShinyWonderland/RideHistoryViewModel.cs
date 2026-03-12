@@ -7,10 +7,10 @@ namespace ShinyWonderland;
 public partial class RideHistoryViewModel(
     IMediator mediator,
     Humanizer humanizer,
-    RideHistoryViewModelLocalized localize
+    StringsLocalized localize
 ) : ObservableObject, IPageLifecycleAware
 {
-    public RideHistoryViewModelLocalized Localize => localize;
+    public StringsLocalized Localize => localize;
     [ObservableProperty] List<RideHistoryItemViewModel> history;
     public Guid? RideId { get; set; }
     

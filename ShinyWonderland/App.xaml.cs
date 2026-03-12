@@ -2,14 +2,14 @@
 
 public partial class App : Application
 {
-    readonly AppShellLocalized localize;
+    readonly StringsLocalized localize;
     
-    public App(AppShellLocalized localize)
+    public App(StringsLocalized localize)
     {
         this.localize = localize;
         this.InitializeComponent();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new(new AppShell(this.localize));
+        => new(new StartAppShell());
 }

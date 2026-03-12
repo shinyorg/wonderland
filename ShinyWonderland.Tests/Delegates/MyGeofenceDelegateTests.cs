@@ -2,30 +2,29 @@ namespace ShinyWonderland.Tests.Delegates;
 
 public class MyGeofenceDelegateTests
 {
-    readonly ILogger<MyGeofenceDelegate> logger;
     readonly AppSettings appSettings;
-    readonly MyGeofenceDelegateLocalized localized;
-    readonly IOptions<ParkOptions> parkOptions;
     readonly INotificationManager notifications;
     readonly MyGeofenceDelegate geofenceDelegate;
 
     public MyGeofenceDelegateTests()
     {
-        logger = Substitute.For<ILogger<MyGeofenceDelegate>>();
+        var logger = Substitute.For<ILogger<MyGeofenceDelegate>>();
         appSettings = new AppSettings();
-        localized = Substitute.For<MyGeofenceDelegateLocalized>();
-        localized.Reminder.Returns("Reminder");
-        localized.NotificationMessage.Returns("Welcome to the park!");
 
-        var options = new ParkOptions
+        var localized = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["Reminder"] = "Reminder",
+            ["EnterParkNotificationMessage"] = "Welcome to the park!"
+        });
+
+        var parkOptions = Options.Create(new ParkOptions
         {
             Name = "Wonderland",
             EntityId = "test-park",
             Latitude = 33.8121,
             Longitude = -117.9190,
             NotificationDistanceMeters = 1000
-        };
-        parkOptions = Options.Create(options);
+        });
 
         notifications = Substitute.For<INotificationManager>();
 
@@ -48,11 +47,12 @@ public class MyGeofenceDelegateTests
         // Act
         await geofenceDelegate.OnStatusChanged(GeofenceState.Entered, region);
 
-        // Assert
-        await notifications.Received(1).Send(
-            Arg.Is<string>(t => t.Contains("Wonderland") && t.Contains("Reminder")),
-            Arg.Is<string>(m => m == "Welcome to the park!")
-        );
+        // Assert - Send(string, string) is an extension method; assert on the interface method Send(Notification)
+        await notifications.Received(1).Send(Arg.Is<Notification>(n =>
+            n.Title!.Contains("Wonderland") &&
+            n.Title!.Contains("Reminder") &&
+            n.Message == "Welcome to the park!"
+        ));
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class MyGeofenceDelegateTests
         await geofenceDelegate.OnStatusChanged(GeofenceState.Entered, region);
 
         // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<string>(), Arg.Any<string>());
+        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class MyGeofenceDelegateTests
         await geofenceDelegate.OnStatusChanged(GeofenceState.Exited, region);
 
         // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<string>(), Arg.Any<string>());
+        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class MyGeofenceDelegateTests
         await geofenceDelegate.OnStatusChanged(GeofenceState.Unknown, region);
 
         // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<string>(), Arg.Any<string>());
+        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
     }
 
     [Fact]
@@ -103,17 +103,16 @@ public class MyGeofenceDelegateTests
         // Arrange
         appSettings.EnableGeofenceNotifications = true;
         var region = new GeofenceRegion("test", new Position(33.8121, -117.9190), Distance.FromMeters(1000));
-        string? capturedTitle = null;
+        Notification? captured = null;
 
-        notifications.Send(Arg.Do<string>(t => capturedTitle = t), Arg.Any<string>())
-            .Returns(Task.CompletedTask);
+        notifications.Send(Arg.Do<Notification>(n => captured = n));
 
         // Act
         await geofenceDelegate.OnStatusChanged(GeofenceState.Entered, region);
 
         // Assert
-        capturedTitle.ShouldNotBeNull();
-        capturedTitle.ShouldContain("Wonderland");
-        capturedTitle.ShouldContain("Reminder");
+        captured.ShouldNotBeNull();
+        captured.Title!.ShouldContain("Wonderland");
+        captured.Title!.ShouldContain("Reminder");
     }
 }

@@ -2,34 +2,26 @@ namespace ShinyWonderland.Tests.ViewModels;
 
 public class ParkingViewModelTests
 {
-    readonly CoreServices services;
-    readonly IMediaPicker mediaPicker;
-    readonly ILogger<ParkingViewModel> logger;
-    readonly ParkingViewModelLocalized localize;
     readonly AppSettings appSettings;
-    readonly IGpsManager gpsManager;
-    readonly INavigator navigator;
+    readonly StringsLocalized localize;
     readonly ParkingViewModel viewModel;
 
     public ParkingViewModelTests()
     {
-        mediaPicker = Substitute.For<IMediaPicker>();
-        logger = Substitute.For<ILogger<ParkingViewModel>>();
-        localize = Substitute.For<ParkingViewModelLocalized>();
-
-        localize.SetParking.Returns("Set Parking Location");
-        localize.RemoveParking.Returns("Remove Parking Location");
-        localize.PermissionDenied.Returns("Permission Denied");
-        localize.OpenSettings.Returns("Open Settings?");
-        localize.Reset.Returns("Reset");
-        localize.ConfirmReset.Returns("Are you sure you want to reset?");
-        localize.Error.Returns("Error");
-        localize.NotCloseEnough.Returns("Not close enough to park");
-        localize.ErrorRetrievingLocation.Returns("Error retrieving location");
+        localize = TestLocalization.Create(new Dictionary<string, string>
+        {
+            ["SetParking"] = "Set Parking Location",
+            ["RemoveParking"] = "Remove Parking Location",
+            ["PermissionDenied"] = "Permission Denied",
+            ["OpenSettings"] = "Open Settings?",
+            ["Reset"] = "Reset",
+            ["ConfirmReset"] = "Are you sure you want to reset?",
+            ["Error"] = "Error",
+            ["NotCloseEnough"] = "Not close enough to park",
+            ["ErrorRetrievingLocation"] = "Error retrieving location"
+        });
 
         appSettings = new AppSettings();
-        gpsManager = Substitute.For<IGpsManager>();
-        navigator = Substitute.For<INavigator>();
 
         var parkOptions = new ParkOptions
         {
@@ -41,21 +33,23 @@ public class ParkingViewModelTests
             MapStartZoomDistanceMeters = 500
         };
 
-        var mediator = Substitute.For<IMediator>();
-        var notifications = Substitute.For<INotificationManager>();
-        var timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
-
-        services = new CoreServices(
-            mediator,
+        var services = new CoreServices(
+            Substitute.For<IMediator>(),
             Options.Create(parkOptions),
             appSettings,
-            navigator,
-            timeProvider,
-            gpsManager,
-            notifications
+            Substitute.For<INavigator>(),
+            Substitute.For<IDialogs>(),
+            new FakeTimeProvider(DateTimeOffset.UtcNow),
+            Substitute.For<IGpsManager>(),
+            localize,
+            Substitute.For<INotificationManager>()
         );
 
-        viewModel = new ParkingViewModel(services, mediaPicker, logger, localize);
+        viewModel = new ParkingViewModel(
+            services,
+            Substitute.For<IMediaPicker>(),
+            Substitute.For<ILogger<ParkingViewModel>>()
+        );
     }
 
     [Fact]

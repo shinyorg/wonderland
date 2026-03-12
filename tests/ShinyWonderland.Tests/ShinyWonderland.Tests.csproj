@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ShinyWonderland\ShinyWonderland.csproj">
+        <ProjectReference Include="..\..\src\ShinyWonderland\ShinyWonderland.csproj">
             <SetTargetFramework>TargetFramework=net10.0</SetTargetFramework>
             <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
         </ProjectReference>

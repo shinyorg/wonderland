@@ -9,8 +9,8 @@
     <File Path=".github\workflows\build-android.yml" />
     <File Path=".github\workflows\build-ios.yml" />
   </Folder>
-  <Project Path="ShinyWonderland.ApiClient/ShinyWonderland.ApiClient.csproj" />
-  <Project Path="ShinyWonderland.Localization/ShinyWonderland.Localization.csproj" />
-  <Project Path="ShinyWonderland.Tests/ShinyWonderland.Tests.csproj" />
-  <Project Path="ShinyWonderland\ShinyWonderland.csproj" />
+  <Project Path="src/ShinyWonderland/ShinyWonderland.csproj" />
+  <Project Path="src/ShinyWonderland.ApiClient/ShinyWonderland.ApiClient.csproj" />
+  <Project Path="src/ShinyWonderland.Localization/ShinyWonderland.Localization.csproj" />
+  <Project Path="tests/ShinyWonderland.Tests/ShinyWonderland.Tests.csproj" />
 </Solution>

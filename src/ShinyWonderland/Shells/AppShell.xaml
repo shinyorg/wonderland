@@ -9,7 +9,6 @@
     <TabBar>
         <Tab Icon="ride_time">
             <ShellContent Title="{Binding Localize.RideTimes}" 
-                          ContentTemplate="{DataTemplate local:RideTimesPage}"
                           ContentTemplate="{DataTemplate local:RideTimesPage}"/>
         </Tab>
         <Tab Icon="ride_time">

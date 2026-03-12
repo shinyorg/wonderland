@@ -1,6 +1,6 @@
 namespace ShinyWonderland;
 
-[ShellMap<StartupPage>]
+[ShellMap<StartupPage>(registerRoute: false)]
 public partial class StartupViewModel(
     CoreServices services,
     ILogger<StartupViewModel> logger,
@@ -19,12 +19,17 @@ public partial class StartupViewModel(
     public void OnDisappearing()
     {
     }
-    
-    
+
+
+    static bool gpsChecked = false;
     async Task TryGps()
     {
+        if (gpsChecked)
+            return;
+        
         try
         {
+            gpsChecked = true;
             var access = await services.Gps.RequestAccess(GpsRequest.Realtime(true));
             
             // only check GPS if background is running and user has granted permissions
@@ -42,11 +47,16 @@ public partial class StartupViewModel(
     }
 
 
+    bool geofenceChecked = false;
     const string GEOFENCE_ID = "ThemePark";
     async Task TryGeofencing()
     {
+        if (geofenceChecked)
+            return;
+        
         try
         {
+            this.geofenceChecked = true;
             var access = await geofenceManager.RequestAccess();
             if (access == AccessState.Available)
             {

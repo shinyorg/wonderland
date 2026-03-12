@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:ShinyWonderland"
        x:Class="ShinyWonderland.AppShell"
        x:DataType="local:AppShell">
-    
+
     <TabBar>
-        <Tab>
+        <Tab Icon="ride_time">
             <ShellContent Title="{Binding Localize.RideTimes}" 
                           ContentTemplate="{DataTemplate local:RideTimesPage}"
-                          Icon="ride_time"/>
-            
+                          ContentTemplate="{DataTemplate local:RideTimesPage}"/>
+        </Tab>
+        <Tab Icon="ride_time">
             <ShellContent Title="{Binding Localize.RideTimes}" 
-                          ContentTemplate="{DataTemplate local:MapRideTimesPage}"
-                          Icon="ride_time"/>
-            
-            <ShellContent Title="{Binding Localize.Settings}" 
-                          ContentTemplate="{DataTemplate local:SettingsPage}"
-                          Icon="settings"/>
-            
-            <ShellContent Title="{Binding Localize.Parking}" 
-                          ContentTemplate="{DataTemplate local:ParkingPage}"
-                          Icon="parking"/>
-
-            <ShellContent Title="{Binding Localize.MealTimes}" 
-                          ContentTemplate="{DataTemplate local:MealTimePage}"
-                          Icon="hours"/>
-            
-            <ShellContent Title="{Binding Localize.Hours}" 
-                          ContentTemplate="{DataTemplate local:HoursPage}"
-                          Icon="hours"/>
+                          ContentTemplate="{DataTemplate local:MapRideTimesPage}"/>
+        </Tab>
+        <Tab Icon="settings">
+            <ShellContent Title="{Binding Localize.Settings}"
+                          ContentTemplate="{DataTemplate local:SettingsPage}"/>
+        </Tab>
+        <Tab Icon="parking">
+            <ShellContent Title="{Binding Localize.Parking}"
+                          ContentTemplate="{DataTemplate local:ParkingPage}"/>
+        </Tab>
+        <Tab Icon="hours">
+            <ShellContent Title="{Binding Localize.MealTimes}"
+                          ContentTemplate="{DataTemplate local:MealTimePage}"/>
+        </Tab>
+        <Tab Icon="hours">
+            <ShellContent Title="{Binding Localize.Hours}"
+                          ContentTemplate="{DataTemplate local:HoursPage}"/>
         </Tab>
     </TabBar>
 </Shell>

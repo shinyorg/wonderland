@@ -1,155 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tv="http://shiny.net/maui/tableview"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
+             xmlns:svc="clr-namespace:ShinyWonderland.Services"
              x:DataType="shinyWonderland:SettingsViewModel"
              x:Class="ShinyWonderland.SettingsPage"
-             BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
              Title="Settings">
-    
-    <ContentPage.Resources>
-        <Style x:Key="SettingLabelStyle" TargetType="Label">
-            <Setter Property="FontFamily" Value="OpenSansRegular" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-            <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="Margin" Value="0, 0, 15, 0" />
-        </Style>
-        
-        <Style x:Key="SettingsCardStyle" TargetType="Border">
-            <Setter Property="Shadow">
-                <Setter.Value>
-                    <Shadow Opacity="0.25" 
-                            Radius="4"
-                            Brush="#000000"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-            <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource Gray600}}" />
-            <Setter Property="Padding" Value="16" />
-            <Setter Property="Margin" Value="16, 8" />
-            <Setter Property="StrokeShape">
-                <Setter.Value>
-                    <RoundRectangle CornerRadius="12" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
-        <Style x:Key="SettingSectionStyle" TargetType="HorizontalStackLayout">
-            <Setter Property="Spacing" Value="10" />
-            <Setter Property="Margin" Value="0, 10" />
-        </Style>
-    </ContentPage.Resources>
-    
-    <ScrollView>
-        <VerticalStackLayout Spacing="20" Padding="0, 20">
-            <Border Style="{StaticResource SettingsCardStyle}">
-                <VerticalStackLayout>
-                    <Label Text="Sort Options" 
-                           FontSize="18" 
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource Primary}" 
-                           Margin="0, 0, 0, 15"/>
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Order by" Style="{StaticResource SettingLabelStyle}" />
-                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray500}}"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
-                                StrokeThickness="1"
-                                Padding="0"
-                                VerticalOptions="Center">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8" />
-                            </Border.StrokeShape>
-                            <Picker ItemsSource="{Binding Sorts}" 
-                                    SelectedIndex="{Binding SortByIndex}"
-                                    Title="Order"
-                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                    BackgroundColor="Transparent"
-                                    WidthRequest="200"
-                                    Margin="10, 0" />
-                        </Border>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-            </Border>
-            
-            <Label Text="Preferences" 
-                   FontSize="22" 
-                   FontAttributes="Bold"
-                   TextColor="{StaticResource Primary}" 
-                   HorizontalOptions="Start"
-                   Margin="24, 0, 0, 0"/>
-                
-            <Border Style="{StaticResource SettingsCardStyle}">
-                <VerticalStackLayout Spacing="20">
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Enable Ride Time Notifications" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableTimeRideNotifications}" 
-                                 VerticalOptions="Center"
-                                 Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Enable Park Arrival Notification" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableGeofenceNotifications}" 
-                                  VerticalOptions="Center"
-                                  Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Enable Drink Notification" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableDrinkNotifications}" 
-                                  VerticalOptions="Center"
-                                  Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Enable Meal Notification" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding EnableMealNotifications}" 
-                                  VerticalOptions="Center"
-                                  Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Show Timed Rides Only" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding ShowTimedOnly}" 
-                                 VerticalOptions="Center"
-                                 Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                    
-                    <BoxView HeightRequest="1" 
-                             BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" 
-                             HorizontalOptions="Fill" />
-                    
-                    <HorizontalStackLayout Style="{StaticResource SettingSectionStyle}">
-                        <Label Text="Show Open Only" Style="{StaticResource SettingLabelStyle}" />
-                        <CheckBox IsChecked="{Binding ShowOpenOnly}" 
-                                 VerticalOptions="Center"
-                                 Color="{StaticResource Primary}" />
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-            </Border>
-            
-            <Label Text="{Binding AppVersion, StringFormat='Version: {0}'}" 
-                   HorizontalOptions="Fill"
-                   HorizontalTextAlignment="Center"/>
-        </VerticalStackLayout>
-    </ScrollView>
+
+    <tv:TableView CellAccentColor="{StaticResource Primary}">
+        <tv:TableRoot>
+            <tv:TableSection Title="Sort Options"
+                             tv:RadioCell.SelectedValue="{Binding Ordering, Mode=TwoWay}">
+                <tv:RadioCell Title="Name" Value="{x:Static svc:RideOrder.Name}" />
+                <tv:RadioCell Title="Wait Time" Value="{x:Static svc:RideOrder.WaitTime}" />
+                <tv:RadioCell Title="Paid Wait Time" Value="{x:Static svc:RideOrder.PaidWaitTime}" />
+                <tv:RadioCell Title="Distance" Value="{x:Static svc:RideOrder.Distance}" />
+            </tv:TableSection>
+
+            <tv:TableSection Title="Notifications"
+                             FooterText="Control which notifications you receive from the app">
+                <tv:SwitchCell Title="Ride Time Notifications" On="{Binding EnableTimeRideNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell Title="Park Arrival Notification" On="{Binding EnableGeofenceNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell Title="Drink Notification" On="{Binding EnableDrinkNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell Title="Meal Notification" On="{Binding EnableMealNotifications, Mode=TwoWay}" />
+            </tv:TableSection>
+
+            <tv:TableSection Title="Display"
+                             FooterText="Filter which rides are shown in the list">
+                <tv:SwitchCell Title="Show Timed Rides Only" On="{Binding ShowTimedOnly, Mode=TwoWay}" />
+                <tv:SwitchCell Title="Show Open Only" On="{Binding ShowOpenOnly, Mode=TwoWay}" />
+            </tv:TableSection>
+
+            <tv:TableSection Title="About">
+                <tv:LabelCell Title="Version" ValueText="{Binding AppVersion}" />
+            </tv:TableSection>
+        </tv:TableRoot>
+    </tv:TableView>
 </ContentPage>

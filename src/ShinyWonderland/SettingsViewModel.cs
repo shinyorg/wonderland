@@ -6,14 +6,7 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
 {
     public string AppVersion => AssemblyInfo.ApplicationDisplayVersion;
     
-    public string[] Sorts { get; } = ["Name", "Wait Time", "Paid Wait Time", "Distance"];
-    [ObservableProperty] public partial int SortByIndex { get; set; } = appSettings.Ordering switch
-    {
-        RideOrder.Name => 0,
-        RideOrder.WaitTime => 1,
-        RideOrder.PaidWaitTime => 2,
-        RideOrder.Distance => 3
-    };
+    [ObservableProperty] public partial RideOrder Ordering { get; set; } = appSettings.Ordering;
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; } = appSettings.EnableTimeRideNotifications;
     [ObservableProperty] public partial bool EnableDrinkNotifications { get; set; } = appSettings.EnableDrinkNotifications;
@@ -25,14 +18,8 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
     {
         switch (e.PropertyName)
         {
-            case nameof(SortByIndex):
-                appSettings.Ordering = this.SortByIndex switch
-                {
-                    0 => RideOrder.Name,
-                    1 => RideOrder.WaitTime,
-                    2 => RideOrder.PaidWaitTime,
-                    3 => RideOrder.Distance
-                };
+            case nameof(Ordering):
+                appSettings.Ordering = this.Ordering;
                 break;
             
             case nameof(ShowOpenOnly):

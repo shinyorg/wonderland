@@ -11,5 +11,5 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new(new StartAppShell());
+        => new(new AppShell(localize));
 }

@@ -13,7 +13,7 @@ public partial class StartupViewModel(
         await this.TryGps();
         await this.TryGeofencing();
 
-        await services.Navigator.SwitchShell(new AppShell(services.Localized));
+        await services.Navigator.NavigateTo("//main");
     }
 
     public void OnDisappearing()

@@ -11,10 +11,18 @@ public partial class StartupViewModel(
     
     public async void OnAppearing()
     {
-        await services.Notifications.RequestAccess();
-        await this.TryGps();
+        try
+        {
+            await services.Notifications.RequestAccess();
+            await this.TryGps();
 
-        await services.Navigator.NavigateTo("//main");
+            await services.Navigator.NavigateTo("//main");
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to navigate to MainPage");
+            await services.Dialogs.Alert("Startup Error", "An error occurred during startup. " + ex);
+        }
     }
 
     public void OnDisappearing()
@@ -56,6 +64,7 @@ public partial class StartupViewModel(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to start GPS");
+            await services.Dialogs.Alert("GPS Error", "Unable to start GPS tracking. " + ex);
         }
     }
 }

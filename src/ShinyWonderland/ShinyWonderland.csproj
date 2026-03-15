@@ -115,4 +115,17 @@
         <ProjectReference Include="..\ShinyWonderland.ApiClient\ShinyWonderland.ApiClient.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="AppShell.xaml">
+        <SubType>Designer</SubType>
+      </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="AppShell.xaml.cs">
+        <DependentUpon>AppShell.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

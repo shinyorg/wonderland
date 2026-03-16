@@ -16,6 +16,7 @@ public partial class StartupViewModel(
             await services.Notifications.RequestAccess();
             await this.TryGps();
 
+            await Task.Delay(1000); // I think shell has a race condition of some sort
             await services.Navigator.NavigateTo("//main");
         }
         catch (Exception ex)
@@ -48,16 +49,13 @@ public partial class StartupViewModel(
                 if (start)
                 {
                     await services.Gps.StartListener(GpsRequest.Realtime(true));
-                    
-                    var regions = geofenceManager.GetMonitorRegions();
-                    if (!regions.Any(x => x.Identifier.Equals(GEOFENCE_ID, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        await geofenceManager.StartMonitoring(new GeofenceRegion(
-                            GEOFENCE_ID,
-                            services.ParkOptions.Value.CenterOfPark,
-                            services.ParkOptions.Value.NotificationDistance
-                        ));
-                    }
+
+                    await geofenceManager.StopAllMonitoring();
+                    await geofenceManager.StartMonitoring(new GeofenceRegion(
+                        GEOFENCE_ID,
+                        services.ParkOptions.Value.CenterOfPark,
+                        services.ParkOptions.Value.NotificationDistance
+                    ));
                 }
             }
         }

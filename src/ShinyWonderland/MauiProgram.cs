@@ -28,7 +28,7 @@ public static class MauiProgram
 #if RELEASE
             .UseSentry(opts =>
             {
-                opts.Dsn = builder.Configuration["Sentry:Dsn"]!;
+                opts.Dsn = builder.Configuration["SentryDsn"]!;
                 // DiagnosticListener.AllListeners.Subscribe(
                 //     x => x.Subscribe()
                 // );

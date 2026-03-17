@@ -16,8 +16,12 @@ public partial class StartupViewModel(
             await services.Notifications.RequestAccess();
             await this.TryGps();
 
-            await Task.Delay(1000); // I think shell has a race condition of some sort
-            await services.Navigator.NavigateTo("//main");
+            // Shell may not be fully initialized when OnAppearing fires without
+            // permission popups to yield the main thread.  Dispatching ensures
+            // navigation runs after the current layout pass completes.
+            await Shell.Current.Dispatcher.DispatchAsync(
+                () => services.Navigator.NavigateTo("//main")
+            );
         }
         catch (Exception ex)
         {

@@ -19,16 +19,16 @@
         <ApplicationVersion>1</ApplicationVersion>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
+    <PropertyGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">
         <OutputType>Exe</OutputType>
         <UseMaui>true</UseMaui>
+        <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == ''">
+    <PropertyGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)'">
         <OutputType>Library</OutputType>
         <UseMaui>false</UseMaui>
     </PropertyGroup>
-
     <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">-->
     <!--        <UseMonoRuntime>false</UseMonoRuntime>-->
     <!--    </PropertyGroup>-->

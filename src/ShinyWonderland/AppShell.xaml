@@ -11,27 +11,27 @@
     </ShellItem>
 
     <TabBar Route="main">
-        <Tab Icon="ride_time">
+        <Tab Icon="ride_time" Route="ridetimes">
             <ShellContent Title="{Binding Localize.RideTimes}" 
                           ContentTemplate="{DataTemplate local:RideTimesPage}"/>
         </Tab>
-        <Tab Icon="ride_time">
+        <Tab Icon="ride_time" Route="ridetimesmap">
             <ShellContent Title="{Binding Localize.RideTimes}" 
                           ContentTemplate="{DataTemplate local:MapRideTimesPage}"/>
         </Tab>
-        <Tab Icon="settings">
+        <Tab Icon="settings" Route="settings">
             <ShellContent Title="{Binding Localize.Settings}"
                           ContentTemplate="{DataTemplate local:SettingsPage}"/>
         </Tab>
-        <Tab Icon="parking">
+        <Tab Icon="parking" Route="parking">
             <ShellContent Title="{Binding Localize.Parking}"
                           ContentTemplate="{DataTemplate local:ParkingPage}"/>
         </Tab>
-        <Tab Icon="hours">
+        <Tab Icon="hours" Route="mealtimes">
             <ShellContent Title="{Binding Localize.MealTimes}"
                           ContentTemplate="{DataTemplate local:MealTimePage}"/>
         </Tab>
-        <Tab Icon="hours">
+        <Tab Icon="hours" Route="hours">
             <ShellContent Title="{Binding Localize.Hours}"
                           ContentTemplate="{DataTemplate local:HoursPage}"/>
         </Tab>

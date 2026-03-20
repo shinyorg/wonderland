@@ -11,5 +11,11 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new(new AppShell(localize));
+    {
+        var shell = new AppShell(this.localize);
+        var window = new Window(shell);
+
+        _ = shell.GoToAsync("//startup");
+        return window;
+    }
 }

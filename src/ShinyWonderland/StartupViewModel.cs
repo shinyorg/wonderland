@@ -5,33 +5,23 @@ public partial class StartupViewModel(
     CoreServices services,
     ILogger<StartupViewModel> logger,
     IGeofenceManager geofenceManager
-) : ObservableObject, IPageLifecycleAware
+) : ObservableObject
 {
     const string GEOFENCE_ID = "ThemePark";
-    
-    public async void OnAppearing()
+
+    public async void OnLoad()
     {
         try
         {
             await services.Notifications.RequestAccess();
             await this.TryGps();
-
-            // Shell may not be fully initialized when OnAppearing fires without
-            // permission popups to yield the main thread.  Dispatching ensures
-            // navigation runs after the current layout pass completes.
-            await Shell.Current.Dispatcher.DispatchAsync(
-                () => services.Navigator.NavigateTo("//main")
-            );
+            await services.Navigator.NavigateTo("//main/ridetimes");
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to navigate to MainPage");
             await services.Dialogs.Alert("Startup Error", "An error occurred during startup. " + ex);
         }
-    }
-
-    public void OnDisappearing()
-    {
     }
 
 

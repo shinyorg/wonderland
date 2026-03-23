@@ -1,4 +1,5 @@
-using Shiny.SqliteDocumentDb;
+using Shiny.DocumentDb;
+using Shiny.DocumentDb.Sqlite;
 
 namespace ShinyWonderland.Tests;
 
@@ -11,7 +12,10 @@ public class DataServiceTests
         var services = new ServiceCollection();
         var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var fullPath = Path.Combine(appData, $"{Guid.NewGuid()}.db");
-        services.AddSqliteDocumentStore($"Data Source={fullPath}");
+        services.AddDocumentStore(opts =>
+        {
+            opts.DatabaseProvider = new SqliteDatabaseProvider($"Data Source={fullPath}");
+        });
         services.AddSingleton<IDataService, DataService>();
         var sp = services.BuildServiceProvider();
         this.dataService = sp.GetRequiredService<IDataService>();

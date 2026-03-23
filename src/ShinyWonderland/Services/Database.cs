@@ -1,6 +1,6 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using Shiny.SqliteDocumentDb;
+using Shiny.DocumentDb;
+using Shiny.DocumentDb.Sqlite;
 
 namespace ShinyWonderland;
 
@@ -111,9 +111,9 @@ public static class DatabaseExtensions
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "wonderland.db"
         );
-        services.AddSqliteDocumentStore(opts =>
+        services.AddDocumentStore(opts =>
         {
-            opts.ConnectionString = $"Data Source={dbPath}";
+            opts.DatabaseProvider = new SqliteDatabaseProvider($"Data Source={dbPath}");
             opts.UseReflectionFallback = false;
             opts.JsonSerializerOptions = AppJsonContext.Default.Options;
         });

@@ -14,7 +14,6 @@
 
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
-        <ApplicationIdGuid>0BDC1432-1873-4436-BA42-D06EC0FA2CF8</ApplicationIdGuid>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
     </PropertyGroup>
@@ -99,7 +98,8 @@
         <PackageReference Include="Shiny.Locations"/>
         <PackageReference Include="Shiny.Jobs"/>
         <PackageReference Include="Shiny.Notifications"/>
-        <PackageReference Include="Shiny.SqliteDocumentDb"/>
+        <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
+        <PackageReference Include="Shiny.DocumentDb.Extensions.DependencyInjection"/>
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">

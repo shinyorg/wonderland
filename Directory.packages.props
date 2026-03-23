@@ -15,15 +15,16 @@
     
     <ItemGroup>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.0"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.3"/>
         <PackageVersion Include="Shiny.Maui.TableView" Version="1.0.2"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="3.1.0"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="3.1.1"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageVersion Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageVersion Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
-        <PackageVersion Include="Shiny.SqliteDocumentDb" Version="1.0.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="3.0.1"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="3.0.1"/>
         <PackageVersion Include="Shiny.Reflector" Version="1.7.1"/>
     </ItemGroup>
     

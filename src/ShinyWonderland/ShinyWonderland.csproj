@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        
+
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
@@ -58,7 +58,7 @@
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
         <TargetPlatformVersion>36</TargetPlatformVersion>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
@@ -84,10 +84,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Redth.MauiDevFlow.Agent" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="Microsoft.Maui.Controls"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Condition="'$(Configuration)' == 'Debug'"/>
+
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>
@@ -106,6 +105,11 @@
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
         <PackageReference Include="Shiny.Hosting.Maui"/>
         <PackageReference Include="Shiny.Extensions.Configuration"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="Redth.MauiDevFlow.Agent"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug"/>
     </ItemGroup>
 
     <ItemGroup>

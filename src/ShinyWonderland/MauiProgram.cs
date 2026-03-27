@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#if PLATFORM
+#if DEBUG
+using MauiDevFlow.Agent;
+#endif
+using Microsoft.Extensions.Configuration;
 using Shiny.Jobs;
 using Shiny.Maui.TableView;
 using ShinyWonderland.Delegates;
@@ -8,7 +12,7 @@ namespace ShinyWonderland;
 
 public static class MauiProgram
 {
-    #if PLATFORM
+    
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -79,5 +83,5 @@ public static class MauiProgram
 
         return app;
     }
-    #endif
 }
+#endif

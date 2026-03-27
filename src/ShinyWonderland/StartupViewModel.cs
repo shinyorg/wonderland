@@ -3,19 +3,23 @@ namespace ShinyWonderland;
 [ShellMap<StartupPage>(registerRoute: false)]
 public partial class StartupViewModel(
     CoreServices services,
-    ILogger<StartupViewModel> logger,
-    IGeofenceManager geofenceManager
+    ILogger<StartupViewModel> logger
 ) : ObservableObject
 {
-    const string GEOFENCE_ID = "ThemePark";
 
     public async void OnLoad()
     {
         try
         {
             await services.Notifications.RequestAccess();
-            await this.TryGps();
-            await services.Navigator.NavigateTo("//main/ridetimes");
+
+            var main = Shell.Current.Items.FirstOrDefault(x => x.Route == "main");
+            if (main != null)
+                Shell.Current.CurrentItem = main;
+
+            // GPS RequestAccess locks Shell navigation when it resolves without
+            // a popup, so run it after we've already navigated away
+            _ = this.TryGps();
         }
         catch (Exception ex)
         {
@@ -39,18 +43,12 @@ public partial class StartupViewModel(
             // only check GPS if background is running and user has granted permissions
             if (access == AccessState.Available && services.Gps.CurrentListener == null)
             {
-                var start = await services.IsUserWithinPark();
-                if (start)
-                {
-                    await services.Gps.StartListener(GpsRequest.Realtime(true));
-
-                    await geofenceManager.StopAllMonitoring();
-                    await geofenceManager.StartMonitoring(new GeofenceRegion(
-                        GEOFENCE_ID,
-                        services.ParkOptions.Value.CenterOfPark,
-                        services.ParkOptions.Value.NotificationDistance
-                    ));
-                }
+                // var start = await services.IsUserWithinPark();
+                // if (start)
+                // {
+                //     await services.Gps.StartListener(GpsRequest.Realtime(true));
+                //
+                // }
             }
         }
         catch (Exception ex)

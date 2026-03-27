@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ShinyVersion>4.0.0-beta-0095</ShinyVersion>
+        <ShinyVersion>4.0.1</ShinyVersion>
     </PropertyGroup>
     
     <ItemGroup>
@@ -23,8 +23,8 @@
         <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>
         <PackageVersion Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
         <PackageVersion Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="3.0.1"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="3.0.1"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="3.2.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="3.2.0"/>
         <PackageVersion Include="Shiny.Reflector" Version="1.7.1"/>
     </ItemGroup>
     
@@ -33,6 +33,10 @@
         <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
     </ItemGroup>
     
+    <ItemGroup>
+        <PackageVersion Include="Redth.MauiDevFlow.Agent" Version="0.23.1"/>
+    </ItemGroup>
+
     <ItemGroup>
         <PackageVersion Include="coverlet.collector" Version="8.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.3.0"/>

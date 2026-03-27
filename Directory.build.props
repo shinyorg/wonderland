@@ -7,6 +7,6 @@
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
         
-        <MauiVersion>10.0.41</MauiVersion>
+        <MauiVersion>10.0.51</MauiVersion>
     </PropertyGroup>
 </Project>

@@ -5,14 +5,17 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:MealTimeViewModel"
              x:Class="ShinyWonderland.MealTimePage"
+             AutomationId="MealTimePage"
              Title="{Binding Localize.Title}">
     <Grid RowDefinitions="Auto, Auto, *">
-        <Button Text="Time Remaining OR Use Drink Pass" 
+        <Button Text="Time Remaining OR Use Drink Pass"
+                AutomationId="DrinkPassButton"
                 Grid.Row="0"/>
-        <Button Text="Time Remaining OR Use Food Pass" 
+        <Button Text="Time Remaining OR Use Food Pass"
+                AutomationId="FoodPassButton"
                 Grid.Row="1"/>
         
-        <CollectionView Grid.Row="2">
+        <CollectionView AutomationId="MealHistoryCollectionView" Grid.Row="2">
             <CollectionView.EmptyView>
                 <controls:NoItemsView />
             </CollectionView.EmptyView>

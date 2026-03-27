@@ -5,6 +5,7 @@
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland"
              x:DataType="shinyWonderland:ParkingViewModel"
              x:Class="ShinyWonderland.ParkingPage"
+             AutomationId="ParkingPage"
              Title="{Binding Localize.Title}">
     
     <ContentPage.Resources>
@@ -27,7 +28,8 @@
     
     <ContentPage.Content>
         <Grid>
-            <Image Source="{Binding ImageUri}" 
+            <Image Source="{Binding ImageUri}"
+                   AutomationId="ParkingImage"
                    IsVisible="{Binding HasParkedImage}">
                 <Image.Shadow>
                     <Shadow Opacity="0.25" 
@@ -36,7 +38,8 @@
                 </Image.Shadow>
             </Image>
             
-            <maps:Map x:Name="ParkingMap" 
+            <maps:Map x:Name="ParkingMap"
+                      AutomationId="ParkingMap"
                       MapType="Street"
                       IsShowingUser="True" 
                       IsZoomEnabled="True"
@@ -51,6 +54,7 @@
             -->
             
             <Button Text="{Binding CommandText}"
+                    AutomationId="ToggleParkingButton"
                     Command="{Binding ToggleSetLocationCommand}"/>
         </Grid>
     </ContentPage.Content>

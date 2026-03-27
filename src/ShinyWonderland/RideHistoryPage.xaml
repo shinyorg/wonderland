@@ -5,9 +5,11 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.RideHistoryPage"
+             AutomationId="RideHistoryPage"
              Title="{Binding Localize.Title}">
     
     <CollectionView ItemsSource="{Binding History}"
+                    AutomationId="RideHistoryCollectionView"
                     Margin="0,8,0,0">
         <CollectionView.EmptyView>
             <controls:NoItemsView />

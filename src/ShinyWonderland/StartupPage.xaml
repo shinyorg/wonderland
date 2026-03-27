@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShinyWonderland.StartupPage"
+             AutomationId="StartupPage"
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
@@ -33,6 +34,7 @@
             </Border>
 
             <Label Text="Wonderland"
+                   AutomationId="StartupTitle"
                    FontSize="36"
                    FontAttributes="Bold"
                    TextColor="White"
@@ -46,6 +48,7 @@
                    Opacity="0.9" />
 
             <ActivityIndicator IsRunning="True"
+                               AutomationId="StartupSpinner"
                                Color="White"
                                HeightRequest="36"
                                WidthRequest="36"

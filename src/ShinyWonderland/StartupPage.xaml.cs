@@ -12,11 +12,4 @@ public partial class StartupPage : ContentPage
     {
         (BindingContext as StartupViewModel)?.OnLoad();
     }
-
-
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
-        
-    }
 }

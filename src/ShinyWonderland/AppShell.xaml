@@ -11,27 +11,27 @@
     </ShellItem>
 
     <TabBar Route="main">
-        <Tab Icon="ride_time" Route="ridetimes">
-            <ShellContent Title="{Binding Localize.RideTimes}" 
+        <Tab Icon="ride_time" Route="ridetimes" AutomationId="RideTimesTab">
+            <ShellContent Title="{Binding Localize.RideTimes}"
                           ContentTemplate="{DataTemplate local:RideTimesPage}"/>
         </Tab>
-        <Tab Icon="ride_time" Route="ridetimesmap">
-            <ShellContent Title="{Binding Localize.RideTimes}" 
+        <Tab Icon="ride_time" Route="ridetimesmap" AutomationId="MapRideTimesTab">
+            <ShellContent Title="{Binding Localize.RideTimes}"
                           ContentTemplate="{DataTemplate local:MapRideTimesPage}"/>
         </Tab>
-        <Tab Icon="settings" Route="settings">
+        <Tab Icon="settings" Route="settings" AutomationId="SettingsTab">
             <ShellContent Title="{Binding Localize.Settings}"
                           ContentTemplate="{DataTemplate local:SettingsPage}"/>
         </Tab>
-        <Tab Icon="parking" Route="parking">
+        <Tab Icon="parking" Route="parking" AutomationId="ParkingTab">
             <ShellContent Title="{Binding Localize.Parking}"
                           ContentTemplate="{DataTemplate local:ParkingPage}"/>
         </Tab>
-        <Tab Icon="hours" Route="mealtimes">
+        <Tab Icon="hours" Route="mealtimes" AutomationId="MealTimesTab">
             <ShellContent Title="{Binding Localize.MealTimes}"
                           ContentTemplate="{DataTemplate local:MealTimePage}"/>
         </Tab>
-        <Tab Icon="hours" Route="hours">
+        <Tab Icon="hours" Route="hours" AutomationId="HoursTab">
             <ShellContent Title="{Binding Localize.Hours}"
                           ContentTemplate="{DataTemplate local:HoursPage}"/>
         </Tab>

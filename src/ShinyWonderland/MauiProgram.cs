@@ -17,6 +17,7 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
+        builder.AddMauiDevFlowAgent();
 #endif
         
         builder

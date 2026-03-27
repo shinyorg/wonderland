@@ -13,4 +13,5 @@
   <Project Path="src/ShinyWonderland.ApiClient/ShinyWonderland.ApiClient.csproj" />
   <Project Path="src/ShinyWonderland.Localization/ShinyWonderland.Localization.csproj" />
   <Project Path="tests/ShinyWonderland.Tests/ShinyWonderland.Tests.csproj" />
+  <Project Path="tests/ShinyWonderland.UITests/ShinyWonderland.UITests.csproj" />
 </Solution>

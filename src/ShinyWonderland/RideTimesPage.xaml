@@ -5,10 +5,12 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="local:RideTimesViewModel"
              x:Class="ShinyWonderland.RideTimesPage"
+             AutomationId="RideTimesPage"
              Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{Binding Localize.History}"
+                     AutomationId="HistoryToolbarButton"
                      Command="{Binding GoToHistoryCommand}" />
     </ContentPage.ToolbarItems>
 
@@ -16,6 +18,7 @@
           RowSpacing="0"
           Padding="0">
         <Label Text="{Binding Localize.YouAreOffline}"
+               AutomationId="OfflineBanner"
                IsVisible="{Binding IsNotConnected}"
                VerticalTextAlignment="Center"
                BackgroundColor="{StaticResource Yellow100Accent}"
@@ -25,7 +28,8 @@
                Margin="0"
                Grid.Row="0" />
 
-        <Label BackgroundColor="{StaticResource Primary}"
+        <Label AutomationId="DataTimestampLabel"
+               BackgroundColor="{StaticResource Primary}"
                TextColor="{StaticResource White}"
                FontAttributes="Bold"
                HorizontalTextAlignment="Center"
@@ -42,10 +46,12 @@
         </Label>
 
         <RefreshView Command="{Binding LoadCommand}"
+                     AutomationId="RideTimesRefreshView"
                      IsRefreshing="{Binding IsBusy}"
                      Grid.Row="2">
 
             <CollectionView ItemsSource="{Binding Rides}"
+                            AutomationId="RidesCollectionView"
                             Margin="0,8,0,0">
                 <CollectionView.EmptyView>
                     <controls:NoItemsView />

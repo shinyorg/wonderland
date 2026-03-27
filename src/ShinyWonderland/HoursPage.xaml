@@ -5,9 +5,11 @@
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
              x:DataType="shinyWonderland:HoursViewModel"
              x:Class="ShinyWonderland.HoursPage"
+             AutomationId="HoursPage"
              Title="{Binding Localize.Title}">
 
     <CollectionView ItemsSource="{Binding Schedule}"
+                    AutomationId="HoursCollectionView"
                     Margin="0,8,0,0">
         <CollectionView.EmptyView>
             <controls:NoItemsView />

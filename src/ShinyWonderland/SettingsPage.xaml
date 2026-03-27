@@ -6,34 +6,35 @@
              xmlns:svc="clr-namespace:ShinyWonderland.Services"
              x:DataType="shinyWonderland:SettingsViewModel"
              x:Class="ShinyWonderland.SettingsPage"
+             AutomationId="SettingsPage"
              Title="Settings">
 
-    <tv:TableView CellAccentColor="{StaticResource Primary}">
+    <tv:TableView AutomationId="SettingsTableView" CellAccentColor="{StaticResource Primary}">
         <tv:TableRoot>
             <tv:TableSection Title="Sort Options"
                              tv:RadioCell.SelectedValue="{Binding Ordering, Mode=TwoWay}">
-                <tv:RadioCell Title="Name" Value="{x:Static svc:RideOrder.Name}" />
-                <tv:RadioCell Title="Wait Time" Value="{x:Static svc:RideOrder.WaitTime}" />
-                <tv:RadioCell Title="Paid Wait Time" Value="{x:Static svc:RideOrder.PaidWaitTime}" />
-                <tv:RadioCell Title="Distance" Value="{x:Static svc:RideOrder.Distance}" />
+                <tv:RadioCell AutomationId="SortByName" Title="Name" Value="{x:Static svc:RideOrder.Name}" />
+                <tv:RadioCell AutomationId="SortByWaitTime" Title="Wait Time" Value="{x:Static svc:RideOrder.WaitTime}" />
+                <tv:RadioCell AutomationId="SortByPaidWaitTime" Title="Paid Wait Time" Value="{x:Static svc:RideOrder.PaidWaitTime}" />
+                <tv:RadioCell AutomationId="SortByDistance" Title="Distance" Value="{x:Static svc:RideOrder.Distance}" />
             </tv:TableSection>
 
             <tv:TableSection Title="Notifications"
                              FooterText="Control which notifications you receive from the app">
-                <tv:SwitchCell Title="Ride Time Notifications" On="{Binding EnableTimeRideNotifications, Mode=TwoWay}" />
-                <tv:SwitchCell Title="Park Arrival Notification" On="{Binding EnableGeofenceNotifications, Mode=TwoWay}" />
-                <tv:SwitchCell Title="Drink Notification" On="{Binding EnableDrinkNotifications, Mode=TwoWay}" />
-                <tv:SwitchCell Title="Meal Notification" On="{Binding EnableMealNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="RideTimeNotifications" Title="Ride Time Notifications" On="{Binding EnableTimeRideNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="GeofenceNotifications" Title="Park Arrival Notification" On="{Binding EnableGeofenceNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="DrinkNotifications" Title="Drink Notification" On="{Binding EnableDrinkNotifications, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="MealNotifications" Title="Meal Notification" On="{Binding EnableMealNotifications, Mode=TwoWay}" />
             </tv:TableSection>
 
             <tv:TableSection Title="Display"
                              FooterText="Filter which rides are shown in the list">
-                <tv:SwitchCell Title="Show Timed Rides Only" On="{Binding ShowTimedOnly, Mode=TwoWay}" />
-                <tv:SwitchCell Title="Show Open Only" On="{Binding ShowOpenOnly, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="ShowTimedOnly" Title="Show Timed Rides Only" On="{Binding ShowTimedOnly, Mode=TwoWay}" />
+                <tv:SwitchCell AutomationId="ShowOpenOnly" Title="Show Open Only" On="{Binding ShowOpenOnly, Mode=TwoWay}" />
             </tv:TableSection>
 
             <tv:TableSection Title="About">
-                <tv:LabelCell Title="Version" ValueText="{Binding AppVersion}" />
+                <tv:LabelCell AutomationId="VersionLabel" Title="Version" ValueText="{Binding AppVersion}" />
             </tv:TableSection>
         </tv:TableRoot>
     </tv:TableView>

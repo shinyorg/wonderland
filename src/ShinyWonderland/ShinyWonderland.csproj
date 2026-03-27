@@ -84,6 +84,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Redth.MauiDevFlow.Agent" Condition="'$(Configuration)' == 'Debug'"/>
         <PackageReference Include="Microsoft.Maui.Controls"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Condition="'$(Configuration)' == 'Debug'"/>

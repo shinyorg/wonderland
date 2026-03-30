@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class ParkingPageTests
+public abstract class ParkingPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public ParkingPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected ParkingPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToParking()
     {
-        await driver.Navigate("//main/parking");
-        await driver.WaitUntilExists("ParkingPage");
+        await Driver.Navigate("//main/parking");
+        await Driver.WaitUntilExists("ParkingPage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class ParkingPageTests
     {
         await NavigateToParking();
 
-        var isVisible = await driver.IsElementVisible("ParkingPage");
+        var isVisible = await Driver.IsElementVisible("ParkingPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class ParkingPageTests
     {
         await NavigateToParking();
 
-        var isVisible = await driver.IsElementVisible("ParkingMap");
+        var isVisible = await Driver.IsElementVisible("ParkingMap");
         isVisible.ShouldBeTrue("Parking map should be visible");
     }
 
@@ -39,7 +33,7 @@ public class ParkingPageTests
     {
         await NavigateToParking();
 
-        var isVisible = await driver.IsElementVisible("ToggleParkingButton");
+        var isVisible = await Driver.IsElementVisible("ToggleParkingButton");
         isVisible.ShouldBeTrue("Toggle parking button should be visible");
     }
 
@@ -48,8 +42,8 @@ public class ParkingPageTests
     {
         await NavigateToParking();
 
-        await driver.Tap(automationId: "ToggleParkingButton");
-        await driver.Screenshot("parking-after-toggle.png");
+        await Driver.Tap(automationId: "ToggleParkingButton");
+        await Driver.Screenshot("parking-after-toggle.png");
     }
 
     [Fact]
@@ -57,6 +51,6 @@ public class ParkingPageTests
     {
         await NavigateToParking();
 
-        await driver.Screenshot("parking.png");
+        await Driver.Screenshot("parking.png");
     }
 }

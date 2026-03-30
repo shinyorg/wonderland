@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class RideTimesPageTests
+public abstract class RideTimesPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public RideTimesPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected RideTimesPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToRideTimes()
     {
-        await driver.Navigate("//main/ridetimes");
-        await driver.WaitUntilExists("RideTimesPage");
+        await Driver.Navigate("//main/ridetimes");
+        await Driver.WaitUntilExists("RideTimesPage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        var isVisible = await driver.IsElementVisible("RideTimesPage");
+        var isVisible = await Driver.IsElementVisible("RideTimesPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        var isVisible = await driver.IsElementVisible("DataTimestampLabel");
+        var isVisible = await Driver.IsElementVisible("DataTimestampLabel");
         isVisible.ShouldBeTrue("Data timestamp label should be visible");
     }
 
@@ -39,7 +33,7 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        var isVisible = await driver.IsElementVisible("RidesCollectionView");
+        var isVisible = await Driver.IsElementVisible("RidesCollectionView");
         isVisible.ShouldBeTrue("Rides collection view should be present");
     }
 
@@ -48,7 +42,7 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        var isVisible = await driver.IsElementVisible("HistoryToolbarButton");
+        var isVisible = await Driver.IsElementVisible("HistoryToolbarButton");
         isVisible.ShouldBeTrue("History toolbar button should be visible");
     }
 
@@ -57,7 +51,7 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        var isVisible = await driver.IsElementVisible("RideTimesRefreshView");
+        var isVisible = await Driver.IsElementVisible("RideTimesRefreshView");
         isVisible.ShouldBeTrue("RefreshView should be present for pull-to-refresh");
     }
 
@@ -66,15 +60,15 @@ public class RideTimesPageTests
     {
         await NavigateToRideTimes();
 
-        await driver.Tap(automationId: "HistoryToolbarButton");
-        await driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
+        await Driver.Tap(automationId: "HistoryToolbarButton");
+        await Driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
 
-        var isVisible = await driver.IsElementVisible("RideHistoryPage");
+        var isVisible = await Driver.IsElementVisible("RideHistoryPage");
         isVisible.ShouldBeTrue("Should navigate to ride history page");
 
         // Navigate back
-        await driver.Navigate("//main/ridetimes");
-        await driver.WaitUntilExists("RideTimesPage");
+        await Driver.Navigate("//main/ridetimes");
+        await Driver.WaitUntilExists("RideTimesPage");
     }
 
     [Fact]
@@ -83,6 +77,6 @@ public class RideTimesPageTests
         await NavigateToRideTimes();
 
         // Visual verification screenshot
-        await driver.Screenshot("ride-times.png");
+        await Driver.Screenshot("ride-times.png");
     }
 }

@@ -1,72 +1,66 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class NavigationTests
+public abstract class NavigationTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public NavigationTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected NavigationTests(PlatformFixture fixture) : base(fixture) { }
 
     [Fact]
     public async Task Navigate_ToRideTimesTab()
     {
-        await driver.Navigate("//main/ridetimes");
-        await driver.WaitUntilExists("RideTimesPage");
+        await Driver.Navigate("//main/ridetimes");
+        await Driver.WaitUntilExists("RideTimesPage");
 
-        var isVisible = await driver.IsElementVisible("RideTimesPage");
+        var isVisible = await Driver.IsElementVisible("RideTimesPage");
         isVisible.ShouldBeTrue();
     }
 
     [Fact]
     public async Task Navigate_ToMapRideTimesTab()
     {
-        await driver.Navigate("//main/ridetimesmap");
-        await driver.WaitUntilExists("MapRideTimesPage");
+        await Driver.Navigate("//main/ridetimesmap");
+        await Driver.WaitUntilExists("MapRideTimesPage");
 
-        var isVisible = await driver.IsElementVisible("MapRideTimesPage");
+        var isVisible = await Driver.IsElementVisible("MapRideTimesPage");
         isVisible.ShouldBeTrue();
     }
 
     [Fact]
     public async Task Navigate_ToSettingsTab()
     {
-        await driver.Navigate("//main/settings");
-        await driver.WaitUntilExists("SettingsPage");
+        await Driver.Navigate("//main/settings");
+        await Driver.WaitUntilExists("SettingsPage");
 
-        var isVisible = await driver.IsElementVisible("SettingsPage");
+        var isVisible = await Driver.IsElementVisible("SettingsPage");
         isVisible.ShouldBeTrue();
     }
 
     [Fact]
     public async Task Navigate_ToParkingTab()
     {
-        await driver.Navigate("//main/parking");
-        await driver.WaitUntilExists("ParkingPage");
+        await Driver.Navigate("//main/parking");
+        await Driver.WaitUntilExists("ParkingPage");
 
-        var isVisible = await driver.IsElementVisible("ParkingPage");
+        var isVisible = await Driver.IsElementVisible("ParkingPage");
         isVisible.ShouldBeTrue();
     }
 
     [Fact]
     public async Task Navigate_ToMealTimesTab()
     {
-        await driver.Navigate("//main/mealtimes");
-        await driver.WaitUntilExists("MealTimePage");
+        await Driver.Navigate("//main/mealtimes");
+        await Driver.WaitUntilExists("MealTimePage");
 
-        var isVisible = await driver.IsElementVisible("MealTimePage");
+        var isVisible = await Driver.IsElementVisible("MealTimePage");
         isVisible.ShouldBeTrue();
     }
 
     [Fact]
     public async Task Navigate_ToHoursTab()
     {
-        await driver.Navigate("//main/hours");
-        await driver.WaitUntilExists("HoursPage");
+        await Driver.Navigate("//main/hours");
+        await Driver.WaitUntilExists("HoursPage");
 
-        var isVisible = await driver.IsElementVisible("HoursPage");
+        var isVisible = await Driver.IsElementVisible("HoursPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -86,10 +80,10 @@ public class NavigationTests
 
         foreach (var (route, pageId) in tabs)
         {
-            await driver.Navigate(route);
-            await driver.WaitUntilExists(pageId);
+            await Driver.Navigate(route);
+            await Driver.WaitUntilExists(pageId);
 
-            var isVisible = await driver.IsElementVisible(pageId);
+            var isVisible = await Driver.IsElementVisible(pageId);
             isVisible.ShouldBeTrue($"Page {pageId} should be visible after navigating to {route}");
         }
     }

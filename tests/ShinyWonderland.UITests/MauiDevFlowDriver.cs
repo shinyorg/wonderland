@@ -8,6 +8,8 @@ public class MauiDevFlowDriver : IAsyncDisposable
 {
     readonly string screenshotDir;
 
+    public Platform? TargetPlatform { get; init; }
+
     public MauiDevFlowDriver(string? screenshotDir = null)
     {
         this.screenshotDir = screenshotDir ?? Path.Combine(
@@ -21,11 +23,18 @@ public class MauiDevFlowDriver : IAsyncDisposable
 
     public async Task<string> RunCommand(string args, int timeoutMs = 30_000)
     {
+        var platformArg = TargetPlatform switch
+        {
+            Platform.iOS => "-p ios ",
+            Platform.Android => "-p android ",
+            _ => ""
+        };
+
         using var process = new Process();
         process.StartInfo = new ProcessStartInfo
         {
             FileName = "maui-devflow",
-            Arguments = args,
+            Arguments = platformArg + args,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,

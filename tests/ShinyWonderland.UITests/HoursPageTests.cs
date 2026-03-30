@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class HoursPageTests
+public abstract class HoursPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public HoursPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected HoursPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToHours()
     {
-        await driver.Navigate("//main/hours");
-        await driver.WaitUntilExists("HoursPage");
+        await Driver.Navigate("//main/hours");
+        await Driver.WaitUntilExists("HoursPage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class HoursPageTests
     {
         await NavigateToHours();
 
-        var isVisible = await driver.IsElementVisible("HoursPage");
+        var isVisible = await Driver.IsElementVisible("HoursPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class HoursPageTests
     {
         await NavigateToHours();
 
-        var isVisible = await driver.IsElementVisible("HoursCollectionView");
+        var isVisible = await Driver.IsElementVisible("HoursCollectionView");
         isVisible.ShouldBeTrue("Hours collection view should be present");
     }
 
@@ -39,6 +33,6 @@ public class HoursPageTests
     {
         await NavigateToHours();
 
-        await driver.Screenshot("hours.png");
+        await Driver.Screenshot("hours.png");
     }
 }

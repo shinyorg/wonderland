@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class MealTimePageTests
+public abstract class MealTimePageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public MealTimePageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected MealTimePageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToMealTimes()
     {
-        await driver.Navigate("//main/mealtimes");
-        await driver.WaitUntilExists("MealTimePage");
+        await Driver.Navigate("//main/mealtimes");
+        await Driver.WaitUntilExists("MealTimePage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class MealTimePageTests
     {
         await NavigateToMealTimes();
 
-        var isVisible = await driver.IsElementVisible("MealTimePage");
+        var isVisible = await Driver.IsElementVisible("MealTimePage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class MealTimePageTests
     {
         await NavigateToMealTimes();
 
-        var isVisible = await driver.IsElementVisible("DrinkPassButton");
+        var isVisible = await Driver.IsElementVisible("DrinkPassButton");
         isVisible.ShouldBeTrue("Drink pass button should be visible");
     }
 
@@ -39,7 +33,7 @@ public class MealTimePageTests
     {
         await NavigateToMealTimes();
 
-        var isVisible = await driver.IsElementVisible("FoodPassButton");
+        var isVisible = await Driver.IsElementVisible("FoodPassButton");
         isVisible.ShouldBeTrue("Food pass button should be visible");
     }
 
@@ -48,7 +42,7 @@ public class MealTimePageTests
     {
         await NavigateToMealTimes();
 
-        var isVisible = await driver.IsElementVisible("MealHistoryCollectionView");
+        var isVisible = await Driver.IsElementVisible("MealHistoryCollectionView");
         isVisible.ShouldBeTrue("Meal history collection view should be present");
     }
 
@@ -57,6 +51,6 @@ public class MealTimePageTests
     {
         await NavigateToMealTimes();
 
-        await driver.Screenshot("meal-times.png");
+        await Driver.Screenshot("meal-times.png");
     }
 }

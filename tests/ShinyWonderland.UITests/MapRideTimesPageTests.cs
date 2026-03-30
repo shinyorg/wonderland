@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class MapRideTimesPageTests
+public abstract class MapRideTimesPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public MapRideTimesPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected MapRideTimesPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToMapRideTimes()
     {
-        await driver.Navigate("//main/ridetimesmap");
-        await driver.WaitUntilExists("MapRideTimesPage");
+        await Driver.Navigate("//main/ridetimesmap");
+        await Driver.WaitUntilExists("MapRideTimesPage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class MapRideTimesPageTests
     {
         await NavigateToMapRideTimes();
 
-        var isVisible = await driver.IsElementVisible("MapRideTimesPage");
+        var isVisible = await Driver.IsElementVisible("MapRideTimesPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class MapRideTimesPageTests
     {
         await NavigateToMapRideTimes();
 
-        var isVisible = await driver.IsElementVisible("RidesMap");
+        var isVisible = await Driver.IsElementVisible("RidesMap");
         isVisible.ShouldBeTrue("Map control should be visible on the map ride times page");
     }
 
@@ -39,6 +33,6 @@ public class MapRideTimesPageTests
     {
         await NavigateToMapRideTimes();
 
-        await driver.Screenshot("map-ride-times.png");
+        await Driver.Screenshot("map-ride-times.png");
     }
 }

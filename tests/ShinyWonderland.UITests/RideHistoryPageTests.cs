@@ -1,22 +1,16 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class RideHistoryPageTests
+public abstract class RideHistoryPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public RideHistoryPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected RideHistoryPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToRideHistory()
     {
         // Navigate to ride times first, then tap history button
-        await driver.Navigate("//main/ridetimes");
-        await driver.WaitUntilExists("RideTimesPage");
-        await driver.Tap(automationId: "HistoryToolbarButton");
-        await driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
+        await Driver.Navigate("//main/ridetimes");
+        await Driver.WaitUntilExists("RideTimesPage");
+        await Driver.Tap(automationId: "HistoryToolbarButton");
+        await Driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
     }
 
     [Fact]
@@ -24,11 +18,11 @@ public class RideHistoryPageTests
     {
         await NavigateToRideHistory();
 
-        var isVisible = await driver.IsElementVisible("RideHistoryPage");
+        var isVisible = await Driver.IsElementVisible("RideHistoryPage");
         isVisible.ShouldBeTrue();
 
         // Navigate back
-        await driver.Navigate("//main/ridetimes");
+        await Driver.Navigate("//main/ridetimes");
     }
 
     [Fact]
@@ -36,11 +30,11 @@ public class RideHistoryPageTests
     {
         await NavigateToRideHistory();
 
-        var isVisible = await driver.IsElementVisible("RideHistoryCollectionView");
+        var isVisible = await Driver.IsElementVisible("RideHistoryCollectionView");
         isVisible.ShouldBeTrue("Ride history collection view should be present");
 
         // Navigate back
-        await driver.Navigate("//main/ridetimes");
+        await Driver.Navigate("//main/ridetimes");
     }
 
     [Fact]
@@ -48,9 +42,9 @@ public class RideHistoryPageTests
     {
         await NavigateToRideHistory();
 
-        await driver.Screenshot("ride-history.png");
+        await Driver.Screenshot("ride-history.png");
 
         // Navigate back
-        await driver.Navigate("//main/ridetimes");
+        await Driver.Navigate("//main/ridetimes");
     }
 }

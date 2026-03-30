@@ -1,28 +1,22 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class StartupPageTests
+public abstract class StartupPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public StartupPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected StartupPageTests(PlatformFixture fixture) : base(fixture) { }
 
     [Fact]
     public async Task Startup_NavigatesToMainTabBar()
     {
         // By the time AppFixture completes, startup should have already
         // navigated to the main tab bar with RideTimesPage visible.
-        var isVisible = await driver.IsElementVisible("RideTimesPage");
+        var isVisible = await Driver.IsElementVisible("RideTimesPage");
         isVisible.ShouldBeTrue("App should navigate from startup to main tab bar");
     }
 
     [Fact]
     public async Task Startup_StartupPageIsNoLongerVisible()
     {
-        var isVisible = await driver.IsElementVisible("StartupPage");
+        var isVisible = await Driver.IsElementVisible("StartupPage");
         isVisible.ShouldBeFalse("Startup page should not be visible after navigation");
     }
 }

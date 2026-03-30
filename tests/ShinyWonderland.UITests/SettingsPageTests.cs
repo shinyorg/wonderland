@@ -1,19 +1,13 @@
 namespace ShinyWonderland.UITests;
 
-[Collection("App")]
-public class SettingsPageTests
+public abstract class SettingsPageTests : PlatformTestBase
 {
-    readonly MauiDevFlowDriver driver;
-
-    public SettingsPageTests(AppFixture fixture)
-    {
-        driver = fixture.Driver;
-    }
+    protected SettingsPageTests(PlatformFixture fixture) : base(fixture) { }
 
     async Task NavigateToSettings()
     {
-        await driver.Navigate("//main/settings");
-        await driver.WaitUntilExists("SettingsPage");
+        await Driver.Navigate("//main/settings");
+        await Driver.WaitUntilExists("SettingsPage");
     }
 
     [Fact]
@@ -21,7 +15,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SettingsPage");
+        var isVisible = await Driver.IsElementVisible("SettingsPage");
         isVisible.ShouldBeTrue();
     }
 
@@ -30,7 +24,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SettingsTableView");
+        var isVisible = await Driver.IsElementVisible("SettingsTableView");
         isVisible.ShouldBeTrue("Settings table view should be present");
     }
 
@@ -39,7 +33,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SortByName");
+        var isVisible = await Driver.IsElementVisible("SortByName");
         isVisible.ShouldBeTrue("Sort by Name radio cell should be present");
     }
 
@@ -48,7 +42,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SortByWaitTime");
+        var isVisible = await Driver.IsElementVisible("SortByWaitTime");
         isVisible.ShouldBeTrue("Sort by Wait Time radio cell should be present");
     }
 
@@ -57,7 +51,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SortByPaidWaitTime");
+        var isVisible = await Driver.IsElementVisible("SortByPaidWaitTime");
         isVisible.ShouldBeTrue("Sort by Paid Wait Time radio cell should be present");
     }
 
@@ -66,7 +60,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("SortByDistance");
+        var isVisible = await Driver.IsElementVisible("SortByDistance");
         isVisible.ShouldBeTrue("Sort by Distance radio cell should be present");
     }
 
@@ -75,8 +69,8 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Tap(automationId: "SortByWaitTime");
-        await driver.Screenshot("settings-sort-wait-time.png");
+        await Driver.Tap(automationId: "SortByWaitTime");
+        await Driver.Screenshot("settings-sort-wait-time.png");
     }
 
     [Fact]
@@ -84,8 +78,8 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Tap(automationId: "SortByName");
-        await driver.Screenshot("settings-sort-name.png");
+        await Driver.Tap(automationId: "SortByName");
+        await Driver.Screenshot("settings-sort-name.png");
     }
 
     [Fact]
@@ -93,16 +87,16 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var rideTime = await driver.IsElementVisible("RideTimeNotifications");
+        var rideTime = await Driver.IsElementVisible("RideTimeNotifications");
         rideTime.ShouldBeTrue("Ride Time Notifications switch should exist");
 
-        var geofence = await driver.IsElementVisible("GeofenceNotifications");
+        var geofence = await Driver.IsElementVisible("GeofenceNotifications");
         geofence.ShouldBeTrue("Geofence Notifications switch should exist");
 
-        var drink = await driver.IsElementVisible("DrinkNotifications");
+        var drink = await Driver.IsElementVisible("DrinkNotifications");
         drink.ShouldBeTrue("Drink Notifications switch should exist");
 
-        var meal = await driver.IsElementVisible("MealNotifications");
+        var meal = await Driver.IsElementVisible("MealNotifications");
         meal.ShouldBeTrue("Meal Notifications switch should exist");
     }
 
@@ -111,10 +105,10 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var timedOnly = await driver.IsElementVisible("ShowTimedOnly");
+        var timedOnly = await Driver.IsElementVisible("ShowTimedOnly");
         timedOnly.ShouldBeTrue("Show Timed Only switch should exist");
 
-        var openOnly = await driver.IsElementVisible("ShowOpenOnly");
+        var openOnly = await Driver.IsElementVisible("ShowOpenOnly");
         openOnly.ShouldBeTrue("Show Open Only switch should exist");
     }
 
@@ -123,8 +117,8 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Tap(automationId: "RideTimeNotifications");
-        await driver.Screenshot("settings-ride-notification-toggled.png");
+        await Driver.Tap(automationId: "RideTimeNotifications");
+        await Driver.Screenshot("settings-ride-notification-toggled.png");
     }
 
     [Fact]
@@ -132,8 +126,8 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Tap(automationId: "ShowTimedOnly");
-        await driver.Screenshot("settings-timed-only-toggled.png");
+        await Driver.Tap(automationId: "ShowTimedOnly");
+        await Driver.Screenshot("settings-timed-only-toggled.png");
     }
 
     [Fact]
@@ -141,8 +135,8 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Tap(automationId: "ShowOpenOnly");
-        await driver.Screenshot("settings-open-only-toggled.png");
+        await Driver.Tap(automationId: "ShowOpenOnly");
+        await Driver.Screenshot("settings-open-only-toggled.png");
     }
 
     [Fact]
@@ -150,7 +144,7 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        var isVisible = await driver.IsElementVisible("VersionLabel");
+        var isVisible = await Driver.IsElementVisible("VersionLabel");
         isVisible.ShouldBeTrue("Version label should be present in About section");
     }
 
@@ -159,6 +153,6 @@ public class SettingsPageTests
     {
         await NavigateToSettings();
 
-        await driver.Screenshot("settings.png");
+        await Driver.Screenshot("settings.png");
     }
 }

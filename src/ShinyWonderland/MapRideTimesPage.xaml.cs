@@ -13,8 +13,7 @@ public partial class MapRideTimesPage : ContentPage
     
     protected override void OnBindingContextChanged()
     {
-        var vm = (MapRideTimesViewModel)this.BindingContext;
-        if (vm != null)
+        if (this.BindingContext is MapRideTimesViewModel vm)
         {
             var mapSpan = MapSpan.FromCenterAndRadius(
                 new Location(vm.CenterOfPark.Latitude, vm.CenterOfPark.Longitude),
@@ -22,5 +21,6 @@ public partial class MapRideTimesPage : ContentPage
             );
             this.TheMap.MoveToRegion(mapSpan);
         }
+        base.OnBindingContextChanged();
     }
 }

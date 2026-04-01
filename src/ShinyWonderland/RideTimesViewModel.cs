@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Disposables;
+using System.Reactive.Subjects;
 using ShinyWonderland.Contracts;
 using ShinyWonderland.Handlers;
 
@@ -18,7 +19,8 @@ public partial class RideTimesViewModel(
     IEventHandler<GpsEvent>
 {
     CancellationTokenSource? cancellationTokenSource;
-    CompositeDisposable? disposer;
+    IDisposable? timerSub;
+    IDisposable? gpsSub;
     Position? currentPosition;
 
     public StringsLocalized Localize => services.Localized;
@@ -36,13 +38,33 @@ public partial class RideTimesViewModel(
     public void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);
+
+        this.gpsSub = this.gpsEventSubj
+            .Sample(TimeSpan.FromSeconds(3))
+            .Where(x => this.Rides.Any(r => r.DistanceMeters != null)) // only update if we have at least one ride with a known distance
+            .Subscribe(@event =>
+            {
+                var rides = this.Rides.ToList();
+                foreach (var ride in rides)
+                    ride.UpdateDistance(@event.Position);
+        
+                this.currentPosition = @event.Position;
+                if (services.AppSettings.Ordering == RideOrder.Distance)
+                {
+                    this.Rides = rides
+                        .OrderBy(x => x.DistanceMeters ?? 999)
+                        .ThenBy(x => x.Name)
+                        .ToList();
+                }
+            });
     }
 
     
     public void OnDisappearing()
     {
         this.cancellationTokenSource?.Cancel();
-        this.disposer?.Dispose();
+        this.gpsSub?.Dispose();
+        this.timerSub?.Dispose();
     }
 
 
@@ -59,29 +81,15 @@ public partial class RideTimesViewModel(
         return Task.CompletedTask;
     }
     
-    
     [MainThread]
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
-
-    [Throttle(3000)]
-    [MainThread]
+    
+    readonly Subject<GpsEvent> gpsEventSubj = new();
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
         logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
-        var rides = this.Rides.ToList();
-        
-        foreach (var ride in rides)
-            ride.UpdateDistance(@event.Position);
-        
-        this.currentPosition = @event.Position;
-        if (services.AppSettings.Ordering == RideOrder.Distance)
-        {
-            this.Rides = rides
-                .OrderBy(x => x.DistanceMeters ?? 999)
-                .ThenBy(x => x.Name)
-                .ToList();
-        }
+        this.gpsEventSubj.OnNext(@event);
 
         return Task.CompletedTask;
     }
@@ -170,16 +178,14 @@ public partial class RideTimesViewModel(
 
     void StartDataTimer(DateTimeOffset? from)
     {
-        this.disposer?.Dispose(); // get rid of original timer if exists from pull-to-refresh
-        this.disposer = new();
+        this.timerSub?.Dispose();
         from ??= services.TimeProvider.GetUtcNow();
         this.DataTimestamp = humanizer.TimeAgo(from.Value);
         
-        Observable
+        this.timerSub = Observable
             .Interval(TimeSpan.FromSeconds(1))
             .Select(_ => humanizer.TimeAgo(from.Value))
-            .Subscribe(x => this.DataTimestamp = x)
-            .DisposedBy(this.disposer);
+            .Subscribe(x => this.DataTimestamp = x);
     }
 }
 

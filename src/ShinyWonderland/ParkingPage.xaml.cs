@@ -16,26 +16,29 @@ public partial class ParkingPage : ContentPage
 
     protected override void OnBindingContextChanged()
     {
-        var vm = (ParkingViewModel)this.BindingContext;
-        if (vm.ParkLocation != null)
-            this.SetPin(vm.ParkLocation);
-        
-        this.sub = vm
-            .WhenAnyProperty()
-            .Where(x => x.PropertyName == nameof(ParkingViewModel.ParkLocation))
-            .Subscribe(_ =>
-            {
-                if (vm.ParkLocation == null)
-                    this.ParkingMap.Pins.Clear();
-                else
-                    this.SetPin(vm.ParkLocation);
-            });
+        if (this.BindingContext is ParkingViewModel vm)
+        {
+            if (vm.ParkLocation != null)
+                this.SetPin(vm.ParkLocation);
 
-        var mapSpan = MapSpan.FromCenterAndRadius(
-            new Location(vm.CenterOfPark.Latitude, vm.CenterOfPark.Longitude),
-            Microsoft.Maui.Maps.Distance.FromMeters(vm.MapStartZoomDistanceMeters)
-        );
-        this.ParkingMap.MoveToRegion(mapSpan);
+            this.sub = vm
+                .WhenAnyProperty()
+                .Where(x => x.PropertyName == nameof(ParkingViewModel.ParkLocation))
+                .Subscribe(_ =>
+                {
+                    if (vm.ParkLocation == null)
+                        this.ParkingMap.Pins.Clear();
+                    else
+                        this.SetPin(vm.ParkLocation);
+                });
+
+            var mapSpan = MapSpan.FromCenterAndRadius(
+                new Location(vm.CenterOfPark.Latitude, vm.CenterOfPark.Longitude),
+                Microsoft.Maui.Maps.Distance.FromMeters(vm.MapStartZoomDistanceMeters)
+            );
+            this.ParkingMap.MoveToRegion(mapSpan);
+        }
+
         base.OnBindingContextChanged();
     }
 

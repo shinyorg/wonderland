@@ -4,22 +4,24 @@ namespace ShinyWonderland;
 public partial class StartupViewModel(
     CoreServices services,
     ILogger<StartupViewModel> logger
-) : ObservableObject
+) : ObservableObject, IPageLifecycleAware
 {
 
-    public async void OnLoad()
+    public async void OnAppearing()
     {
         try
         {
             await services.Notifications.RequestAccess();
 
-            var main = Shell.Current.Items.FirstOrDefault(x => x.Route == "main");
-            if (main != null)
-                Shell.Current.CurrentItem = main;
+            // var main = Shell.Current.Items.FirstOrDefault(x => x.Route == "main");
+            // if (main != null)
+            //     Shell.Current.CurrentItem = main;
 
             // GPS RequestAccess locks Shell navigation when it resolves without
             // a popup, so run it after we've already navigated away
-            _ = this.TryGps();
+            await this.TryGps();
+
+            await services.Navigator.NavigateTo("//main");
         }
         catch (Exception ex)
         {
@@ -29,6 +31,11 @@ public partial class StartupViewModel(
     }
 
 
+    public void OnDisappearing()
+    {
+    }
+
+    
     static bool gpsChecked = false;
     async Task TryGps()
     {
@@ -43,12 +50,11 @@ public partial class StartupViewModel(
             // only check GPS if background is running and user has granted permissions
             if (access == AccessState.Available && services.Gps.CurrentListener == null)
             {
-                // var start = await services.IsUserWithinPark();
-                // if (start)
-                // {
-                //     await services.Gps.StartListener(GpsRequest.Realtime(true));
-                //
-                // }
+                var start = await services.IsUserWithinPark();
+                if (start)
+                {
+                    await services.Gps.StartListener(GpsRequest.Realtime(true));
+                }
             }
         }
         catch (Exception ex)

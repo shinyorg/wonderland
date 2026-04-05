@@ -201,4 +201,57 @@ public class DataServiceTests
         drink.Timestamp.ShouldNotBeNull();
         drink.Timestamp!.Value.ShouldBe(now, TimeSpan.FromSeconds(1));
     }
+
+    [Fact]
+    public async Task AddMealPass_ShouldInsertPass()
+    {
+        var pass = new MealPass { Type = MealTimeType.Drink };
+
+        await this.dataService.AddMealPass(pass);
+
+        var passes = await this.dataService.GetMealPasses();
+        passes.ShouldContain(x => x.Type == MealTimeType.Drink);
+    }
+
+    [Fact]
+    public async Task GetMealPasses_ShouldReturnAllPasses()
+    {
+        await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
+        await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Food });
+        await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
+
+        var passes = await this.dataService.GetMealPasses();
+        passes.Count.ShouldBe(3);
+    }
+
+    [Fact]
+    public async Task UpdateMealPass_ShouldPersistChanges()
+    {
+        var pass = new MealPass { Type = MealTimeType.Drink };
+        await this.dataService.AddMealPass(pass);
+
+        var passes = await this.dataService.GetMealPasses();
+        var inserted = passes.First(x => x.Type == MealTimeType.Drink);
+        inserted.LastUsed = DateTimeOffset.UtcNow;
+        inserted.NotificationSent = true;
+        await this.dataService.UpdateMealPass(inserted);
+
+        var updated = (await this.dataService.GetMealPasses()).First(x => x.Id == inserted.Id);
+        updated.LastUsed.ShouldNotBeNull();
+        updated.NotificationSent.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteMealPass_ShouldRemovePass()
+    {
+        await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
+
+        var passes = await this.dataService.GetMealPasses();
+        passes.Count.ShouldBe(1);
+
+        await this.dataService.DeleteMealPass(passes[0].Id);
+
+        var remaining = await this.dataService.GetMealPasses();
+        remaining.Count.ShouldBe(0);
+    }
 }

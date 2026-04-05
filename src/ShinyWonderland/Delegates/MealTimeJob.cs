@@ -1,27 +1,63 @@
 using Shiny.Jobs;
 using Shiny.Notifications;
 using ShinyWonderland.Contracts;
+using ShinyWonderland.Handlers;
 
 namespace ShinyWonderland.Delegates;
 
 
 public class MealTimeJob(
-    ILogger<MealTimeJob> logger
-    // IMediator mediator,
-    // INotificationManager notificationManager,
-    // AppSettings appSettings
+    ILogger<MealTimeJob> logger,
+    IMediator mediator,
+    INotificationManager notificationManager,
+    AppSettings appSettings,
+    IOptions<MealTimeOptions> options,
+    TimeProvider timeProvider
 ) : Job(logger), IEventHandler<GpsEvent>
 {
-    protected override Task Run(CancellationToken cancelToken)
+    protected override async Task Run(CancellationToken cancelToken)
     {
-        // TODO: only send notification for last time and then reset with new drink time
-        // could use IDs of meal time historical records
-        return Task.CompletedTask;
+        if (!options.Value.Enabled)
+        {
+            logger.LogInformation("MealTime feature is disabled");
+            return;
+        }
+
+        var passes = (await mediator.Request(new GetMealPasses(), cancelToken)).Result;
+        var now = timeProvider.GetUtcNow();
+
+        foreach (var pass in passes)
+        {
+            if (pass.LastUsed == null || pass.NotificationSent)
+                continue;
+
+            var waitTime = pass.Type == MealTimeType.Drink
+                ? options.Value.DrinkTimeWait
+                : options.Value.FoodTimeWait;
+
+            if (pass.LastUsed.Value.Add(waitTime) > now)
+                continue;
+
+            var shouldNotify = pass.Type == MealTimeType.Drink
+                ? appSettings.EnableDrinkNotifications
+                : appSettings.EnableMealNotifications;
+
+            if (shouldNotify)
+            {
+                var typeLabel = pass.Type == MealTimeType.Drink ? "Drink" : "Food";
+                await notificationManager.Send(new Notification
+                {
+                    Title = $"{typeLabel} Pass Available",
+                    Message = $"Your {typeLabel.ToLower()} pass is ready to use!"
+                });
+            }
+
+            await mediator.Send(new MarkPassNotifiedCommand(pass.Id), cancelToken);
+        }
     }
 
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
-        // TODO: if in park
         return Task.CompletedTask;
     }
 }

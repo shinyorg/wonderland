@@ -7,6 +7,7 @@ namespace ShinyWonderland;
 
 [JsonSerializable(typeof(RideHistoryRecord))]
 [JsonSerializable(typeof(MealTimeHistoryRecord))]
+[JsonSerializable(typeof(MealPass))]
 public partial class AppJsonContext : JsonSerializerContext;
 
 public enum MealTimeType
@@ -42,6 +43,14 @@ public class MealTimeValue
     public DateTimeOffset? Timestamp { get; set; }
 }
 
+public class MealPass
+{
+    public int Id { get; set; }
+    public MealTimeType Type { get; set; }
+    public DateTimeOffset? LastUsed { get; set; }
+    public bool NotificationSent { get; set; }
+}
+
 public interface IDataService
 {
     Task AddRideHistory(RideHistoryRecord record);
@@ -50,6 +59,10 @@ public interface IDataService
     Task<List<RideHistoryRecord>> GetRideTimeHistory();
     Task<List<LastRideTime>> GetLastRideTimes();
     Task<List<MealTimeValue>> GetLatestMealTimes();
+    Task AddMealPass(MealPass pass);
+    Task<List<MealPass>> GetMealPasses();
+    Task UpdateMealPass(MealPass pass);
+    Task DeleteMealPass(int id);
 }
 
 public class DataService(IDocumentStore store) : IDataService
@@ -101,6 +114,21 @@ public class DataService(IDocumentStore store) : IDataService
             })
             .ToList();
     }
+
+    public Task AddMealPass(MealPass pass)
+        => store.Insert(pass);
+
+    public async Task<List<MealPass>> GetMealPasses()
+    {
+        var results = await store.Query<MealPass>().ToList();
+        return results.ToList();
+    }
+
+    public Task UpdateMealPass(MealPass pass)
+        => store.Update(pass);
+
+    public Task DeleteMealPass(int id)
+        => store.Remove<MealPass>(id);
 }
 
 public static class DatabaseExtensions

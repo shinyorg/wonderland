@@ -4,14 +4,36 @@ public class MealTimeViewModelTests
 {
     readonly IMediator mediator;
     readonly StringsLocalized localize;
+    readonly IOptions<MealTimeOptions> options;
+    readonly FakeTimeProvider timeProvider;
     readonly MealTimeViewModel viewModel;
 
     public MealTimeViewModelTests()
     {
         mediator = Substitute.For<IMediator>();
         localize = TestLocalization.Create();
+        options = Options.Create(new MealTimeOptions
+        {
+            Enabled = true,
+            DrinkTimeWait = TimeSpan.FromMinutes(15),
+            FoodTimeWait = TimeSpan.FromMinutes(90)
+        });
+        timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
 
-        viewModel = new MealTimeViewModel(mediator, localize);
+        SetupDefaultAvailability();
+
+        viewModel = new MealTimeViewModel(mediator, options, timeProvider, localize);
+    }
+
+    void SetupDefaultAvailability()
+    {
+        var availability = new MealTimeAvailability(
+            new List<MealPassAvailability>(),
+            new List<MealPassAvailability>(),
+            0, 0, null, null
+        );
+        mediator.Request(Arg.Any<GetMealTimeAvailability>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
+            .Returns(MediatorTestHelpers.CreateResult(availability));
     }
 
     [Fact]
@@ -29,7 +51,7 @@ public class MealTimeViewModelTests
 
         // Act
         viewModel.OnAppearing();
-        await Task.Delay(100); // Allow async operation to complete
+        await Task.Delay(100);
 
         // Assert
         viewModel.History.ShouldNotBeNull();
@@ -66,5 +88,55 @@ public class MealTimeViewModelTests
     {
         // Act & Assert
         Should.NotThrow(() => viewModel.OnDisappearing());
+    }
+
+    [Fact]
+    public async Task UseDrinkPass_ShouldSendCommand()
+    {
+        // Arrange
+        var history = new List<MealTimeHistoryRecord>();
+        mediator.Request(Arg.Any<GetMealTimeHistory>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
+            .Returns(MediatorTestHelpers.CreateResult(history));
+
+        // Act
+        await viewModel.UseDrinkPassCommand.ExecuteAsync(null);
+
+        // Assert
+        await mediator.Received().Send(
+            Arg.Is<UseMealPassCommand>(x => x.Type == MealTimeType.Drink),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<Action<IMediatorContext>>()
+        );
+    }
+
+    [Fact]
+    public async Task AddDrinkPass_ShouldSendCommand()
+    {
+        // Act
+        await viewModel.AddDrinkPassCommand.ExecuteAsync(null);
+
+        // Assert
+        await mediator.Received().Send(
+            Arg.Is<AddMealPassCommand>(x => x.Type == MealTimeType.Drink),
+            Arg.Any<CancellationToken>(),
+            Arg.Any<Action<IMediatorContext>>()
+        );
+    }
+
+    [Fact]
+    public async Task OnAppearing_ShouldSetButtonTextForNoPasses()
+    {
+        // Arrange
+        var history = new List<MealTimeHistoryRecord>();
+        mediator.Request(Arg.Any<GetMealTimeHistory>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
+            .Returns(MediatorTestHelpers.CreateResult(history));
+
+        // Act
+        viewModel.OnAppearing();
+        await Task.Delay(100);
+
+        // Assert
+        viewModel.DrinkButtonText.ShouldBe("Add Pass");
+        viewModel.FoodButtonText.ShouldBe("Add Pass");
     }
 }

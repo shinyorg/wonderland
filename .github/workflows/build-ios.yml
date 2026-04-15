@@ -18,9 +18,9 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  XCODE_VERSION: 26.2.0
+  XCODE_VERSION: 26.4.0
   DOTNET_TFM: 'net10.0'
-  DOTNET_VERSION: '10.0.102'
+  DOTNET_VERSION: '10.0.202'
   APP_PROJECT: './src/ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
   APPSETTINGS_JSON_FILE: './src/ShinyWonderland/appsettings.json'
@@ -34,21 +34,19 @@ jobs:
     
     steps:
     - name: '✅ Checkout'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+        workloads: maui-ios, maui-android
 
     - name: Setup XCode ${{ env.XCODE_VERSION }}
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
     
-#    - name: Fix XCode Simulators
-#      run: xcodebuild -downloadPlatform iOS -buildVersion ${{ env.XCODE_VERSION }} -architectureVariant universal
-          
     # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
     - name: Configure From Secrets
       uses: Lambdaspire/action-substitute-secrets-in-file@v1.1.0
@@ -57,9 +55,6 @@ jobs:
         tokenPattern: ${TOKEN}
         secretsJson: ${{ toJSON(secrets) }}
           
-    - name: Add .NET Workloads
-      run: dotnet workload install maui-ios maui-android
-
     # https://github.com/Apple-Actions/download-provisioning-profiles
     - name: Download Apple Provisioning Profiles
       uses: Apple-Actions/download-provisioning-profiles@v4

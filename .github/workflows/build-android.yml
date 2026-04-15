@@ -22,7 +22,7 @@ env:
   APP_VERSION: '1.0'
   APPSETTINGS_JSON_FILE: './src/ShinyWonderland/appsettings.json'
   DOTNET_TFM: 'net10.0'
-  DOTNET_VERSION: '10.0.102'
+  DOTNET_VERSION: '10.0.202'
   PACKAGE_NAME: 'org.shiny.wonderland'
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
  
@@ -33,15 +33,13 @@ jobs:
     
     steps:
     - name: '✅ Checkout'
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-    - name: Add .NET Workloads
-      run: dotnet workload install maui-ios maui-android
+        workloads: maui-ios, maui-android
       
       # https://github.com/marketplace/actions/substitute-secrets-into-tokenised-file
     - name: Configure From Secrets

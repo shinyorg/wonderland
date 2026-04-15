@@ -7,9 +7,8 @@
                    x:Class="ShinyWonderland.AppShell"
                    x:DataType="local:AppShell">
 
-    <ShellItem Route="startup" FlyoutItemIsVisible="False">
-        <ShellContent ContentTemplate="{DataTemplate local:StartupPage}" />
-    </ShellItem>
+    <ShellContent ContentTemplate="{DataTemplate local:StartupPage}" 
+                  Route="startup"/>
 
     <TabBar Route="main">
         <Tab Title="{Binding Localize.RideTimes}" Icon="ride_time" Route="ridetimes" AutomationId="RideTimesTab">

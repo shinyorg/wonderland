@@ -13,15 +13,11 @@ public partial class StartupViewModel(
         {
             await services.Notifications.RequestAccess();
 
-            // var main = Shell.Current.Items.FirstOrDefault(x => x.Route == "main");
-            // if (main != null)
-            //     Shell.Current.CurrentItem = main;
-
             // GPS RequestAccess locks Shell navigation when it resolves without
             // a popup, so run it after we've already navigated away
             await this.TryGps();
 
-            await services.Navigator.NavigateTo("//main");
+            await services.Navigator.NavigateTo("main", false);
         }
         catch (Exception ex)
         {

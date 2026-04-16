@@ -8,10 +8,10 @@
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <LangVersion>preview</LangVersion>
-
+        
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
-
+        
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -69,7 +69,7 @@
 
         <CustomEntitlements Include="keychain-access-groups" Type="StringArray" Value="%24(AppIdentifierPrefix)$(ApplicationId)" Visible="false"/>
     </ItemGroup>
-
+    
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.png" Color="#512BD4"/>
         <MauiSplashScreen Include="Resources\Splash\splash.png" Color="#512BD4" BaseSize="128,128"/>
@@ -86,13 +86,13 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
-
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>
-        <PackageReference Include="Shiny.Maui.TableView"/>
         <PackageReference Include="Shiny.Reflector"/>
         <PackageReference Include="Shiny.Maui.Shell"/>
+        <PackageReference Include="Shiny.Maui.Shell.UxDiversDialogs"/>
+        <PackageReference Include="Shiny.Maui.Controls"/>
         <PackageReference Include="Shiny.Mediator.Maui"/>
         <PackageReference Include="Shiny.Mediator.Sentry"/>
         <PackageReference Include="Shiny.Locations"/>

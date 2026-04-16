@@ -4,7 +4,6 @@ using MauiDevFlow.Agent;
 #endif
 using Microsoft.Extensions.Configuration;
 using Shiny.Jobs;
-using Shiny.Maui.TableView;
 using ShinyWonderland.Delegates;
 
 namespace ShinyWonderland;
@@ -28,8 +27,11 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiMaps()
             .UseShiny()
-            .UseShinyTableView()
-            .UseShinyShell(x => x.AddGeneratedMaps())
+            .UseShinyControls()
+            .UseShinyShell(x => x
+                .AddGeneratedMaps()
+                .UseUxDiversDialogs()
+            )
 #if RELEASE
             .UseSentry(opts =>
             {

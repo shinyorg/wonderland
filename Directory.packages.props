@@ -15,8 +15,9 @@
     <ItemGroup>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.4"/>
-        <PackageVersion Include="Shiny.Maui.TableView" Version="1.1.1"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="4.1.0"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0010"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="4.2.1"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="1.0.0"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>

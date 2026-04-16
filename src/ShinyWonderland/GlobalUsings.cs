@@ -9,3 +9,16 @@ global using CommunityToolkit.Mvvm.Input;
 global using Shiny;
 global using Shiny.Locations;
 global using ShinyWonderland.Services;
+
+[assembly: XmlnsDefinition(
+    "http://schemas.microsoft.com/dotnet/maui/global",
+    "http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+)]
+[assembly:XmlnsDefinition(
+    "clr-namespace:ShinyWonderland",
+    "shinyWonderland"
+ )]
+[assembly: XmlnsDefinition(
+    "http://shiny.net/maui/controls",
+    "shiny"
+)]

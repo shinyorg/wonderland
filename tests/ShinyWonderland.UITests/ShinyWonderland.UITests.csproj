@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>$(BaseTargetFramework)</TargetFramework>
         <IsPackable>false</IsPackable>
+        <OutputType>Exe</OutputType>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,18 +12,13 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="Shouldly"/>
-        <PackageReference Include="xunit"/>
-        <PackageReference Include="xunit.runner.visualstudio">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="TUnit"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
-        <Using Include="Shouldly"/>
+        <Using Include="TUnit.Core"/>
+        <Using Include="TUnit.Assertions"/>
+        <Using Include="TUnit.Assertions.Extensions"/>
     </ItemGroup>
 
 </Project>

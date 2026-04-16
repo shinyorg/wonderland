@@ -9,7 +9,7 @@ public class RideTimesViewModelTests
 
     public RideTimesViewModelTests()
     {
-        logger = Substitute.For<ILogger<RideTimesViewModel>>();
+        logger = new ILoggerImposter<RideTimesViewModel>().Instance();
         localize = TestLocalization.Create(new Dictionary<string, string>
         {
             ["Error"] = "Error",
@@ -40,15 +40,15 @@ public class RideTimesViewModelTests
         };
 
         services = new CoreServices(
-            Substitute.For<IMediator>(),
+            new TestMediator(),
             Options.Create(parkOptions),
             new AppSettings(),
-            Substitute.For<INavigator>(),
-            Substitute.For<IDialogs>(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
             timeProvider,
-            Substitute.For<IGpsManager>(),
+            new IGpsManagerImposter().Instance(),
             localize,
-            Substitute.For<INotificationManager>()
+            new INotificationManagerImposter().Instance()
         );
     }
 
@@ -58,117 +58,51 @@ public class RideTimesViewModelTests
         humanizer
     );
 
-    [Fact]
-    public void Title_ShouldReturnParkName()
+    [Test]
+    public async Task Title_ShouldReturnParkName()
     {
-        // Arrange
         var vm = CreateViewModel();
-
-        // Assert
-        vm.Title.ShouldBe("Wonderland");
+        await Assert.That(vm.Title).IsEqualTo("Wonderland");
     }
 
-    [Fact]
-    public void Localize_ShouldReturnInjectedLocalize()
+    [Test]
+    public async Task Localize_ShouldReturnInjectedLocalize()
     {
-        // Arrange
         var vm = CreateViewModel();
-
-        // Assert
-        vm.Localize.ShouldBe(localize);
+        await Assert.That(vm.Localize).IsEqualTo(localize);
     }
 
-    [Fact]
-    public void Rides_ShouldStartEmpty()
+    [Test]
+    public async Task Rides_ShouldStartEmpty()
     {
-        // Arrange
         var vm = CreateViewModel();
-
-        // Assert
-        vm.Rides.ShouldNotBeNull();
-        vm.Rides.Count.ShouldBe(0);
+        await Assert.That(vm.Rides).IsNotNull();
+        await Assert.That(vm.Rides.Count).IsEqualTo(0);
     }
 
-    [Fact]
-    public void IsBusy_ShouldStartFalse()
+    [Test]
+    public async Task IsBusy_ShouldStartFalse()
     {
-        // Arrange
         var vm = CreateViewModel();
-
-        // Assert
-        vm.IsBusy.ShouldBeFalse();
+        await Assert.That(vm.IsBusy).IsFalse();
     }
 
-    // [Fact]
-    // public void IsNotConnected_ShouldBeInverseOfIsConnected()
-    // {
-    //     // Arrange
-    //     var vm = CreateViewModel();
-    //
-    //     // Assert - default state
-    //     vm.IsConnected.ShouldBeFalse();
-    //     vm.IsNotConnected.ShouldBeTrue();
-    //
-    //     // Act
-    //     vm.IsConnected = true;
-    //
-    //     // Assert
-    //     vm.IsNotConnected.ShouldBeFalse();
-    // }
-
-    [Fact]
+    [Test]
     public async Task Handle_ConnectivityChanged_ShouldUpdateIsConnected()
     {
-        // Arrange
         var vm = CreateViewModel();
-        var context = Substitute.For<IMediatorContext>();
+        var context = new TestMediatorContext();
 
-        // Act
         await vm.Handle(new ConnectivityChanged(true), context, CancellationToken.None);
 
-        // Assert
-        vm.IsConnected.ShouldBeTrue();
+        await Assert.That(vm.IsConnected).IsTrue();
     }
 
-    // [Fact]
-    // public async Task Handle_GpsEvent_ShouldUpdateRideDistances()
-    // {
-    //     // Arrange
-    //     var vm = CreateViewModel();
-    //
-    //     // Setup initial rides
-    //     var rides = new List<RideTime>
-    //     {
-    //         new("1", "Test Ride", 30, 10, new Position(33.8122, -117.9191), true, null)
-    //     };
-    //
-    //     mediator.Request(Arg.Any<GetCurrentRideTimes>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-    //         .Returns(MediatorTestHelpers.CreateResult(rides));
-    //     notifications.RequestAccess(Arg.Any<CancellationToken>()).Returns(AccessState.Available);
-    //     gpsManager.RequestAccess(Arg.Any<GpsRequest>(), Arg.Any<CancellationToken>()).Returns(AccessState.Available);
-    //     geofenceManager.RequestAccess(Arg.Any<CancellationToken>()).Returns(AccessState.Available);
-    //
-    //     vm.OnAppearing();
-    //     await Task.Delay(150);
-    //
-    //     var context = Substitute.For<IMediatorContext>();
-    //     var gpsEvent = new GpsEvent(new Position(33.8123, -117.9192));
-    //
-    //     // Act
-    //     await vm.Handle(gpsEvent, context, CancellationToken.None);
-    //
-    //     // Assert - distance should be updated (not "Unknown" anymore)
-    //     vm.Rides.ShouldNotBeEmpty();
-    // }
-
-    [Fact]
+    [Test]
     public void OnDisappearing_ShouldNotThrow()
     {
-        // Arrange
         var vm = CreateViewModel();
-
-        // Act & Assert
-        Should.NotThrow(() => vm.OnDisappearing());
+        vm.OnDisappearing();
     }
 }
 
@@ -204,156 +138,135 @@ public class RideTimeViewModelTests
         };
 
         services = new CoreServices(
-            Substitute.For<IMediator>(),
+            new TestMediator(),
             Options.Create(parkOptions),
             new AppSettings(),
-            Substitute.For<INavigator>(),
-            Substitute.For<IDialogs>(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
             timeProvider,
-            Substitute.For<IGpsManager>(),
+            new IGpsManagerImposter().Instance(),
             localize,
-            Substitute.For<INotificationManager>()
+            new INotificationManagerImposter().Instance()
         );
     }
 
-    [Fact]
-    public void Name_ShouldReturnRideName()
+    [Test]
+    public async Task Name_ShouldReturnRideName()
     {
-        // Arrange
         var ride = new RideTime("1", "Space Mountain", 30, 10, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.Name.ShouldBe("Space Mountain");
+        await Assert.That(vm.Name).IsEqualTo("Space Mountain");
     }
 
-    [Fact]
-    public void WaitTimeMinutes_ShouldReturnRideWaitTime()
+    [Test]
+    public async Task WaitTimeMinutes_ShouldReturnRideWaitTime()
     {
-        // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.WaitTimeMinutes.ShouldBe(30);
-        vm.PaidWaitTimeMinutes.ShouldBe(10);
+        await Assert.That(vm.WaitTimeMinutes).IsEqualTo(30);
+        await Assert.That(vm.PaidWaitTimeMinutes).IsEqualTo(10);
     }
 
-    [Fact]
-    public void IsOpen_ShouldReflectRideStatus()
+    [Test]
+    public async Task IsOpen_ShouldReflectRideStatus()
     {
-        // Arrange
         var openRide = new RideTime("1", "Open Ride", 30, 10, null, true, null);
         var closedRide = new RideTime("2", "Closed Ride", null, null, null, false, null);
 
         var openVm = new RideTimeViewModel(openRide, humanizer, services);
         var closedVm = new RideTimeViewModel(closedRide, humanizer, services);
 
-        // Assert
-        openVm.IsOpen.ShouldBeTrue();
-        openVm.IsClosed.ShouldBeFalse();
-        closedVm.IsOpen.ShouldBeFalse();
-        closedVm.IsClosed.ShouldBeTrue();
+        await Assert.That(openVm.IsOpen).IsTrue();
+        await Assert.That(openVm.IsClosed).IsFalse();
+        await Assert.That(closedVm.IsOpen).IsFalse();
+        await Assert.That(closedVm.IsClosed).IsTrue();
     }
 
-    [Fact]
-    public void HasWaitTime_ShouldBeTrue_WhenWaitTimeHasValue()
+    [Test]
+    public async Task HasWaitTime_ShouldBeTrue_WhenWaitTimeHasValue()
     {
-        // Arrange
         var ride = new RideTime("1", "Test Ride", 30, null, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.HasWaitTime.ShouldBeTrue();
-        vm.HasPaidWaitTime.ShouldBeFalse();
+        await Assert.That(vm.HasWaitTime).IsTrue();
+        await Assert.That(vm.HasPaidWaitTime).IsFalse();
     }
 
-    [Fact]
-    public void HasLastRide_ShouldBeTrue_EvenWhenNeverRidden()
+    [Test]
+    public async Task HasLastRide_ShouldBeTrue_EvenWhenNeverRidden()
     {
         // NOTE: HasLastRide checks LastRidden != null, but TimeAgo(null) returns "Never" (non-null)
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        vm.HasLastRide.ShouldBeTrue();
-        vm.LastRidden.ShouldBe("Never");
+        await Assert.That(vm.HasLastRide).IsTrue();
+        await Assert.That(vm.LastRidden).IsEqualTo("Never");
     }
 
-    [Fact]
-    public void HasLastRide_ShouldBeTrue_WhenPreviouslyRidden()
+    [Test]
+    public async Task HasLastRide_ShouldBeTrue_WhenPreviouslyRidden()
     {
-        // Arrange
         var lastRidden = DateTimeOffset.UtcNow.AddHours(-1);
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, lastRidden);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.HasLastRide.ShouldBeTrue();
-        vm.LastRidden.ShouldNotBeNull();
+        await Assert.That(vm.HasLastRide).IsTrue();
+        await Assert.That(vm.LastRidden).IsNotNull();
     }
 
-    [Fact]
-    public void DistanceText_ShouldDefaultToUnknown()
+    [Test]
+    public async Task DistanceText_ShouldDefaultToUnknown()
     {
-        // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
-        // Assert
-        vm.DistanceText.ShouldBe("Unknown");
-        vm.DistanceMeters.ShouldBeNull();
+        await Assert.That(vm.DistanceText).IsEqualTo("Unknown");
+        await Assert.That(vm.DistanceMeters).IsNull();
     }
 
-    [Fact]
-    public void UpdateDistance_ShouldCalculateDistanceInMeters()
+    [Test]
+    public async Task UpdateDistance_ShouldCalculateDistanceInMeters()
     {
-        // Arrange
         var ridePosition = new Position(33.8121, -117.9190);
         var ride = new RideTime("1", "Test Ride", 30, 10, ridePosition, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(33.8122, -117.9191); // Very close
 
-        // Act
         vm.UpdateDistance(userPosition);
 
-        // Assert
-        vm.DistanceMeters.ShouldNotBeNull();
-        vm.DistanceText.ShouldContain("m"); // Should be in meters since close distance
+        await Assert.That(vm.DistanceMeters).IsNotNull();
+        await Assert.That(vm.DistanceText).Contains("m");
     }
 
-    [Fact]
-    public void UpdateDistance_ShouldShowKilometers_WhenFarAway()
+    [Test]
+    public async Task UpdateDistance_ShouldShowKilometers_WhenFarAway()
     {
-        // Arrange
         var ridePosition = new Position(33.8121, -117.9190);
         var ride = new RideTime("1", "Test Ride", 30, 10, ridePosition, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(34.0000, -118.0000); // Far away
 
-        // Act
         vm.UpdateDistance(userPosition);
 
-        // Assert
-        vm.DistanceMeters.ShouldNotBeNull();
-        vm.DistanceText.ShouldContain("km");
+        await Assert.That(vm.DistanceMeters).IsNotNull();
+        await Assert.That(vm.DistanceText).Contains("km");
     }
 
-    [Fact]
-    public void UpdateDistance_WithNoRidePosition_ShouldNotUpdate()
+    [Test]
+    public async Task UpdateDistance_WithNoRidePosition_ShouldNotUpdate()
     {
-        // Arrange
         var ride = new RideTime("1", "Test Ride", 30, 10, null, true, null);
         var vm = new RideTimeViewModel(ride, humanizer, services);
 
         var userPosition = new Position(33.8122, -117.9191);
 
-        // Act
         vm.UpdateDistance(userPosition);
 
-        // Assert
-        vm.DistanceMeters.ShouldBeNull();
-        vm.DistanceText.ShouldBe("Unknown");
+        await Assert.That(vm.DistanceMeters).IsNull();
+        await Assert.That(vm.DistanceText).IsEqualTo("Unknown");
     }
 }

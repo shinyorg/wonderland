@@ -1,3 +1,6 @@
+using Microsoft.Maui.Media;
+using Shiny.Notifications;
+
 namespace ShinyWonderland.Tests.ViewModels;
 
 public class ParkingViewModelTests
@@ -34,136 +37,116 @@ public class ParkingViewModelTests
         };
 
         var services = new CoreServices(
-            Substitute.For<IMediator>(),
+            new TestMediator(),
             Options.Create(parkOptions),
             appSettings,
-            Substitute.For<INavigator>(),
-            Substitute.For<IDialogs>(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
             new FakeTimeProvider(DateTimeOffset.UtcNow),
-            Substitute.For<IGpsManager>(),
+            new IGpsManagerImposter().Instance(),
             localize,
-            Substitute.For<INotificationManager>()
+            new INotificationManagerImposter().Instance()
         );
 
         viewModel = new ParkingViewModel(
             services,
-            Substitute.For<IMediaPicker>(),
-            Substitute.For<ILogger<ParkingViewModel>>()
+            new IMediaPickerImposter().Instance(),
+            new ILoggerImposter<ParkingViewModel>().Instance()
         );
     }
 
-    [Fact]
-    public void CommandText_WhenNotParked_ShouldReturnSetParking()
+    [Test]
+    public async Task CommandText_WhenNotParked_ShouldReturnSetParking()
     {
-        // Assert
-        viewModel.ParkLocation.ShouldBeNull();
-        viewModel.CommandText.ShouldBe("Set Parking Location");
+        await Assert.That(viewModel.ParkLocation).IsNull();
+        await Assert.That(viewModel.CommandText).IsEqualTo("Set Parking Location");
     }
 
-    [Fact]
-    public void CommandText_WhenParked_ShouldReturnRemoveParking()
+    [Test]
+    public async Task CommandText_WhenParked_ShouldReturnRemoveParking()
     {
-        // Arrange
         viewModel.ParkLocation = new Position(33.8121, -117.9190);
 
-        // Assert
-        viewModel.CommandText.ShouldBe("Remove Parking Location");
+        await Assert.That(viewModel.CommandText).IsEqualTo("Remove Parking Location");
     }
 
-    [Fact]
-    public void IsParked_WhenNoParkLocation_ShouldBeFalse()
+    [Test]
+    public async Task IsParked_WhenNoParkLocation_ShouldBeFalse()
     {
-        // Assert
-        viewModel.IsParked.ShouldBeFalse();
+        await Assert.That(viewModel.IsParked).IsFalse();
     }
 
-    [Fact]
-    public void IsParked_WhenParkLocationSet_ShouldBeTrue()
+    [Test]
+    public async Task IsParked_WhenParkLocationSet_ShouldBeTrue()
     {
-        // Arrange
         viewModel.ParkLocation = new Position(33.8121, -117.9190);
 
-        // Assert
-        viewModel.IsParked.ShouldBeTrue();
+        await Assert.That(viewModel.IsParked).IsTrue();
     }
 
-    [Fact]
-    public void HasParkedImage_WhenNoImage_ShouldBeFalse()
+    [Test]
+    public async Task HasParkedImage_WhenNoImage_ShouldBeFalse()
     {
-        // Assert
-        viewModel.HasParkedImage.ShouldBeFalse();
+        await Assert.That(viewModel.HasParkedImage).IsFalse();
     }
 
-    [Fact]
-    public void HasParkedImage_WhenImageSet_ShouldBeTrue()
+    [Test]
+    public async Task HasParkedImage_WhenImageSet_ShouldBeTrue()
     {
-        // Arrange
         viewModel.ImageUri = "file://some/path.png";
 
-        // Assert
-        viewModel.HasParkedImage.ShouldBeTrue();
+        await Assert.That(viewModel.HasParkedImage).IsTrue();
     }
 
-    [Fact]
-    public void CenterOfPark_ShouldReturnParkOptionsPosition()
+    [Test]
+    public async Task CenterOfPark_ShouldReturnParkOptionsPosition()
     {
-        // Assert
-        viewModel.CenterOfPark.Latitude.ShouldBe(33.8121);
-        viewModel.CenterOfPark.Longitude.ShouldBe(-117.9190);
+        await Assert.That(viewModel.CenterOfPark.Latitude).IsEqualTo(33.8121);
+        await Assert.That(viewModel.CenterOfPark.Longitude).IsEqualTo(-117.9190);
     }
 
-    [Fact]
-    public void MapStartZoomDistanceMeters_ShouldReturnParkOptionsValue()
+    [Test]
+    public async Task MapStartZoomDistanceMeters_ShouldReturnParkOptionsValue()
     {
-        // Assert
-        viewModel.MapStartZoomDistanceMeters.ShouldBe(500);
+        await Assert.That(viewModel.MapStartZoomDistanceMeters).IsEqualTo(500);
     }
 
-    [Fact]
-    public void OnAppearing_ShouldLoadParkingLocationFromAppSettings()
+    [Test]
+    public async Task OnAppearing_ShouldLoadParkingLocationFromAppSettings()
     {
-        // Arrange
         var expectedPosition = new Position(33.8121, -117.9190);
         appSettings.ParkingLocation = expectedPosition;
 
-        // Act
         viewModel.OnAppearing();
 
-        // Assert
-        viewModel.ParkLocation.ShouldBe(expectedPosition);
+        await Assert.That(viewModel.ParkLocation).IsEqualTo(expectedPosition);
     }
 
-    [Fact]
-    public void OnAppearing_WhenNoParkingLocation_ShouldHaveNullParkLocation()
+    [Test]
+    public async Task OnAppearing_WhenNoParkingLocation_ShouldHaveNullParkLocation()
     {
-        // Arrange
         appSettings.ParkingLocation = null;
 
-        // Act
         viewModel.OnAppearing();
 
-        // Assert
-        viewModel.ParkLocation.ShouldBeNull();
+        await Assert.That(viewModel.ParkLocation).IsNull();
     }
 
-    [Fact]
-    public void Localize_ShouldReturnInjectedLocalize()
+    [Test]
+    public async Task Localize_ShouldReturnInjectedLocalize()
     {
-        // Assert
-        viewModel.Localize.ShouldBe(localize);
+        await Assert.That(viewModel.Localize).IsEqualTo(localize);
     }
 
-    [Fact]
+    [Test]
     public void OnDisappearing_ShouldNotThrow()
     {
-        // Act & Assert
-        Should.NotThrow(() => viewModel.OnDisappearing());
+        viewModel.OnDisappearing();
     }
 
-    [Fact]
-    public void IsBusy_ShouldStartAsFalse()
+    [Test]
+    public async Task IsBusy_ShouldStartAsFalse()
     {
-        // Assert
-        viewModel.IsBusy.ShouldBeFalse();
+        await Assert.That(viewModel.IsBusy).IsFalse();
     }
 }

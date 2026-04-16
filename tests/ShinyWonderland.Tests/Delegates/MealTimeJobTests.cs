@@ -1,3 +1,7 @@
+using Shiny.Notifications;
+using ShinyWonderland.Contracts;
+using ShinyWonderland.Handlers;
+
 namespace ShinyWonderland.Tests.Delegates;
 
 public class TestableMealTimeJob(
@@ -14,9 +18,8 @@ public class TestableMealTimeJob(
 
 public class MealTimeJobTests
 {
-    readonly ILogger<MealTimeJob> logger;
-    readonly IMediator mediator;
-    readonly INotificationManager notificationManager;
+    readonly TestMediator mediator;
+    readonly INotificationManagerImposter notifications;
     readonly AppSettings appSettings;
     readonly IOptions<MealTimeOptions> options;
     readonly FakeTimeProvider timeProvider;
@@ -24,9 +27,8 @@ public class MealTimeJobTests
 
     public MealTimeJobTests()
     {
-        logger = Substitute.For<ILogger<MealTimeJob>>();
-        mediator = Substitute.For<IMediator>();
-        notificationManager = Substitute.For<INotificationManager>();
+        mediator = new TestMediator();
+        notifications = new INotificationManagerImposter();
         appSettings = new AppSettings
         {
             EnableDrinkNotifications = true,
@@ -40,144 +42,118 @@ public class MealTimeJobTests
         });
         timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
 
-        job = new TestableMealTimeJob(logger, mediator, notificationManager, appSettings, options, timeProvider);
+        job = new TestableMealTimeJob(
+            new ILoggerImposter<MealTimeJob>().Instance(),
+            mediator,
+            notifications.Instance(),
+            appSettings,
+            options,
+            timeProvider
+        );
     }
 
-    [Fact]
+    [Test]
     public async Task Handle_GpsEvent_ShouldNotThrow()
     {
-        // Arrange
         var gpsEvent = new GpsEvent(new Position(33.8121, -117.9190));
-        var context = Substitute.For<IMediatorContext>();
+        var context = new TestMediatorContext();
 
-        // Act & Assert
-        await Should.NotThrowAsync(() => job.Handle(gpsEvent, context, CancellationToken.None));
+        await job.Handle(gpsEvent, context, CancellationToken.None);
     }
 
-    [Fact]
-    public void MealTimeJob_ShouldImplementIEventHandler()
+    [Test]
+    public async Task MealTimeJob_ShouldImplementIEventHandler()
     {
-        // Assert
-        job.ShouldBeAssignableTo<IEventHandler<GpsEvent>>();
+        await Assert.That(job).IsAssignableTo<IEventHandler<GpsEvent>>();
     }
 
-    [Fact]
+    [Test]
     public async Task Run_ExpiredPass_ShouldSendNotificationAndMarkNotified()
     {
-        // Arrange
         var now = timeProvider.GetUtcNow();
         var passes = new List<MealPass>
         {
             new() { Id = 1, Type = MealTimeType.Drink, LastUsed = now.AddMinutes(-20), NotificationSent = false }
         };
-        mediator.Request(Arg.Any<GetMealPasses>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(passes));
+        mediator.SetupRequest<GetMealPasses, List<MealPass>>(passes);
 
-        // Act
         await job.RunJob(CancellationToken.None);
 
-        // Assert
-        await notificationManager.Received(1).Send(Arg.Any<Notification>());
-        await mediator.Received(1).Send(
-            Arg.Is<MarkPassNotifiedCommand>(x => x.PassId == 1),
-            Arg.Any<CancellationToken>(),
-            Arg.Any<Action<IMediatorContext>>()
-        );
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Once());
+        await Assert.That(mediator.SentCommands.OfType<MarkPassNotifiedCommand>())
+            .Contains(x => x.PassId == 1);
     }
 
-    [Fact]
+    [Test]
     public async Task Run_PassOnCooldown_ShouldNotSendNotification()
     {
-        // Arrange
         var now = timeProvider.GetUtcNow();
         var passes = new List<MealPass>
         {
             new() { Id = 1, Type = MealTimeType.Drink, LastUsed = now.AddMinutes(-5), NotificationSent = false }
         };
-        mediator.Request(Arg.Any<GetMealPasses>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(passes));
+        mediator.SetupRequest<GetMealPasses, List<MealPass>>(passes);
 
-        // Act
         await job.RunJob(CancellationToken.None);
 
-        // Assert
-        await notificationManager.DidNotReceive().Send(Arg.Any<Notification>());
-        await mediator.DidNotReceive().Send(
-            Arg.Any<MarkPassNotifiedCommand>(),
-            Arg.Any<CancellationToken>(),
-            Arg.Any<Action<IMediatorContext>>()
-        );
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
+        await Assert.That(mediator.SentCommands.OfType<MarkPassNotifiedCommand>()).IsEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task Run_AlreadyNotified_ShouldNotSendDuplicate()
     {
-        // Arrange
         var now = timeProvider.GetUtcNow();
         var passes = new List<MealPass>
         {
             new() { Id = 1, Type = MealTimeType.Drink, LastUsed = now.AddMinutes(-20), NotificationSent = true }
         };
-        mediator.Request(Arg.Any<GetMealPasses>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(passes));
+        mediator.SetupRequest<GetMealPasses, List<MealPass>>(passes);
 
-        // Act
         await job.RunJob(CancellationToken.None);
 
-        // Assert
-        await notificationManager.DidNotReceive().Send(Arg.Any<Notification>());
-        await mediator.DidNotReceive().Send(
-            Arg.Any<MarkPassNotifiedCommand>(),
-            Arg.Any<CancellationToken>(),
-            Arg.Any<Action<IMediatorContext>>()
-        );
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
+        await Assert.That(mediator.SentCommands.OfType<MarkPassNotifiedCommand>()).IsEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task Run_Disabled_ShouldSkip()
     {
-        // Arrange
         var disabledOptions = Options.Create(new MealTimeOptions
         {
             Enabled = false,
             DrinkTimeWait = TimeSpan.FromMinutes(15),
             FoodTimeWait = TimeSpan.FromMinutes(90)
         });
-        var jobDisabled = new TestableMealTimeJob(logger, mediator, notificationManager, appSettings, disabledOptions, timeProvider);
+        var jobDisabled = new TestableMealTimeJob(
+            new ILoggerImposter<MealTimeJob>().Instance(),
+            mediator,
+            notifications.Instance(),
+            appSettings,
+            disabledOptions,
+            timeProvider
+        );
 
-        // Act
         await jobDisabled.RunJob(CancellationToken.None);
 
-        // Assert
-        await mediator.DidNotReceive().Request(
-            Arg.Any<GetMealPasses>(),
-            Arg.Any<CancellationToken>(),
-            Arg.Any<Action<IMediatorContext>>()
-        );
+        await Assert.That(mediator.Requests.OfType<GetMealPasses>()).IsEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task Run_NotificationsOff_ShouldStillMarkNotifiedButNotSend()
     {
-        // Arrange
         appSettings.EnableDrinkNotifications = false;
         var now = timeProvider.GetUtcNow();
         var passes = new List<MealPass>
         {
             new() { Id = 1, Type = MealTimeType.Drink, LastUsed = now.AddMinutes(-20), NotificationSent = false }
         };
-        mediator.Request(Arg.Any<GetMealPasses>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(passes));
+        mediator.SetupRequest<GetMealPasses, List<MealPass>>(passes);
 
-        // Act
         await job.RunJob(CancellationToken.None);
 
-        // Assert
-        await notificationManager.DidNotReceive().Send(Arg.Any<Notification>());
-        await mediator.Received(1).Send(
-            Arg.Is<MarkPassNotifiedCommand>(x => x.PassId == 1),
-            Arg.Any<CancellationToken>(),
-            Arg.Any<Action<IMediatorContext>>()
-        );
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
+        await Assert.That(mediator.SentCommands.OfType<MarkPassNotifiedCommand>())
+            .Contains(x => x.PassId == 1);
     }
 }

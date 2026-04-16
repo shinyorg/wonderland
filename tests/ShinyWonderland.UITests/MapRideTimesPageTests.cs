@@ -2,33 +2,31 @@ namespace ShinyWonderland.UITests;
 
 public abstract class MapRideTimesPageTests : PlatformTestBase
 {
-    protected MapRideTimesPageTests(PlatformFixture fixture) : base(fixture) { }
-
     async Task NavigateToMapRideTimes()
     {
         await Driver.Navigate("//main/ridetimesmap");
         await Driver.WaitUntilExists("MapRideTimesPage");
     }
 
-    [Fact]
+    [Test]
     public async Task MapRideTimes_PageLoads()
     {
         await NavigateToMapRideTimes();
 
         var isVisible = await Driver.IsElementVisible("MapRideTimesPage");
-        isVisible.ShouldBeTrue();
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task MapRideTimes_MapIsPresent()
     {
         await NavigateToMapRideTimes();
 
         var isVisible = await Driver.IsElementVisible("RidesMap");
-        isVisible.ShouldBeTrue("Map control should be visible on the map ride times page");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task MapRideTimes_Screenshot()
     {
         await NavigateToMapRideTimes();

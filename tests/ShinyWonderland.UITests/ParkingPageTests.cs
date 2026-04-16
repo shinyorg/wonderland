@@ -2,42 +2,40 @@ namespace ShinyWonderland.UITests;
 
 public abstract class ParkingPageTests : PlatformTestBase
 {
-    protected ParkingPageTests(PlatformFixture fixture) : base(fixture) { }
-
     async Task NavigateToParking()
     {
         await Driver.Navigate("//main/parking");
         await Driver.WaitUntilExists("ParkingPage");
     }
 
-    [Fact]
+    [Test]
     public async Task Parking_PageLoads()
     {
         await NavigateToParking();
 
         var isVisible = await Driver.IsElementVisible("ParkingPage");
-        isVisible.ShouldBeTrue();
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task Parking_MapExists()
     {
         await NavigateToParking();
 
         var isVisible = await Driver.IsElementVisible("ParkingMap");
-        isVisible.ShouldBeTrue("Parking map should be visible");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task Parking_ToggleButtonExists()
     {
         await NavigateToParking();
 
         var isVisible = await Driver.IsElementVisible("ToggleParkingButton");
-        isVisible.ShouldBeTrue("Toggle parking button should be visible");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task Parking_TapSetParking()
     {
         await NavigateToParking();
@@ -46,7 +44,7 @@ public abstract class ParkingPageTests : PlatformTestBase
         await Driver.Screenshot("parking-after-toggle.png");
     }
 
-    [Fact]
+    [Test]
     public async Task Parking_Screenshot()
     {
         await NavigateToParking();

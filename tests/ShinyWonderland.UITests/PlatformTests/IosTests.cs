@@ -1,28 +1,82 @@
 namespace ShinyWonderland.UITests.PlatformTests;
 
-[Collection("iOS")]
-public class IosStartupPageTests(IosAppFixture fixture) : StartupPageTests(fixture);
+[InheritsTests]
+public class IosStartupPageTests : StartupPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
 
-[Collection("iOS")]
-public class IosNavigationTests(IosAppFixture fixture) : NavigationTests(fixture);
+    protected override PlatformFixture Fixture => IosFixture;
+}
 
-[Collection("iOS")]
-public class IosRideTimesPageTests(IosAppFixture fixture) : RideTimesPageTests(fixture);
+[InheritsTests]
+public class IosNavigationTests : NavigationTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
 
-[Collection("iOS")]
-public class IosMapRideTimesPageTests(IosAppFixture fixture) : MapRideTimesPageTests(fixture);
+    protected override PlatformFixture Fixture => IosFixture;
+}
 
-[Collection("iOS")]
-public class IosSettingsPageTests(IosAppFixture fixture) : SettingsPageTests(fixture);
+[InheritsTests]
+public class IosRideTimesPageTests : RideTimesPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
 
-[Collection("iOS")]
-public class IosParkingPageTests(IosAppFixture fixture) : ParkingPageTests(fixture);
+    protected override PlatformFixture Fixture => IosFixture;
+}
 
-[Collection("iOS")]
-public class IosMealTimePageTests(IosAppFixture fixture) : MealTimePageTests(fixture);
+[InheritsTests]
+public class IosMapRideTimesPageTests : MapRideTimesPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
 
-[Collection("iOS")]
-public class IosHoursPageTests(IosAppFixture fixture) : HoursPageTests(fixture);
+    protected override PlatformFixture Fixture => IosFixture;
+}
 
-[Collection("iOS")]
-public class IosRideHistoryPageTests(IosAppFixture fixture) : RideHistoryPageTests(fixture);
+[InheritsTests]
+public class IosSettingsPageTests : SettingsPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
+
+    protected override PlatformFixture Fixture => IosFixture;
+}
+
+[InheritsTests]
+public class IosParkingPageTests : ParkingPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
+
+    protected override PlatformFixture Fixture => IosFixture;
+}
+
+[InheritsTests]
+public class IosMealTimePageTests : MealTimePageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
+
+    protected override PlatformFixture Fixture => IosFixture;
+}
+
+[InheritsTests]
+public class IosHoursPageTests : HoursPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
+
+    protected override PlatformFixture Fixture => IosFixture;
+}
+
+[InheritsTests]
+public class IosRideHistoryPageTests : RideHistoryPageTests
+{
+    [ClassDataSource<IosAppFixture>(Shared = SharedType.PerTestSession)]
+    public required IosAppFixture IosFixture { get; init; }
+
+    protected override PlatformFixture Fixture => IosFixture;
+}

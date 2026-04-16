@@ -1,14 +1,16 @@
+using ShinyWonderland.Contracts;
+
 namespace ShinyWonderland.Tests.ViewModels;
 
 public class MapRideTimesViewModelTests
 {
-    readonly IMediator mediator;
+    readonly TestMediator mediator;
     readonly IOptions<ParkOptions> parkOptions;
     readonly MapRideTimesViewModel viewModel;
 
     public MapRideTimesViewModelTests()
     {
-        mediator = Substitute.For<IMediator>();
+        mediator = new TestMediator();
 
         var options = new ParkOptions
         {
@@ -24,10 +26,9 @@ public class MapRideTimesViewModelTests
         viewModel = new MapRideTimesViewModel(mediator, parkOptions);
     }
 
-    [Fact]
+    [Test]
     public async Task OnAppearing_ShouldLoadOpenRidesWithPositions()
     {
-        // Arrange
         var rides = new List<RideTime>
         {
             new("1", "Open Ride", 30, 10, new Position(33.8121, -117.9190), true, null),
@@ -36,76 +37,64 @@ public class MapRideTimesViewModelTests
             new("4", "Another Open Ride", 15, 5, new Position(33.8123, -117.9192), true, null)
         };
 
-        mediator.Request(Arg.Any<GetCurrentRideTimes>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(rides));
+        mediator.SetupRequest<GetCurrentRideTimes, List<RideTime>>(rides);
 
-        // Act
         viewModel.OnAppearing();
         await Task.Delay(100);
 
-        // Assert
-        viewModel.Rides.ShouldNotBeNull();
-        viewModel.Rides.Count.ShouldBe(2); // Only open rides with positions
-        viewModel.Rides.ShouldAllBe(r => r.Text.Contains("Wait:"));
+        await Assert.That(viewModel.Rides).IsNotNull();
+        await Assert.That(viewModel.Rides.Count).IsEqualTo(2); // Only open rides with positions
+        await Assert.That(viewModel.Rides.All(r => r.Text.Contains("Wait:"))).IsTrue();
     }
 
-    [Fact]
-    public void CenterOfPark_ShouldReturnParkOptionsPosition()
+    [Test]
+    public async Task CenterOfPark_ShouldReturnParkOptionsPosition()
     {
-        // Assert
-        viewModel.CenterOfPark.Latitude.ShouldBe(parkOptions.Value.Latitude);
-        viewModel.CenterOfPark.Longitude.ShouldBe(parkOptions.Value.Longitude);
+        await Assert.That(viewModel.CenterOfPark.Latitude).IsEqualTo(parkOptions.Value.Latitude);
+        await Assert.That(viewModel.CenterOfPark.Longitude).IsEqualTo(parkOptions.Value.Longitude);
     }
 
-    [Fact]
-    public void MapStartZoomDistanceMeters_ShouldReturnParkOptionsValue()
+    [Test]
+    public async Task MapStartZoomDistanceMeters_ShouldReturnParkOptionsValue()
     {
-        // Assert
-        viewModel.MapStartZoomDistanceMeters.ShouldBe(parkOptions.Value.MapStartZoomDistanceMeters);
+        await Assert.That(viewModel.MapStartZoomDistanceMeters).IsEqualTo(parkOptions.Value.MapStartZoomDistanceMeters);
     }
 
-    [Fact]
+    [Test]
     public async Task OnAppearing_WithNoOpenRides_ShouldReturnEmptyList()
     {
-        // Arrange
         var rides = new List<RideTime>
         {
             new("1", "Closed Ride 1", null, null, new Position(33.8121, -117.9190), false, null),
             new("2", "Closed Ride 2", null, null, new Position(33.8122, -117.9191), false, null)
         };
 
-        mediator.Request(Arg.Any<GetCurrentRideTimes>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(rides));
+        mediator.SetupRequest<GetCurrentRideTimes, List<RideTime>>(rides);
 
-        // Act
         viewModel.OnAppearing();
         await Task.Delay(100);
 
-        // Assert
-        viewModel.Rides.ShouldNotBeNull();
-        viewModel.Rides.Count.ShouldBe(0);
+        await Assert.That(viewModel.Rides).IsNotNull();
+        await Assert.That(viewModel.Rides.Count).IsEqualTo(0);
     }
 
-    [Fact]
-    public void MapItem_ShouldContainFormattedText()
+    [Test]
+    public async Task MapItem_ShouldContainFormattedText()
     {
-        // Arrange
         var mapItem = new MapItem(
             "Test Ride\nWait: 30 min\nPaid Wait: 10 min",
             new Microsoft.Maui.Devices.Sensors.Location(33.8121, -117.9190)
         );
 
-        // Assert
-        mapItem.Text.ShouldContain("Test Ride");
-        mapItem.Text.ShouldContain("Wait: 30 min");
-        mapItem.Text.ShouldContain("Paid Wait: 10 min");
-        mapItem.Location.Latitude.ShouldBe(33.8121);
+        await Assert.That(mapItem.Text).Contains("Test Ride");
+        await Assert.That(mapItem.Text).Contains("Wait: 30 min");
+        await Assert.That(mapItem.Text).Contains("Paid Wait: 10 min");
+        await Assert.That(mapItem.Location.Latitude).IsEqualTo(33.8121);
     }
 
-    [Fact]
+    [Test]
     public void OnDisappearing_ShouldNotThrow()
     {
-        // Act & Assert
-        Should.NotThrow(() => viewModel.OnDisappearing());
+        viewModel.OnDisappearing();
     }
 }

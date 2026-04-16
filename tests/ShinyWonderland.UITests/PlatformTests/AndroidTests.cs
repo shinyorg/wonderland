@@ -1,28 +1,82 @@
 namespace ShinyWonderland.UITests.PlatformTests;
 
-[Collection("Android")]
-public class AndroidStartupPageTests(AndroidAppFixture fixture) : StartupPageTests(fixture);
+[InheritsTests]
+public class AndroidStartupPageTests : StartupPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
 
-[Collection("Android")]
-public class AndroidNavigationTests(AndroidAppFixture fixture) : NavigationTests(fixture);
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
 
-[Collection("Android")]
-public class AndroidRideTimesPageTests(AndroidAppFixture fixture) : RideTimesPageTests(fixture);
+[InheritsTests]
+public class AndroidNavigationTests : NavigationTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
 
-[Collection("Android")]
-public class AndroidMapRideTimesPageTests(AndroidAppFixture fixture) : MapRideTimesPageTests(fixture);
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
 
-[Collection("Android")]
-public class AndroidSettingsPageTests(AndroidAppFixture fixture) : SettingsPageTests(fixture);
+[InheritsTests]
+public class AndroidRideTimesPageTests : RideTimesPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
 
-[Collection("Android")]
-public class AndroidParkingPageTests(AndroidAppFixture fixture) : ParkingPageTests(fixture);
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
 
-[Collection("Android")]
-public class AndroidMealTimePageTests(AndroidAppFixture fixture) : MealTimePageTests(fixture);
+[InheritsTests]
+public class AndroidMapRideTimesPageTests : MapRideTimesPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
 
-[Collection("Android")]
-public class AndroidHoursPageTests(AndroidAppFixture fixture) : HoursPageTests(fixture);
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
 
-[Collection("Android")]
-public class AndroidRideHistoryPageTests(AndroidAppFixture fixture) : RideHistoryPageTests(fixture);
+[InheritsTests]
+public class AndroidSettingsPageTests : SettingsPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
+
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
+
+[InheritsTests]
+public class AndroidParkingPageTests : ParkingPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
+
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
+
+[InheritsTests]
+public class AndroidMealTimePageTests : MealTimePageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
+
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
+
+[InheritsTests]
+public class AndroidHoursPageTests : HoursPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
+
+    protected override PlatformFixture Fixture => AndroidFixture;
+}
+
+[InheritsTests]
+public class AndroidRideHistoryPageTests : RideHistoryPageTests
+{
+    [ClassDataSource<AndroidAppFixture>(Shared = SharedType.PerTestSession)]
+    public required AndroidAppFixture AndroidFixture { get; init; }
+
+    protected override PlatformFixture Fixture => AndroidFixture;
+}

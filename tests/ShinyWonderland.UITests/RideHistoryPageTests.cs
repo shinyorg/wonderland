@@ -2,8 +2,6 @@ namespace ShinyWonderland.UITests;
 
 public abstract class RideHistoryPageTests : PlatformTestBase
 {
-    protected RideHistoryPageTests(PlatformFixture fixture) : base(fixture) { }
-
     async Task NavigateToRideHistory()
     {
         // Navigate to ride times first, then tap history button
@@ -13,31 +11,31 @@ public abstract class RideHistoryPageTests : PlatformTestBase
         await Driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
     }
 
-    [Fact]
+    [Test]
     public async Task RideHistory_PageLoads()
     {
         await NavigateToRideHistory();
 
         var isVisible = await Driver.IsElementVisible("RideHistoryPage");
-        isVisible.ShouldBeTrue();
+        await Assert.That(isVisible).IsTrue();
 
         // Navigate back
         await Driver.Navigate("//main/ridetimes");
     }
 
-    [Fact]
+    [Test]
     public async Task RideHistory_CollectionViewExists()
     {
         await NavigateToRideHistory();
 
         var isVisible = await Driver.IsElementVisible("RideHistoryCollectionView");
-        isVisible.ShouldBeTrue("Ride history collection view should be present");
+        await Assert.That(isVisible).IsTrue();
 
         // Navigate back
         await Driver.Navigate("//main/ridetimes");
     }
 
-    [Fact]
+    [Test]
     public async Task RideHistory_Screenshot()
     {
         await NavigateToRideHistory();

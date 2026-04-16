@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Shiny.DocumentDb;
 using Shiny.DocumentDb.Sqlite;
 
@@ -21,7 +22,7 @@ public class DataServiceTests
         this.dataService = sp.GetRequiredService<IDataService>();
     }
 
-    [Fact]
+    [Test]
     public async Task AddRideHistory_ShouldInsertRecord()
     {
         var record = new RideHistoryRecord
@@ -34,31 +35,16 @@ public class DataServiceTests
         await this.dataService.AddRideHistory(record);
 
         var history = await this.dataService.GetRideTimeHistory();
-        history.ShouldContain(x => x.RideId == "ride-1" && x.RideName == "Space Mountain");
+        await Assert.That(history).Contains(x => x.RideId == "ride-1" && x.RideName == "Space Mountain");
     }
 
-    [Fact]
+    [Test]
     public async Task GetRideTimeHistory_ShouldReturnRecordsInDescendingOrder()
     {
         var now = DateTimeOffset.UtcNow;
-        var record1 = new RideHistoryRecord
-        {
-            RideId = "ride-1",
-            RideName = "Space Mountain",
-            Timestamp = now.AddHours(-2)
-        };
-        var record2 = new RideHistoryRecord
-        {
-            RideId = "ride-2",
-            RideName = "Thunder Mountain",
-            Timestamp = now.AddHours(-1)
-        };
-        var record3 = new RideHistoryRecord
-        {
-            RideId = "ride-3",
-            RideName = "Pirates",
-            Timestamp = now
-        };
+        var record1 = new RideHistoryRecord { RideId = "ride-1", RideName = "Space Mountain", Timestamp = now.AddHours(-2) };
+        var record2 = new RideHistoryRecord { RideId = "ride-2", RideName = "Thunder Mountain", Timestamp = now.AddHours(-1) };
+        var record3 = new RideHistoryRecord { RideId = "ride-3", RideName = "Pirates", Timestamp = now };
 
         await this.dataService.AddRideHistory(record1);
         await this.dataService.AddRideHistory(record2);
@@ -66,35 +52,20 @@ public class DataServiceTests
 
         var history = await this.dataService.GetRideTimeHistory();
 
-        history.Count.ShouldBeGreaterThanOrEqualTo(3);
+        await Assert.That(history.Count).IsGreaterThanOrEqualTo(3);
         var myRecords = history.Where(x => x.RideId.StartsWith("ride-")).ToList();
-        myRecords[0].RideId.ShouldBe("ride-3");
-        myRecords[1].RideId.ShouldBe("ride-2");
-        myRecords[2].RideId.ShouldBe("ride-1");
+        await Assert.That(myRecords[0].RideId).IsEqualTo("ride-3");
+        await Assert.That(myRecords[1].RideId).IsEqualTo("ride-2");
+        await Assert.That(myRecords[2].RideId).IsEqualTo("ride-1");
     }
 
-    [Fact]
+    [Test]
     public async Task GetLastRideTimes_ShouldReturnLatestTimestampPerRide()
     {
         var now = DateTimeOffset.UtcNow;
-        var record1 = new RideHistoryRecord
-        {
-            RideId = "unique-ride-a",
-            RideName = "Space Mountain",
-            Timestamp = now.AddHours(-2)
-        };
-        var record2 = new RideHistoryRecord
-        {
-            RideId = "unique-ride-a",
-            RideName = "Space Mountain",
-            Timestamp = now
-        };
-        var record3 = new RideHistoryRecord
-        {
-            RideId = "unique-ride-b",
-            RideName = "Thunder Mountain",
-            Timestamp = now.AddHours(-1)
-        };
+        var record1 = new RideHistoryRecord { RideId = "unique-ride-a", RideName = "Space Mountain", Timestamp = now.AddHours(-2) };
+        var record2 = new RideHistoryRecord { RideId = "unique-ride-a", RideName = "Space Mountain", Timestamp = now };
+        var record3 = new RideHistoryRecord { RideId = "unique-ride-b", RideName = "Thunder Mountain", Timestamp = now.AddHours(-1) };
 
         await this.dataService.AddRideHistory(record1);
         await this.dataService.AddRideHistory(record2);
@@ -105,14 +76,14 @@ public class DataServiceTests
         var rideA = lastTimes.FirstOrDefault(x => x.RideId == "unique-ride-a");
         var rideB = lastTimes.FirstOrDefault(x => x.RideId == "unique-ride-b");
 
-        rideA.ShouldNotBeNull();
-        rideA.Timestamp.ShouldBe(now, TimeSpan.FromSeconds(1));
+        await Assert.That(rideA).IsNotNull();
+        await Assert.That(rideA!.Timestamp).IsEqualTo(now).Within(TimeSpan.FromSeconds(1));
 
-        rideB.ShouldNotBeNull();
-        rideB.Timestamp.ShouldBe(now.AddHours(-1), TimeSpan.FromSeconds(1));
+        await Assert.That(rideB).IsNotNull();
+        await Assert.That(rideB!.Timestamp).IsEqualTo(now.AddHours(-1)).Within(TimeSpan.FromSeconds(1));
     }
 
-    [Fact]
+    [Test]
     public async Task AddMealTimeHistory_ShouldInsertRecord()
     {
         var record = new MealTimeHistoryRecord
@@ -124,28 +95,16 @@ public class DataServiceTests
         await this.dataService.AddMealTimeHistory(record);
 
         var history = await this.dataService.GetMealTimeHistory();
-        history.ShouldContain(x => x.Type == MealTimeType.Food);
+        await Assert.That(history).Contains(x => x.Type == MealTimeType.Food);
     }
 
-    [Fact]
+    [Test]
     public async Task GetMealTimeHistory_ShouldReturnRecordsInDescendingOrder()
     {
         var now = DateTimeOffset.UtcNow;
-        var record1 = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Food,
-            Timestamp = now.AddHours(-2)
-        };
-        var record2 = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Drink,
-            Timestamp = now.AddHours(-1)
-        };
-        var record3 = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Food,
-            Timestamp = now
-        };
+        var record1 = new MealTimeHistoryRecord { Type = MealTimeType.Food, Timestamp = now.AddHours(-2) };
+        var record2 = new MealTimeHistoryRecord { Type = MealTimeType.Drink, Timestamp = now.AddHours(-1) };
+        var record3 = new MealTimeHistoryRecord { Type = MealTimeType.Food, Timestamp = now };
 
         await this.dataService.AddMealTimeHistory(record1);
         await this.dataService.AddMealTimeHistory(record2);
@@ -153,35 +112,19 @@ public class DataServiceTests
 
         var history = await this.dataService.GetMealTimeHistory();
 
-        history.Count.ShouldBeGreaterThanOrEqualTo(3);
-        history[0].Timestamp.ShouldBeGreaterThanOrEqualTo(history[1].Timestamp);
-        history[1].Timestamp.ShouldBeGreaterThanOrEqualTo(history[2].Timestamp);
+        await Assert.That(history.Count).IsGreaterThanOrEqualTo(3);
+        await Assert.That(history[0].Timestamp).IsGreaterThanOrEqualTo(history[1].Timestamp);
+        await Assert.That(history[1].Timestamp).IsGreaterThanOrEqualTo(history[2].Timestamp);
     }
 
-    [Fact]
+    [Test]
     public async Task GetLatestMealTimes_ShouldReturnLatestTimestampPerType()
     {
         var now = DateTimeOffset.UtcNow;
-        var foodOld = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Food,
-            Timestamp = now.AddHours(-3)
-        };
-        var foodNew = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Food,
-            Timestamp = now.AddHours(-1)
-        };
-        var drinkOld = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Drink,
-            Timestamp = now.AddHours(-2)
-        };
-        var drinkNew = new MealTimeHistoryRecord
-        {
-            Type = MealTimeType.Drink,
-            Timestamp = now
-        };
+        var foodOld = new MealTimeHistoryRecord { Type = MealTimeType.Food, Timestamp = now.AddHours(-3) };
+        var foodNew = new MealTimeHistoryRecord { Type = MealTimeType.Food, Timestamp = now.AddHours(-1) };
+        var drinkOld = new MealTimeHistoryRecord { Type = MealTimeType.Drink, Timestamp = now.AddHours(-2) };
+        var drinkNew = new MealTimeHistoryRecord { Type = MealTimeType.Drink, Timestamp = now };
 
         await this.dataService.AddMealTimeHistory(foodOld);
         await this.dataService.AddMealTimeHistory(foodNew);
@@ -193,16 +136,16 @@ public class DataServiceTests
         var food = latestTimes.FirstOrDefault(x => x.Type == MealTimeType.Food);
         var drink = latestTimes.FirstOrDefault(x => x.Type == MealTimeType.Drink);
 
-        food.ShouldNotBeNull();
-        food.Timestamp.ShouldNotBeNull();
-        food.Timestamp!.Value.ShouldBe(now.AddHours(-1), TimeSpan.FromSeconds(1));
+        await Assert.That(food).IsNotNull();
+        await Assert.That(food!.Timestamp).IsNotNull();
+        await Assert.That(food.Timestamp!.Value).IsEqualTo(now.AddHours(-1)).Within(TimeSpan.FromSeconds(1));
 
-        drink.ShouldNotBeNull();
-        drink.Timestamp.ShouldNotBeNull();
-        drink.Timestamp!.Value.ShouldBe(now, TimeSpan.FromSeconds(1));
+        await Assert.That(drink).IsNotNull();
+        await Assert.That(drink!.Timestamp).IsNotNull();
+        await Assert.That(drink.Timestamp!.Value).IsEqualTo(now).Within(TimeSpan.FromSeconds(1));
     }
 
-    [Fact]
+    [Test]
     public async Task AddMealPass_ShouldInsertPass()
     {
         var pass = new MealPass { Type = MealTimeType.Drink };
@@ -210,10 +153,10 @@ public class DataServiceTests
         await this.dataService.AddMealPass(pass);
 
         var passes = await this.dataService.GetMealPasses();
-        passes.ShouldContain(x => x.Type == MealTimeType.Drink);
+        await Assert.That(passes).Contains(x => x.Type == MealTimeType.Drink);
     }
 
-    [Fact]
+    [Test]
     public async Task GetMealPasses_ShouldReturnAllPasses()
     {
         await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
@@ -221,10 +164,10 @@ public class DataServiceTests
         await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
 
         var passes = await this.dataService.GetMealPasses();
-        passes.Count.ShouldBe(3);
+        await Assert.That(passes.Count).IsEqualTo(3);
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateMealPass_ShouldPersistChanges()
     {
         var pass = new MealPass { Type = MealTimeType.Drink };
@@ -237,21 +180,21 @@ public class DataServiceTests
         await this.dataService.UpdateMealPass(inserted);
 
         var updated = (await this.dataService.GetMealPasses()).First(x => x.Id == inserted.Id);
-        updated.LastUsed.ShouldNotBeNull();
-        updated.NotificationSent.ShouldBeTrue();
+        await Assert.That(updated.LastUsed).IsNotNull();
+        await Assert.That(updated.NotificationSent).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task DeleteMealPass_ShouldRemovePass()
     {
         await this.dataService.AddMealPass(new MealPass { Type = MealTimeType.Drink });
 
         var passes = await this.dataService.GetMealPasses();
-        passes.Count.ShouldBe(1);
+        await Assert.That(passes.Count).IsEqualTo(1);
 
         await this.dataService.DeleteMealPass(passes[0].Id);
 
         var remaining = await this.dataService.GetMealPasses();
-        remaining.Count.ShouldBe(0);
+        await Assert.That(remaining.Count).IsEqualTo(0);
     }
 }

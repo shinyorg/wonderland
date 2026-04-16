@@ -2,60 +2,58 @@ namespace ShinyWonderland.UITests;
 
 public abstract class RideTimesPageTests : PlatformTestBase
 {
-    protected RideTimesPageTests(PlatformFixture fixture) : base(fixture) { }
-
     async Task NavigateToRideTimes()
     {
         await Driver.Navigate("//main/ridetimes");
         await Driver.WaitUntilExists("RideTimesPage");
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_PageLoads()
     {
         await NavigateToRideTimes();
 
         var isVisible = await Driver.IsElementVisible("RideTimesPage");
-        isVisible.ShouldBeTrue();
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_HasDataTimestamp()
     {
         await NavigateToRideTimes();
 
         var isVisible = await Driver.IsElementVisible("DataTimestampLabel");
-        isVisible.ShouldBeTrue("Data timestamp label should be visible");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_CollectionViewExists()
     {
         await NavigateToRideTimes();
 
         var isVisible = await Driver.IsElementVisible("RidesCollectionView");
-        isVisible.ShouldBeTrue("Rides collection view should be present");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_HasHistoryToolbarButton()
     {
         await NavigateToRideTimes();
 
         var isVisible = await Driver.IsElementVisible("HistoryToolbarButton");
-        isVisible.ShouldBeTrue("History toolbar button should be visible");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_RefreshViewExists()
     {
         await NavigateToRideTimes();
 
         var isVisible = await Driver.IsElementVisible("RideTimesRefreshView");
-        isVisible.ShouldBeTrue("RefreshView should be present for pull-to-refresh");
+        await Assert.That(isVisible).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_HistoryButton_NavigatesToHistory()
     {
         await NavigateToRideTimes();
@@ -64,14 +62,14 @@ public abstract class RideTimesPageTests : PlatformTestBase
         await Driver.WaitUntilExists("RideHistoryPage", timeoutSeconds: 10);
 
         var isVisible = await Driver.IsElementVisible("RideHistoryPage");
-        isVisible.ShouldBeTrue("Should navigate to ride history page");
+        await Assert.That(isVisible).IsTrue();
 
         // Navigate back
         await Driver.Navigate("//main/ridetimes");
         await Driver.WaitUntilExists("RideTimesPage");
     }
 
-    [Fact]
+    [Test]
     public async Task RideTimes_Screenshot()
     {
         await NavigateToRideTimes();

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using TUnit.Core.Interfaces;
 
 namespace ShinyWonderland.UITests;
 
@@ -9,7 +10,7 @@ public enum Platform
     Android
 }
 
-public abstract class PlatformFixture : IAsyncLifetime
+public abstract class PlatformFixture : IAsyncInitializer, IAsyncDisposable
 {
     public abstract Platform Platform { get; }
     public MauiDevFlowDriver Driver { get; private set; } = null!;
@@ -77,5 +78,5 @@ public abstract class PlatformFixture : IAsyncLifetime
         await Task.Delay(5000);
     }
 
-    public Task DisposeAsync() => Task.CompletedTask;
+    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }

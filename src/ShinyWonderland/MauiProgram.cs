@@ -32,15 +32,6 @@ public static class MauiProgram
                 .AddGeneratedMaps()
                 .UseUxDiversDialogs()
             )
-#if RELEASE
-            .UseSentry(opts =>
-            {
-                opts.Dsn = builder.Configuration["SentryDsn"]!;
-                // DiagnosticListener.AllListeners.Subscribe(
-                //     x => x.Subscribe()
-                // );
-            })
-#endif
             .AddShinyMediator(
                 x => x
                     .AddMediatorRegistry()
@@ -52,6 +43,15 @@ public static class MauiProgram
                     .UseMaui(false),
                 false
             )
+#if RELEASE
+            .UseSentry(opts =>
+            {
+                opts.Dsn = builder.Configuration["SentryDsn"]!;
+                // DiagnosticListener.AllListeners.Subscribe(
+                //     x => x.Subscribe()
+                // );
+            })
+#endif
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

@@ -2,7 +2,7 @@ namespace ShinyWonderland.Tests.ViewModels;
 
 public class RideHistoryViewModelTests
 {
-    readonly IMediator mediator;
+    readonly TestMediator mediator;
     readonly FakeTimeProvider timeProvider;
     readonly Humanizer humanizer;
     readonly StringsLocalized localize;
@@ -10,7 +10,7 @@ public class RideHistoryViewModelTests
 
     public RideHistoryViewModelTests()
     {
-        mediator = Substitute.For<IMediator>();
+        mediator = new TestMediator();
         localize = TestLocalization.Create(new Dictionary<string, string>
         {
             ["Never"] = "Never",
@@ -34,54 +34,44 @@ public class RideHistoryViewModelTests
         viewModel = new RideHistoryViewModel(mediator, humanizer, localize);
     }
 
-    [Fact]
+    [Test]
     public async Task OnAppearing_ShouldLoadHistory()
     {
-        // Arrange
         var records = new List<RideHistoryRecord>
         {
             new() { Id = 1, RideId = "ride1", RideName = "Thunder Mountain", Timestamp = DateTimeOffset.UtcNow.AddMinutes(-30) },
             new() { Id = 2, RideId = "ride2", RideName = "Space Mountain", Timestamp = DateTimeOffset.UtcNow.AddHours(-1) }
         };
 
-        mediator.Request(Arg.Any<GetRideHistory>(), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(records));
+        mediator.SetupRequest<GetRideHistory, List<RideHistoryRecord>>(records);
 
-        // Act
         viewModel.OnAppearing();
         await Task.Delay(100);
 
-        // Assert
-        viewModel.History.ShouldNotBeNull();
-        viewModel.History.Count.ShouldBe(2);
+        await Assert.That(viewModel.History).IsNotNull();
+        await Assert.That(viewModel.History.Count).IsEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task OnAppearing_WithRideIdFilter_ShouldPassRideIdToRequest()
     {
-        // Arrange
         var rideId = Guid.NewGuid();
         viewModel.RideId = rideId;
 
         var records = new List<RideHistoryRecord>();
-        GetRideHistory? capturedRequest = null;
+        mediator.SetupRequest<GetRideHistory, List<RideHistoryRecord>>(records);
 
-        mediator.Request(Arg.Do<GetRideHistory>(r => capturedRequest = r), Arg.Any<CancellationToken>(), Arg.Any<Action<IMediatorContext>>())
-            .Returns(MediatorTestHelpers.CreateResult(records));
-
-        // Act
         viewModel.OnAppearing();
         await Task.Delay(100);
 
-        // Assert
-        capturedRequest.ShouldNotBeNull();
-        capturedRequest.Ride.ShouldBe(rideId);
+        var capturedRequest = mediator.Requests.OfType<GetRideHistory>().LastOrDefault();
+        await Assert.That(capturedRequest).IsNotNull();
+        await Assert.That(capturedRequest!.Ride).IsEqualTo(rideId);
     }
 
-    [Fact]
-    public void RideHistoryItemViewModel_ShouldReturnCorrectRideName()
+    [Test]
+    public async Task RideHistoryItemViewModel_ShouldReturnCorrectRideName()
     {
-        // Arrange
         var record = new RideHistoryRecord
         {
             Id = 1,
@@ -92,15 +82,13 @@ public class RideHistoryViewModelTests
 
         var itemVm = new RideHistoryItemViewModel(humanizer, record);
 
-        // Assert
-        itemVm.RideName.ShouldBe("Thunder Mountain");
-        itemVm.Data.ShouldBe(record);
+        await Assert.That(itemVm.RideName).IsEqualTo("Thunder Mountain");
+        await Assert.That(itemVm.Data).IsEqualTo(record);
     }
 
-    [Fact]
-    public void RideHistoryItemViewModel_TimeAgo_ShouldReturnFormattedTime()
+    [Test]
+    public async Task RideHistoryItemViewModel_TimeAgo_ShouldReturnFormattedTime()
     {
-        // Arrange - use FakeTimeProvider time for deterministic results
         var record = new RideHistoryRecord
         {
             Id = 1,
@@ -111,23 +99,21 @@ public class RideHistoryViewModelTests
 
         var itemVm = new RideHistoryItemViewModel(humanizer, record);
 
-        // Assert
-        itemVm.TimeAgo.ShouldNotBeNullOrEmpty();
-        itemVm.TimeAgo.ShouldContain("5");
-        itemVm.TimeAgo.ShouldContain("minute");
+        await Assert.That(itemVm.TimeAgo).IsNotNull();
+        await Assert.That(itemVm.TimeAgo).IsNotEmpty();
+        await Assert.That(itemVm.TimeAgo).Contains("5");
+        await Assert.That(itemVm.TimeAgo).Contains("minute");
     }
 
-    [Fact]
-    public void Localize_ShouldReturnInjectedLocalize()
+    [Test]
+    public async Task Localize_ShouldReturnInjectedLocalize()
     {
-        // Assert
-        viewModel.Localize.ShouldBe(localize);
+        await Assert.That(viewModel.Localize).IsEqualTo(localize);
     }
 
-    [Fact]
+    [Test]
     public void OnDisappearing_ShouldNotThrow()
     {
-        // Act & Assert
-        Should.NotThrow(() => viewModel.OnDisappearing());
+        viewModel.OnDisappearing();
     }
 }

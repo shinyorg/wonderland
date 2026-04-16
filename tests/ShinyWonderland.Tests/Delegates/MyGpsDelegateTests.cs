@@ -1,3 +1,5 @@
+using Shiny.Notifications;
+
 namespace ShinyWonderland.Tests.Delegates;
 
 public class MyGpsDelegateTests
@@ -21,36 +23,34 @@ public class MyGpsDelegateTests
         });
 
         var services = new CoreServices(
-            Substitute.For<IMediator>(),
+            new TestMediator(),
             parkOptions,
             new AppSettings(),
-            Substitute.For<INavigator>(),
-            Substitute.For<IDialogs>(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
             new FakeTimeProvider(DateTimeOffset.UtcNow),
-            Substitute.For<IGpsManager>(),
+            new IGpsManagerImposter().Instance(),
             localized,
-            Substitute.For<INotificationManager>()
+            new INotificationManagerImposter().Instance()
         );
 
         gpsDelegate = new MyGpsDelegate(
-            Substitute.For<ILogger<MyGpsDelegate>>(),
+            new ILoggerImposter<MyGpsDelegate>().Instance(),
             services
         );
     }
 
-    [Fact]
-    public void Constructor_ShouldSetMinimumDistance()
+    [Test]
+    public async Task Constructor_ShouldSetMinimumDistance()
     {
-        // Assert
-        gpsDelegate.MinimumDistance.ShouldNotBeNull();
-        gpsDelegate.MinimumDistance!.TotalMeters.ShouldBe(10);
+        await Assert.That(gpsDelegate.MinimumDistance).IsNotNull();
+        await Assert.That(gpsDelegate.MinimumDistance!.TotalMeters).IsEqualTo(10);
     }
 
-    [Fact]
-    public void Constructor_ShouldSetMinimumTime()
+    [Test]
+    public async Task Constructor_ShouldSetMinimumTime()
     {
-        // Assert
-        gpsDelegate.MinimumTime.ShouldNotBeNull();
-        gpsDelegate.MinimumTime!.Value.TotalSeconds.ShouldBe(10);
+        await Assert.That(gpsDelegate.MinimumTime).IsNotNull();
+        await Assert.That(gpsDelegate.MinimumTime!.Value.TotalSeconds).IsEqualTo(10);
     }
 }

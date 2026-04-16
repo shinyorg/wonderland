@@ -1,23 +1,17 @@
+using TUnit.Core.Exceptions;
+
 namespace ShinyWonderland.UITests;
 
-public abstract class PlatformTestBase : IAsyncLifetime
+public abstract class PlatformTestBase
 {
-    readonly PlatformFixture fixture;
+    protected abstract PlatformFixture Fixture { get; }
 
-    protected PlatformTestBase(PlatformFixture fixture)
+    protected MauiDevFlowDriver Driver => Fixture.Driver;
+
+    [Before(Test)]
+    public void SkipIfOSMismatch()
     {
-        this.fixture = fixture;
+        if (!Fixture.CanRunOnCurrentOS())
+            throw new SkipTestException($"{Fixture.Platform} tests are not supported on this OS.");
     }
-
-    protected MauiDevFlowDriver Driver => fixture.Driver;
-
-    public Task InitializeAsync()
-    {
-        if (!fixture.CanRunOnCurrentOS())
-            throw new Exception($"$XunitDynamicSkip${fixture.Platform} tests are not supported on this OS.");
-
-        return Task.CompletedTask;
-    }
-
-    public Task DisposeAsync() => Task.CompletedTask;
 }

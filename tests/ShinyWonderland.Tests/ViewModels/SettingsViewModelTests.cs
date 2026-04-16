@@ -11,117 +11,88 @@ public class SettingsViewModelTests
         viewModel = new SettingsViewModel(appSettings);
     }
 
-    [Fact]
-    public void AppVersion_ShouldNotBeEmpty()
+    [Test]
+    public async Task AppVersion_ShouldNotBeEmpty()
     {
-        // Assert
-        viewModel.AppVersion.ShouldNotBeNullOrEmpty();
+        await Assert.That(viewModel.AppVersion).IsNotNull();
+        await Assert.That(viewModel.AppVersion).IsNotEmpty();
     }
 
-    [Theory]
-    [InlineData(RideOrder.Name)]
-    [InlineData(RideOrder.WaitTime)]
-    [InlineData(RideOrder.PaidWaitTime)]
-    [InlineData(RideOrder.Distance)]
-    public void Ordering_ShouldUpdateAppSettings(RideOrder order)
+    [Test]
+    [Arguments(RideOrder.Name)]
+    [Arguments(RideOrder.WaitTime)]
+    [Arguments(RideOrder.PaidWaitTime)]
+    [Arguments(RideOrder.Distance)]
+    public async Task Ordering_ShouldUpdateAppSettings(RideOrder order)
     {
-        // Act
         viewModel.Ordering = order;
-
-        // Assert
-        appSettings.Ordering.ShouldBe(order);
+        await Assert.That(appSettings.Ordering).IsEqualTo(order);
     }
 
-    [Fact]
-    public void ShowOpenOnly_ShouldUpdateAppSettings()
+    [Test]
+    public async Task ShowOpenOnly_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.ShowOpenOnly = false;
+        await Assert.That(appSettings.ShowOpenOnly).IsFalse();
 
-        // Assert
-        appSettings.ShowOpenOnly.ShouldBeFalse();
-
-        // Act
         viewModel.ShowOpenOnly = true;
-
-        // Assert
-        appSettings.ShowOpenOnly.ShouldBeTrue();
+        await Assert.That(appSettings.ShowOpenOnly).IsTrue();
     }
 
-    [Fact]
-    public void ShowTimedOnly_ShouldUpdateAppSettings()
+    [Test]
+    public async Task ShowTimedOnly_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.ShowTimedOnly = false;
-
-        // Assert
-        appSettings.ShowTimedOnly.ShouldBeFalse();
+        await Assert.That(appSettings.ShowTimedOnly).IsFalse();
     }
 
-    [Fact]
-    public void EnableTimeRideNotifications_ShouldUpdateAppSettings()
+    [Test]
+    public async Task EnableTimeRideNotifications_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.EnableTimeRideNotifications = false;
-
-        // Assert
-        appSettings.EnableTimeRideNotifications.ShouldBeFalse();
+        await Assert.That(appSettings.EnableTimeRideNotifications).IsFalse();
     }
 
-    [Fact]
-    public void EnableDrinkNotifications_ShouldUpdateAppSettings()
+    [Test]
+    public async Task EnableDrinkNotifications_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.EnableDrinkNotifications = false;
-
-        // Assert
-        appSettings.EnableDrinkNotifications.ShouldBeFalse();
+        await Assert.That(appSettings.EnableDrinkNotifications).IsFalse();
     }
 
-    [Fact]
-    public void EnableMealNotifications_ShouldUpdateAppSettings()
+    [Test]
+    public async Task EnableMealNotifications_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.EnableMealNotifications = false;
-
-        // Assert
-        appSettings.EnableMealNotifications.ShouldBeFalse();
+        await Assert.That(appSettings.EnableMealNotifications).IsFalse();
     }
 
-    [Fact]
-    public void EnableGeofenceNotifications_ShouldUpdateAppSettings()
+    [Test]
+    public async Task EnableGeofenceNotifications_ShouldUpdateAppSettings()
     {
-        // Act
         viewModel.EnableGeofenceNotifications = false;
-
-        // Assert
-        appSettings.EnableGeofenceNotifications.ShouldBeFalse();
+        await Assert.That(appSettings.EnableGeofenceNotifications).IsFalse();
     }
 
-    [Fact]
-    public void InitialValues_ShouldMatchAppSettingsDefaults()
+    [Test]
+    public async Task InitialValues_ShouldMatchAppSettingsDefaults()
     {
-        // Arrange
         var defaultSettings = new AppSettings();
         var vm = new SettingsViewModel(defaultSettings);
 
-        // Assert
-        vm.ShowOpenOnly.ShouldBe(defaultSettings.ShowOpenOnly);
-        vm.ShowTimedOnly.ShouldBe(defaultSettings.ShowTimedOnly);
-        vm.EnableTimeRideNotifications.ShouldBe(defaultSettings.EnableTimeRideNotifications);
-        vm.EnableDrinkNotifications.ShouldBe(defaultSettings.EnableDrinkNotifications);
-        vm.EnableMealNotifications.ShouldBe(defaultSettings.EnableMealNotifications);
-        vm.EnableGeofenceNotifications.ShouldBe(defaultSettings.EnableGeofenceNotifications);
+        await Assert.That(vm.ShowOpenOnly).IsEqualTo(defaultSettings.ShowOpenOnly);
+        await Assert.That(vm.ShowTimedOnly).IsEqualTo(defaultSettings.ShowTimedOnly);
+        await Assert.That(vm.EnableTimeRideNotifications).IsEqualTo(defaultSettings.EnableTimeRideNotifications);
+        await Assert.That(vm.EnableDrinkNotifications).IsEqualTo(defaultSettings.EnableDrinkNotifications);
+        await Assert.That(vm.EnableMealNotifications).IsEqualTo(defaultSettings.EnableMealNotifications);
+        await Assert.That(vm.EnableGeofenceNotifications).IsEqualTo(defaultSettings.EnableGeofenceNotifications);
     }
 
-    [Fact]
-    public void Ordering_InitialValue_ShouldMatchAppSettings()
+    [Test]
+    public async Task Ordering_InitialValue_ShouldMatchAppSettings()
     {
-        // Arrange
         var settings = new AppSettings { Ordering = RideOrder.WaitTime };
         var vm = new SettingsViewModel(settings);
-
-        // Assert
-        vm.Ordering.ShouldBe(RideOrder.WaitTime);
+        await Assert.That(vm.Ordering).IsEqualTo(RideOrder.WaitTime);
     }
 }

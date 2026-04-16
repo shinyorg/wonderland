@@ -1,9 +1,12 @@
+using Shiny.Notifications;
+using ShinyWonderland.Contracts;
+
 namespace ShinyWonderland.Tests.Delegates;
 
 public class RideTimeJobTests
 {
     readonly FakeTimeProvider timeProvider;
-    readonly INotificationManager notifications;
+    readonly INotificationManagerImposter notifications;
     readonly RideTimeJob job;
 
     public RideTimeJobTests()
@@ -23,56 +26,50 @@ public class RideTimeJobTests
             NotificationDistanceMeters = 1000
         });
 
-        notifications = Substitute.For<INotificationManager>();
+        notifications = new INotificationManagerImposter();
         timeProvider = new FakeTimeProvider(new DateTimeOffset(2026, 1, 26, 12, 0, 0, TimeSpan.Zero));
 
         var services = new CoreServices(
-            Substitute.For<IMediator>(),
+            new TestMediator(),
             parkOptions,
             new AppSettings(),
-            Substitute.For<INavigator>(),
-            Substitute.For<IDialogs>(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
             timeProvider,
-            Substitute.For<IGpsManager>(),
+            new IGpsManagerImposter().Instance(),
             localized,
-            notifications
+            notifications.Instance()
         );
 
         job = new RideTimeJob(
-            Substitute.For<ILogger<RideTimeJob>>(),
+            new ILoggerImposter<RideTimeJob>().Instance(),
             parkOptions,
             services
         );
     }
 
-    [Fact]
-    public void IsTimeToRun_WhenLastSnapshotTimeIsNull_ShouldReturnTrue()
+    [Test]
+    public async Task IsTimeToRun_WhenLastSnapshotTimeIsNull_ShouldReturnTrue()
     {
-        // Arrange
         job.LastSnapshotTime = null;
 
-        // Act
         var result = job.IsTimeToRun();
 
-        // Assert
-        result.ShouldBeTrue();
+        await Assert.That(result).IsTrue();
     }
 
-    [Fact]
-    public void IsTimeToRun_WhenLastRunLessThan5MinutesAgo_ShouldReturnFalse()
+    [Test]
+    public async Task IsTimeToRun_WhenLastRunLessThan5MinutesAgo_ShouldReturnFalse()
     {
-        // Arrange
         job.LastSnapshotTime = timeProvider.GetUtcNow().AddMinutes(-3);
 
-        // Act
         var result = job.IsTimeToRun();
 
-        // Assert
-        result.ShouldBeFalse();
+        await Assert.That(result).IsFalse();
     }
 
-    [Fact]
-    public void IsTimeToRun_WhenLastRunMoreThan5MinutesAgo_ShouldReturnTrue()
+    [Test]
+    public async Task IsTimeToRun_WhenLastRunMoreThan5MinutesAgo_ShouldReturnTrue()
     {
         // NOTE: Production code subtracts in reverse (LastSnapshotTime - Now),
         // so TotalMinutes is always negative for past times and never >= 5
@@ -80,57 +77,47 @@ public class RideTimeJobTests
 
         var result = job.IsTimeToRun();
 
-        result.ShouldBeFalse();
+        await Assert.That(result).IsFalse();
     }
 
-    [Fact]
-    public void EnsureLastSnapshot_WhenSnapshotTimeIsNull_ShouldKeepSnapshotNull()
+    [Test]
+    public async Task EnsureLastSnapshot_WhenSnapshotTimeIsNull_ShouldKeepSnapshotNull()
     {
-        // Arrange
         job.LastSnapshotTime = null;
         job.LastSnapshot = new List<RideTime> { new("1", "Test", 30, 10, null, true, null) };
 
-        // Act
         job.EnsureLastSnapshot();
 
-        // Assert
-        job.LastSnapshot.ShouldBeNull();
+        await Assert.That(job.LastSnapshot).IsNull();
     }
 
-    [Fact]
-    public void EnsureLastSnapshot_WhenSnapshotIsOld_ShouldClearSnapshot()
+    [Test]
+    public async Task EnsureLastSnapshot_WhenSnapshotIsOld_ShouldClearSnapshot()
     {
-        // Arrange
         job.LastSnapshotTime = timeProvider.GetUtcNow().AddMinutes(-35);
         job.LastSnapshot = new List<RideTime> { new("1", "Test", 30, 10, null, true, null) };
 
-        // Act
         job.EnsureLastSnapshot();
 
-        // Assert
-        job.LastSnapshot.ShouldBeNull();
-        job.LastSnapshotTime.ShouldBeNull();
+        await Assert.That(job.LastSnapshot).IsNull();
+        await Assert.That(job.LastSnapshotTime).IsNull();
     }
 
-    [Fact]
-    public void EnsureLastSnapshot_WhenSnapshotIsRecent_ShouldKeepSnapshot()
+    [Test]
+    public async Task EnsureLastSnapshot_WhenSnapshotIsRecent_ShouldKeepSnapshot()
     {
-        // Arrange
         var rides = new List<RideTime> { new("1", "Test", 30, 10, null, true, null) };
         job.LastSnapshotTime = timeProvider.GetUtcNow().AddMinutes(-15);
         job.LastSnapshot = rides;
 
-        // Act
         job.EnsureLastSnapshot();
 
-        // Assert
-        job.LastSnapshot.ShouldBe(rides);
+        await Assert.That(job.LastSnapshot).IsEqualTo(rides);
     }
 
-    [Fact]
+    [Test]
     public async Task IterateDiff_WhenWaitTimeDecreased_ShouldSendNotification()
     {
-        // Arrange
         var previous = new List<RideTime>
         {
             new("1", "Thunder Mountain", 60, 30, null, true, null)
@@ -140,17 +127,14 @@ public class RideTimeJobTests
             new("1", "Thunder Mountain", 30, 15, null, true, null)
         };
 
-        // Act
         await job.IterateDiff(previous, current);
 
-        // Assert
-        await notifications.Received(1).Send(Arg.Any<Notification>());
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Once());
     }
 
-    [Fact]
+    [Test]
     public async Task IterateDiff_WhenWaitTimeIncreased_ShouldNotSendNotification()
     {
-        // Arrange
         var previous = new List<RideTime>
         {
             new("1", "Thunder Mountain", 30, 15, null, true, null)
@@ -160,17 +144,14 @@ public class RideTimeJobTests
             new("1", "Thunder Mountain", 60, 30, null, true, null)
         };
 
-        // Act
         await job.IterateDiff(previous, current);
 
-        // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
     }
 
-    [Fact]
+    [Test]
     public async Task IterateDiff_WhenRideIsClosed_ShouldNotSendNotification()
     {
-        // Arrange
         var previous = new List<RideTime>
         {
             new("1", "Thunder Mountain", 60, 30, null, true, null)
@@ -180,17 +161,14 @@ public class RideTimeJobTests
             new("1", "Thunder Mountain", null, null, null, false, null)
         };
 
-        // Act
         await job.IterateDiff(previous, current);
 
-        // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
     }
 
-    [Fact]
+    [Test]
     public async Task IterateDiff_WhenRideNotInCurrent_ShouldNotSendNotification()
     {
-        // Arrange
         var previous = new List<RideTime>
         {
             new("1", "Thunder Mountain", 60, 30, null, true, null)
@@ -200,17 +178,14 @@ public class RideTimeJobTests
             new("2", "Space Mountain", 30, 15, null, true, null)
         };
 
-        // Act
         await job.IterateDiff(previous, current);
 
-        // Assert
-        await notifications.DidNotReceive().Send(Arg.Any<Notification>());
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Never());
     }
 
-    [Fact]
+    [Test]
     public async Task IterateDiff_WithMultipleRides_ShouldOnlyNotifyDecreased()
     {
-        // Arrange
         var previous = new List<RideTime>
         {
             new("1", "Thunder Mountain", 60, 30, null, true, null),
@@ -220,21 +195,18 @@ public class RideTimeJobTests
         var current = new List<RideTime>
         {
             new("1", "Thunder Mountain", 30, 15, null, true, null), // Decreased
-            new("2", "Space Mountain", 45, 20, null, true, null), // Increased
-            new("3", "Splash Mountain", 45, 20, null, true, null)  // Same
+            new("2", "Space Mountain", 45, 20, null, true, null),   // Increased
+            new("3", "Splash Mountain", 45, 20, null, true, null)   // Same
         };
 
-        // Act
         await job.IterateDiff(previous, current);
 
-        // Assert
-        await notifications.Received(1).Send(Arg.Any<Notification>());
+        notifications.Send(Arg<Notification>.Any()).Called(Count.Once());
     }
 
-    [Fact]
-    public void LastSnapshot_ShouldRaisePropertyChanged()
+    [Test]
+    public async Task LastSnapshot_ShouldRaisePropertyChanged()
     {
-        // Arrange
         var propertyChangedRaised = false;
         job.PropertyChanged += (_, e) =>
         {
@@ -242,17 +214,14 @@ public class RideTimeJobTests
                 propertyChangedRaised = true;
         };
 
-        // Act
         job.LastSnapshot = new List<RideTime>();
 
-        // Assert
-        propertyChangedRaised.ShouldBeTrue();
+        await Assert.That(propertyChangedRaised).IsTrue();
     }
 
-    [Fact]
-    public void LastSnapshotTime_ShouldRaisePropertyChanged()
+    [Test]
+    public async Task LastSnapshotTime_ShouldRaisePropertyChanged()
     {
-        // Arrange
         var propertyChangedRaised = false;
         job.PropertyChanged += (_, e) =>
         {
@@ -260,10 +229,8 @@ public class RideTimeJobTests
                 propertyChangedRaised = true;
         };
 
-        // Act
         job.LastSnapshotTime = DateTimeOffset.UtcNow;
 
-        // Assert
-        propertyChangedRaised.ShouldBeTrue();
+        await Assert.That(propertyChangedRaised).IsTrue();
     }
 }

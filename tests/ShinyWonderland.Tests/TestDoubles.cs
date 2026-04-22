@@ -218,6 +218,11 @@ public class TestNavigator : INavigator
     public Task SwitchShell(Microsoft.Maui.Controls.Shell shell) => Task.CompletedTask;
     public Task SwitchShell<TShell>() where TShell : Microsoft.Maui.Controls.Shell => Task.CompletedTask;
 
+    public Task SetTabBadge(string route, int value) => Task.CompletedTask;
+    public Task SetTabBadge<TViewModel>(int value) => Task.CompletedTask;
+    public Task ClearTabBadge(string route) => Task.CompletedTask;
+    public Task ClearTabBadge<TViewModel>() => Task.CompletedTask;
+
     // Suppress unused-event warnings
     void RaiseEvents()
     {

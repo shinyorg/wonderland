@@ -1,23 +1,22 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ShinyVersion>4.0.1</ShinyVersion>
+        <ShinyVersion>4.1.0-beta-0093</ShinyVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5"
-                        Condition="'$(Configuration)' == 'Debug'"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageVersion Include="Sentry.Maui" Version="6.3.2"/>
+        <PackageVersion Include="Sentry.Maui" Version="6.4.1"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.4"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0010"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="4.2.1"/>
-        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="1.0.0"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0028"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="5.0.0"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="5.0.0"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
         <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>
@@ -33,8 +32,8 @@
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Redth.MauiDevFlow.Agent" Version="0.23.1"/>
-        <PackageVersion Include="coverlet.collector" Version="8.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.4.0"/>
+        <PackageVersion Include="coverlet.collector" Version="10.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.5.0"/>
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
         <PackageVersion Include="Imposter" Version="0.1.9"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>

@@ -8,7 +8,7 @@ namespace ShinyWonderland.Features.Rides.Delegates;
 public class RideTimeJob(
     ILogger<RideTimeJob> logger,
     IOptions<ParkOptions> parkOptions,
-    CoreServices services
+    ViewModelServices services
 ) : Job(logger)
 {
     public List<RideTime>? LastSnapshot

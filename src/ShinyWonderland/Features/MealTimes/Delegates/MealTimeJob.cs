@@ -13,7 +13,7 @@ public class MealTimeJob(
     AppSettings appSettings,
     IOptions<MealTimeOptions> options,
     TimeProvider timeProvider
-) : Job(logger), IEventHandler<GpsEvent>
+) : Job(logger)
 {
     protected override async Task Run(CancellationToken cancelToken)
     {
@@ -54,10 +54,5 @@ public class MealTimeJob(
 
             await mediator.Send(new MarkPassNotifiedCommand(pass.Id), cancelToken);
         }
-    }
-
-    public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
     }
 }

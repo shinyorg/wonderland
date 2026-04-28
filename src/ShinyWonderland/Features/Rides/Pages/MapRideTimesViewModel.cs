@@ -2,7 +2,7 @@ namespace ShinyWonderland.Features.Rides.Pages;
 
 
 [ShellMap<MapRideTimesPage>(registerRoute: false)]
-public partial class MapRideTimesViewModel(CoreServices services) : BaseViewModel(services)
+public partial class MapRideTimesViewModel(ViewModelServices services) : BaseViewModel(services)
 {
 
     [ObservableProperty] List<MapItem> rides;

@@ -2,7 +2,7 @@ namespace ShinyWonderland.Features.MealTimes.Pages;
 
 
 [ShellMap<MealTimePage>(registerRoute: false)]
-public partial class MealTimeViewModel(CoreServices services) : BaseViewModel(services)
+public partial class MealTimeViewModel(ViewModelServices services) : BaseViewModel(services)
 {
     [ObservableProperty] List<MealTimeHistoryRecord> history;
     [ObservableProperty] MealTimeAvailability? availability;

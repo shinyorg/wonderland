@@ -3,14 +3,14 @@ using System.Reactive.Disposables;
 namespace ShinyWonderland.Features;
 
 
-public partial class BaseViewModel(CoreServices services) : 
+public partial class BaseViewModel(ViewModelServices services) : 
     ObservableObject, 
     IPageLifecycleAware, 
     INavigationConfirmation,
     IConnectivityEventHandler,
     IDisposable
 {
-    protected CoreServices Services => services;
+    protected ViewModelServices Services => services;
     protected INavigator Navigator => services.Navigator;
     protected IDialogs Dialogs => services.Dialogs;
     protected IMediator Mediator => services.Mediator;

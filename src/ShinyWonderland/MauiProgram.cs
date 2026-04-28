@@ -19,10 +19,13 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         
-        builder.Configuration.AddJsonPlatformBundle();
+        
 #if DEBUG
+        builder.Configuration.AddJsonPlatformBundle("debug");
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
+#else
+        builder.Configuration.AddJsonPlatformBundle();
 #endif
         
         builder
@@ -43,14 +46,14 @@ public static class MauiProgram
                     .AddGeneratedOpenApiClient()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
-                    .UseSentry()
-                    .UseMaui(false),
+                    .UseSentry(),
                 false
             )
             .AddInfrastructureModules(
                 new AIModule(),
                 new MealTimesModule(),
-                new RideModule()
+                new RideModule(),
+                new ParkingModule()
             )
 #if RELEASE
             .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
@@ -62,7 +65,7 @@ public static class MauiProgram
             });
 
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
-        builder.Services.AddWonderlandLocalization();
+        builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddGeneratedServices();
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddSingleton(MediaPicker.Default);

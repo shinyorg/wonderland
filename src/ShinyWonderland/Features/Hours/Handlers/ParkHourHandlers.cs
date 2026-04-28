@@ -1,4 +1,3 @@
-using ShinyWonderland.Contracts;
 using ShinyWonderland.ThemeParksApi;
 
 namespace ShinyWonderland.Features.Hours.Handlers;

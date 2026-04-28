@@ -3,7 +3,7 @@ namespace ShinyWonderland.Features.Parking.Pages;
 
 [ShellMap<ParkingPage>(registerRoute: false)]
 public partial class ParkingViewModel(
-    CoreServices services,
+    ViewModelServices services,
     IMediaPicker mediaPicker
 ) : BaseViewModel(services)
 {

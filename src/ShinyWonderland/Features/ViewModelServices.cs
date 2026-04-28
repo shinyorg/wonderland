@@ -1,10 +1,10 @@
 using Shiny.Notifications;
 
-namespace ShinyWonderland.Services;
+namespace ShinyWonderland.Features;
 
 
 [Singleton]
-public record CoreServices(
+public record ViewModelServices(
     IMediator Mediator,
     IOptions<ParkOptions> ParkOptions,
     AppSettings AppSettings,

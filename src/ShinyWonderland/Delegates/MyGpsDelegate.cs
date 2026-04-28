@@ -4,44 +4,39 @@ using ShinyWonderland.Contracts;
 namespace ShinyWonderland.Delegates;
 
 
-public class MyGpsDelegate : GpsDelegate
+public class MyGpsDelegate(
+    AppSettings appSettings,
+    StringsLocalized strings,
+    ILogger<MyGpsDelegate> logger,
+    IOptions<ParkOptions> parkOptions,
+    IGpsManager gpsManager,
+    INotificationManager notificationManager,
+    IMediator mediator
+) : GpsDelegate(logger)
 {
-    readonly CoreServices services;
-    
-    public MyGpsDelegate(
-        ILogger<MyGpsDelegate> logger,
-        CoreServices services
-    ) : base(logger)
-    {
-        this.MinimumDistance = Distance.FromMeters(10);
-        this.MinimumTime = TimeSpan.FromSeconds(10);
-        this.services = services;
-    }
-
-    
     protected override async Task OnGpsReading(GpsReading reading)
     {
         // single reads are coming through here - this is a "bug" with Shiny.Locations
-        if (this.services.Gps.CurrentListener == null)
-            return;
+        this.MinimumDistance = Distance.FromMeters(10);
+        this.MinimumTime = TimeSpan.FromSeconds(10);
 
         try
         {
-            var within = reading.IsWithinPark(this.services.ParkOptions.Value);
+            var within = reading.IsWithinPark(parkOptions.Value);
             if (within)
             {
-                await this.services.Mediator.Publish(new GpsEvent(reading.Position));
+                await mediator.Publish(new GpsEvent(reading.Position));
             }
             else
             {
                 // shutter down
                 this.Logger.LogInformation("Outside Wonderland, shutting down GPS");
 
-                this.services.AppSettings.ParkingLocation = null;
-                await this.services.Gps.StopListener();
-                await this.services.Notifications.Send(
-                    this.services.ParkOptions.Value.Name,
-                    this.services.Localized.LeaveParkNotificationMessage
+                appSettings.ParkingLocation = null;
+                await gpsManager.StopListener();
+                await notificationManager.Send(
+                    parkOptions.Value.Name,
+                    strings.LeaveParkNotificationMessage
                 );
             }
         }

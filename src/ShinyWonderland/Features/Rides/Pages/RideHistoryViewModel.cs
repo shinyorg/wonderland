@@ -5,7 +5,7 @@ namespace ShinyWonderland.Features.Rides.Pages;
 
 [ShellMap<RideHistoryPage>]
 public partial class RideHistoryViewModel(
-    CoreServices services,
+    ViewModelServices services,
     Humanizer humanizer
 ) : BaseViewModel(services)
 {

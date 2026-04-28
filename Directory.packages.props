@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <ClientVersion>4.1.0-beta-0093</ClientVersion>
-        <MediatorVersion>6.3.0-beta-0003</MediatorVersion>
+        <MediatorVersion>6.3.0-beta-0004</MediatorVersion>
         <ShellVersion>6.0.1</ShellVersion>
     </PropertyGroup>
     <ItemGroup>

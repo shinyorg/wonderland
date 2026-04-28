@@ -1,7 +1,7 @@
 namespace ShinyWonderland.Features.AI.Pages;
 
 [ShellMap<AiLoadingPage>]
-public partial class AiLoadingViewModel(CoreServices services) : BaseViewModel(services)
+public partial class AiLoadingViewModel(ViewModelServices services) : BaseViewModel(services)
 {
     [RelayCommand]
     void Cancel() => this.Deactivate();

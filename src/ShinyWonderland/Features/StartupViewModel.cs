@@ -1,36 +1,25 @@
 namespace ShinyWonderland.Features;
 
 [ShellMap<StartupPage>(registerRoute: false)]
-public partial class StartupViewModel(
-    CoreServices services,
-    ILogger<StartupViewModel> logger
-) : ObservableObject, IPageLifecycleAware
+public partial class StartupViewModel(ViewModelServices services) : BaseViewModel(services)
 {
-
-    public async void OnAppearing()
+    public override async void OnAppearing()
     {
         try
         {
             await services.Notifications.RequestAccess();
+            await services.Navigator.NavigateTo("main", false);
 
             // GPS RequestAccess locks Shell navigation when it resolves without
             // a popup, so run it after we've already navigated away
             await this.TryGps();
-
-            await services.Navigator.NavigateTo("main", false);
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Failed to navigate to MainPage");
+            Logger.LogWarning(ex, "Failed to navigate to MainPage");
             await services.Dialogs.Alert("Startup Error", "An error occurred during startup. " + ex);
         }
     }
-
-
-    public void OnDisappearing()
-    {
-    }
-
     
     static bool gpsChecked = false;
     async Task TryGps()
@@ -55,7 +44,7 @@ public partial class StartupViewModel(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Failed to start GPS");
+            Logger.LogWarning(ex, "Failed to start GPS");
             await services.Dialogs.Alert("GPS Error", "Unable to start GPS tracking. " + ex);
         }
     }

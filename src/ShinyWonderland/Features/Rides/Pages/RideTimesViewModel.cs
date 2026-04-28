@@ -6,7 +6,7 @@ namespace ShinyWonderland.Features.Rides.Pages;
 
 [ShellMap<RideTimesPage>(registerRoute: false)]
 public partial class RideTimesViewModel(
-    CoreServices services,
+    ViewModelServices services,
     ILogger<RideTimesViewModel> logger,
     Humanizer humanizer
 ) : BaseViewModel(services),
@@ -168,7 +168,7 @@ public partial class RideTimesViewModel(
 public partial class RideTimeViewModel(
     RideTime rideTime,
     Humanizer humanizer,
-    CoreServices services
+    ViewModelServices services
 ) : ObservableObject
 {
     public string Name => rideTime.Name;

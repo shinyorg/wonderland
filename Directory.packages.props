@@ -1,13 +1,18 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ShinyVersion>4.1.0-beta-0093</ShinyVersion>
+        <ClientVersion>4.1.0-beta-0093</ClientVersion>
+        <MediatorVersion>6.3.0-beta-0003</MediatorVersion>
+        <ShellVersion>6.0.1</ShellVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.0" />
+        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.0" />
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
+        <PackageVersion Include="CommunityToolkit.Maui" Version="14.1.0"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
         <PackageVersion Include="Sentry.Maui" Version="6.4.1"/>
     </ItemGroup>
@@ -15,20 +20,20 @@
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.4"/>
         <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0028"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="5.0.0"/>
-        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="5.0.0"/>
-        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.2.1"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.2.1"/>
-        <PackageVersion Include="Shiny.Locations" Version="$(ShinyVersion)"/>
-        <PackageVersion Include="Shiny.Jobs" Version="$(ShinyVersion)"/>
-        <PackageVersion Include="Shiny.Notifications" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="$(ShellVersion)"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="$(ShellVersion)"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="$(MediatorVersion)"/>
+        <PackageVersion Include="Shiny.Locations" Version="$(ClientVersion)"/>
+        <PackageVersion Include="Shiny.Jobs" Version="$(ClientVersion)"/>
+        <PackageVersion Include="Shiny.Notifications" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="3.2.0"/>
         <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="3.2.0"/>
         <PackageVersion Include="Shiny.Reflector" Version="1.7.2"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ShinyVersion)"/>
-        <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ShinyVersion)"/>
+        <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>
+        <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ClientVersion)"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Redth.MauiDevFlow.Agent" Version="0.23.1"/>

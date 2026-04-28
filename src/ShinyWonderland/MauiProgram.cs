@@ -1,8 +1,10 @@
 ﻿#if PLATFORM
-#if DEBUG
-using MauiDevFlow.Agent;
-#endif
+using System.ClientModel;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Media;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
 
@@ -20,23 +22,24 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
-        builder.AddMauiDevFlowAgent();
 #endif
         
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseShiny()
             .UseShinyControls()
             .UseShinyShell(x => x
                 .AddGeneratedMaps()
                 .UseUxDiversDialogs()
+                .AddAiTools()
             )
             .AddShinyMediator(
                 x => x
                     .AddMediatorRegistry()
+                    .AddGeneratedAITools()
                     .AddGeneratedOpenApiClient()
-                    .AddThrottleEventMiddleware()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
                     .UseSentry()
@@ -44,13 +47,7 @@ public static class MauiProgram
                 false
             )
 #if RELEASE
-            .UseSentry(opts =>
-            {
-                opts.Dsn = builder.Configuration["SentryDsn"]!;
-                // DiagnosticListener.AllListeners.Subscribe(
-                //     x => x.Subscribe()
-                // );
-            })
+            .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
 #endif
             .ConfigureFonts(fonts =>
             {
@@ -66,7 +63,25 @@ public static class MauiProgram
         builder.Services.AddShinyService<AppSettings>();
 
         builder.Services.AddSingleton(MediaPicker.Default);
+        builder.Services.AddSingleton(TextToSpeech.Default);
+        builder.Services.AddSingleton(SpeechToText.Default);
         builder.Services.AddSingleton(TimeProvider.System);
+
+        builder.Services.AddChatClient(sp =>
+        {
+            var config = sp.GetRequiredService<IConfiguration>();
+            var apiKey = config["GitHubCopilot:ApiKey"] ?? "";
+            var model = config["GitHubCopilot:Model"] ?? "gpt-4o";
+
+            var client = new OpenAIClient(
+                new ApiKeyCredential(apiKey),
+                new OpenAIClientOptions
+                {
+                    Endpoint = new Uri("https://api.githubcopilot.com")
+                }
+            );
+            return client.GetChatClient(model).AsIChatClient();
+        });
 
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();

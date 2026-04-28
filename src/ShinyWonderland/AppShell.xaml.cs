@@ -1,15 +1,23 @@
+using CommunityToolkit.Mvvm.Input;
+
 namespace ShinyWonderland;
 
 
 public partial class AppShell : ShinyShell
 {
-    public AppShell(StringsLocalized localize)
+    readonly IMediator mediator;
+
+    public AppShell(StringsLocalized localize, IMediator mediator)
     {
         this.Localize = localize;
+        this.mediator = mediator;
         this.BindingContext = this;
         this.InitializeComponent();
     }
-    
-    
+
+
     public StringsLocalized Localize { get; }
+
+    [RelayCommand]
+    Task AskAI() => this.mediator.Send(new Tools.AskAI());
 }

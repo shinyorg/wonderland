@@ -7,6 +7,12 @@
                    x:Class="ShinyWonderland.AppShell"
                    x:DataType="local:AppShell">
 
+    <Shell.ToolbarItems>
+        <ToolbarItem Text="AI"
+                     AutomationId="AskAIToolbarButton"
+                     Command="{Binding AskAICommand}" />
+    </Shell.ToolbarItems>
+
     <ShellContent ContentTemplate="{DataTemplate local:StartupPage}" 
                   Route="startup"/>
 

@@ -13,7 +13,8 @@ public record CoreServices(
     TimeProvider TimeProvider,
     IGpsManager Gps,
     StringsLocalized Localized,
-    INotificationManager Notifications
+    INotificationManager Notifications,
+    ILoggerFactory LoggerFactory
 )
 {
     public async Task<(bool IsWithinPark, Position? Position)> TrySetParking(CancellationToken cancellationToken)

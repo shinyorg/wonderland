@@ -16,64 +16,81 @@ public partial class AIHandler(
 {
     readonly List<ChatMessage> history = [
         new(
-            ChatRole.System, 
+            ChatRole.System,
             "You are a helpful theme park assistant. Use the available tools to answer questions about rides, wait times, meals, and park hours."
-        ), 
+        ),
         // new(
-        //     ChatRole.System, 
+        //     ChatRole.System,
         //     shellTools.Prompt
         // )
     ];
 
     public async Task Handle(AskAI command, IMediatorContext context, CancellationToken cancellationToken)
     {
-        var granted = await speechToText.RequestPermissions(cancellationToken);
-        if (!granted)
+        if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+        {
+            await textToSpeech.SpeakAsync("You are not connected to the internet.", cancelToken: cancellationToken);
             return;
+        }
 
-        var tcs = new TaskCompletionSource<string?>();
-
-        void OnCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
-            => tcs.TrySetResult(e.RecognitionResult.Text);
-
-        speechToText.RecognitionResultCompleted += OnCompleted;
         try
         {
-            await speechToText.StartListenAsync(new CommunityToolkit.Maui.Media.SpeechToTextOptions
-            {
-                Culture = System.Globalization.CultureInfo.CurrentCulture,
-                ShouldReportPartialResults = false
-            }, cancellationToken);
+            await textToSpeech.SpeakAsync("What would you like to know?", cancelToken: cancellationToken);
 
-            using var reg = cancellationToken.Register(() => tcs.TrySetCanceled());
-            var userText = await tcs.Task;
-
-            await speechToText.StopListenAsync(cancellationToken);
-
-            if (string.IsNullOrWhiteSpace(userText))
+            var granted = await speechToText.RequestPermissions(cancellationToken);
+            if (!granted)
                 return;
 
-            history.Add(new(ChatRole.User, userText));
-            var tools = aitools.ToList();
-            
-            // we don't currently have any routing for AI, this is here for the future
-            // tools.AddRange(shellTools.Tools);
-            
-            var chatOptions = new ChatOptions
+            var tcs = new TaskCompletionSource<string?>();
+
+            void OnCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
+                => tcs.TrySetResult(e.RecognitionResult.Text);
+
+            speechToText.RecognitionResultCompleted += OnCompleted;
+            try
             {
-                Tools = tools
-            };
+                await speechToText.StartListenAsync(new CommunityToolkit.Maui.Media.SpeechToTextOptions
+                {
+                    Culture = System.Globalization.CultureInfo.CurrentCulture,
+                    ShouldReportPartialResults = false
+                }, cancellationToken);
 
-            var response = await chatClient.GetResponseAsync(history, chatOptions, cancellationToken);
-            history.AddRange(response.Messages);
+                using var reg = cancellationToken.Register(() => tcs.TrySetCanceled());
+                var userText = await tcs.Task;
 
-            var assistantText = response.Text;
-            if (!string.IsNullOrWhiteSpace(assistantText))
-                await textToSpeech.SpeakAsync(assistantText, cancelToken: cancellationToken);
+                await speechToText.StopListenAsync(cancellationToken);
+
+                if (string.IsNullOrWhiteSpace(userText))
+                    return;
+
+                history.Add(new(ChatRole.User, userText));
+                var tools = aitools.ToList();
+                // tools.AddRange(shellTools.Tools);
+
+                var chatOptions = new ChatOptions
+                {
+                    Tools = tools
+                };
+
+                var response = await chatClient.GetResponseAsync(history, chatOptions, cancellationToken);
+                history.AddRange(response.Messages);
+
+                var assistantText = response.Text;
+                if (!string.IsNullOrWhiteSpace(assistantText))
+                    await textToSpeech.SpeakAsync(assistantText, cancelToken: cancellationToken);
+            }
+            finally
+            {
+                speechToText.RecognitionResultCompleted -= OnCompleted;
+            }
         }
-        finally
+        catch (OperationCanceledException)
         {
-            speechToText.RecognitionResultCompleted -= OnCompleted;
+            // user cancelled — nothing to do
+        }
+        catch
+        {
+            await textToSpeech.SpeakAsync("oh oh - something went wrong");
         }
     }
 }

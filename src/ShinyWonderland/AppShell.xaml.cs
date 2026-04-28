@@ -1,5 +1,3 @@
-using CommunityToolkit.Mvvm.Input;
-
 namespace ShinyWonderland;
 
 
@@ -19,5 +17,5 @@ public partial class AppShell : ShinyShell
     public StringsLocalized Localize { get; }
 
     [RelayCommand]
-    Task AskAI() => this.mediator.Send(new Tools.AskAI());
+    Task AskAI() => this.mediator.Send(new AskAI());
 }

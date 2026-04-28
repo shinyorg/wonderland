@@ -6,6 +6,7 @@ public class MapRideTimesViewModelTests
 {
     readonly TestMediator mediator;
     readonly IOptions<ParkOptions> parkOptions;
+    readonly CoreServices services;
     readonly MapRideTimesViewModel viewModel;
 
     public MapRideTimesViewModelTests()
@@ -23,7 +24,20 @@ public class MapRideTimesViewModelTests
         };
         parkOptions = Options.Create(options);
 
-        viewModel = new MapRideTimesViewModel(mediator, parkOptions);
+        services = new CoreServices(
+            mediator,
+            parkOptions,
+            new AppSettings(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
+            new FakeTimeProvider(DateTimeOffset.UtcNow),
+            new IGpsManagerImposter().Instance(),
+            TestLocalization.Create(),
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
+        );
+
+        viewModel = new MapRideTimesViewModel(services);
     }
 
     [Test]

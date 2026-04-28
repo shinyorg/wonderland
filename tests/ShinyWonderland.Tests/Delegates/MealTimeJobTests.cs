@@ -1,6 +1,6 @@
 using Shiny.Notifications;
 using ShinyWonderland.Contracts;
-using ShinyWonderland.Handlers;
+using ShinyWonderland.Features.MealTimes.Handlers;
 
 namespace ShinyWonderland.Tests.Delegates;
 

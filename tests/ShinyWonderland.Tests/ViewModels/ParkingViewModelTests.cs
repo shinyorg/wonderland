@@ -45,13 +45,13 @@ public class ParkingViewModelTests
             new FakeTimeProvider(DateTimeOffset.UtcNow),
             new IGpsManagerImposter().Instance(),
             localize,
-            new INotificationManagerImposter().Instance()
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
         );
 
         viewModel = new ParkingViewModel(
             services,
-            new IMediaPickerImposter().Instance(),
-            new ILoggerImposter<ParkingViewModel>().Instance()
+            new IMediaPickerImposter().Instance()
         );
     }
 

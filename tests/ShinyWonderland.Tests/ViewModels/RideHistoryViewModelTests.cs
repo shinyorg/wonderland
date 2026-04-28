@@ -6,6 +6,7 @@ public class RideHistoryViewModelTests
     readonly FakeTimeProvider timeProvider;
     readonly Humanizer humanizer;
     readonly StringsLocalized localize;
+    readonly CoreServices services;
     readonly RideHistoryViewModel viewModel;
 
     public RideHistoryViewModelTests()
@@ -31,7 +32,27 @@ public class RideHistoryViewModelTests
         timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
         humanizer = new Humanizer(timeProvider, localize);
 
-        viewModel = new RideHistoryViewModel(mediator, humanizer, localize);
+        services = new CoreServices(
+            mediator,
+            Options.Create(new ParkOptions
+            {
+                Name = "Wonderland",
+                EntityId = "test-park",
+                Latitude = 33.8121,
+                Longitude = -117.9190,
+                NotificationDistanceMeters = 1000
+            }),
+            new AppSettings(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
+            timeProvider,
+            new IGpsManagerImposter().Instance(),
+            localize,
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
+        );
+
+        viewModel = new RideHistoryViewModel(services, humanizer);
     }
 
     [Test]

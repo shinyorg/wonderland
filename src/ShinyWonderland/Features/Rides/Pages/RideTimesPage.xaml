@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ShinyWonderland.Features.Rides.Pages"
+             xmlns:controls="clr-namespace:ShinyWonderland.Controls"
+             x:DataType="local:RideTimesViewModel"
+             x:Class="ShinyWonderland.Features.Rides.Pages.RideTimesPage"
+             AutomationId="RideTimesPage"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding Localize.History}"
+                     AutomationId="HistoryToolbarButton"
+                     Command="{Binding GoToHistoryCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto, Auto, *"
+          RowSpacing="0"
+          Padding="0">
+        <Label Text="{Binding Localize.YouAreOffline}"
+               AutomationId="OfflineBanner"
+               IsVisible="{Binding IsNotConnected}"
+               VerticalTextAlignment="Center"
+               BackgroundColor="{StaticResource Yellow100Accent}"
+               TextColor="{StaticResource Gray900}"
+               FontAttributes="Bold"
+               Padding="16,10"
+               Margin="0"
+               Grid.Row="0" />
+
+        <Label AutomationId="DataTimestampLabel"
+               BackgroundColor="{StaticResource Primary}"
+               TextColor="{StaticResource White}"
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               Padding="16,8"
+               Margin="0"
+               Grid.Row="1">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="{Binding Localize.DataFrom}" />
+                    <Span Text=" " />
+                    <Span Text="{Binding DataTimestamp}" />
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+        <RefreshView Command="{Binding LoadCommand}"
+                     AutomationId="RideTimesRefreshView"
+                     IsRefreshing="{Binding IsBusy}"
+                     Grid.Row="2">
+
+            <CollectionView ItemsSource="{Binding Rides}"
+                            AutomationId="RidesCollectionView"
+                            Margin="0,8,0,0">
+                <CollectionView.EmptyView>
+                    <controls:NoItemsView />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:RideTimeViewModel">
+                        <controls:ListItemView>
+                            <Grid RowDefinitions="Auto, Auto, Auto"
+                                  ColumnDefinitions="2*, 2*, 1*"
+                                  Padding="16">
+
+                                <Label Text="{Binding Name}"
+                                       FontSize="Large"
+                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
+                                       FontAttributes="Bold"
+                                       Grid.Row="0"
+                                       Grid.ColumnSpan="3" />
+
+                                <Label IsVisible="{Binding HasWaitTime}"
+                                       TextColor="{StaticResource Blue100Accent}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Start"
+                                       Grid.Row="1"
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding WaitTimeMinutes}" />
+                                            <Span Text=" " />
+                                            <Span Text="{Binding Localize.Mins}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label IsVisible="{Binding HasPaidWaitTime}"
+                                       TextColor="{StaticResource Blue100Accent}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Start"
+                                       Grid.Row="1"
+                                       Grid.Column="1">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Localize.Paid}" />
+                                            <Span Text=": " />
+                                            <Span Text="{Binding PaidWaitTimeMinutes}" />
+                                            <Span Text=" " />
+                                            <Span Text="{Binding Localize.Mins}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label HorizontalTextAlignment="Start"
+                                       VerticalTextAlignment="Start"
+                                       TextColor="{StaticResource Blue100Accent}"
+                                       IsVisible="{Binding HasLastRide}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       Grid.ColumnSpan="2">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Localize.LastRide}" />
+                                            <Span Text=": " />
+                                            <Span Text="{Binding LastRidden}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <!--IsVisible="{Binding IsOpen}"-->
+                                <Label Text="{Binding DistanceText}"
+                                       TextColor="{StaticResource Blue100Accent}"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Start"
+                                       Grid.Row="3"
+                                       Grid.Column="0" />
+
+                                <Button Text="{Binding Localize.AddRide}"
+                                        Command="{Binding AddRideCommand}"
+                                        HorizontalOptions="Center"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="3" />
+
+                                <Border IsVisible="{Binding IsClosed}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 4"
+                                        BackgroundColor="{StaticResource Gray950}"
+                                        Padding="8,4"
+                                        HorizontalOptions="Center"
+                                        Grid.Row="1"
+                                        Grid.Column="0">
+                                    <Label Text="{Binding Localize.Closed}"
+                                           TextColor="White"
+                                           FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </controls:ListItemView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

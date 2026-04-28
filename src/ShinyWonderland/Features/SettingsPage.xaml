@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shinyWonderland="clr-namespace:ShinyWonderland.Features"
+             xmlns:svc="clr-namespace:ShinyWonderland.Services"
+             xmlns:shiny="http://shiny.net/maui/controls"
+             x:DataType="shinyWonderland:SettingsViewModel"
+             x:Class="ShinyWonderland.Features.SettingsPage"
+             AutomationId="SettingsPage"
+             Title="Settings">
+
+    <shiny:TableView AutomationId="SettingsTableView" CellAccentColor="{StaticResource Primary}">
+        <shiny:TableRoot>
+            <shiny:TableSection Title="Sort Options"
+                             shiny:RadioCell.SelectedValue="{Binding Ordering, Mode=TwoWay}">
+                <shiny:RadioCell AutomationId="SortByName" Title="Name" Value="{x:Static svc:RideOrder.Name}" />
+                <shiny:RadioCell AutomationId="SortByWaitTime" Title="Wait Time" Value="{x:Static svc:RideOrder.WaitTime}" />
+                <shiny:RadioCell AutomationId="SortByPaidWaitTime" Title="Paid Wait Time" Value="{x:Static svc:RideOrder.PaidWaitTime}" />
+                <shiny:RadioCell AutomationId="SortByDistance" Title="Distance" Value="{x:Static svc:RideOrder.Distance}" />
+            </shiny:TableSection>
+
+            <shiny:TableSection Title="Notifications"
+                             FooterText="Control which notifications you receive from the app">
+                <shiny:SwitchCell AutomationId="RideTimeNotifications" Title="Ride Time Notifications" On="{Binding EnableTimeRideNotifications, Mode=TwoWay}" />
+                <shiny:SwitchCell AutomationId="GeofenceNotifications" Title="Park Arrival Notification" On="{Binding EnableGeofenceNotifications, Mode=TwoWay}" />
+                <shiny:SwitchCell AutomationId="DrinkNotifications" Title="Drink Notification" On="{Binding EnableDrinkNotifications, Mode=TwoWay}" />
+                <shiny:SwitchCell AutomationId="MealNotifications" Title="Meal Notification" On="{Binding EnableMealNotifications, Mode=TwoWay}" />
+            </shiny:TableSection>
+
+            <shiny:TableSection Title="Display"
+                             FooterText="Filter which rides are shown in the list">
+                <shiny:SwitchCell AutomationId="ShowTimedOnly" Title="Show Timed Rides Only" On="{Binding ShowTimedOnly, Mode=TwoWay}" />
+                <shiny:SwitchCell AutomationId="ShowOpenOnly" Title="Show Open Only" On="{Binding ShowOpenOnly, Mode=TwoWay}" />
+            </shiny:TableSection>
+
+            <shiny:TableSection Title="About">
+                <shiny:LabelCell AutomationId="VersionLabel" Title="Version" ValueText="{Binding AppVersion}" />
+            </shiny:TableSection>
+        </shiny:TableRoot>
+    </shiny:TableView>
+</ContentPage>

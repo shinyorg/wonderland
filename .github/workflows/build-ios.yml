@@ -20,7 +20,7 @@ concurrency:
 env:
   XCODE_VERSION: 26.3.0
   DOTNET_TFM: 'net10.0'
-  DOTNET_VERSION: '10.0.202'
+  DOTNET_VERSION: '10.0.203'
   APP_PROJECT: './src/ShinyWonderland/ShinyWonderland.csproj'
   APP_VERSION: '1.0'
   APPSETTINGS_JSON_FILE: './src/ShinyWonderland/appsettings.json'
@@ -34,7 +34,7 @@ jobs:
     
     steps:
     - name: '✅ Checkout'
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v5

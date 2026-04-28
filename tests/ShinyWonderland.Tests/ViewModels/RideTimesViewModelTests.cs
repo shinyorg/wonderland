@@ -48,7 +48,8 @@ public class RideTimesViewModelTests
             timeProvider,
             new IGpsManagerImposter().Instance(),
             localize,
-            new INotificationManagerImposter().Instance()
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
         );
     }
 
@@ -88,14 +89,14 @@ public class RideTimesViewModelTests
     }
 
     [Test]
-    public async Task Handle_ConnectivityChanged_ShouldUpdateIsConnected()
+    public async Task Handle_ConnectivityChanged_ShouldUpdateInternetAvailability()
     {
         var vm = CreateViewModel();
         var context = new TestMediatorContext();
 
         await vm.Handle(new ConnectivityChanged(true), context, CancellationToken.None);
 
-        await Assert.That(vm.IsConnected).IsTrue();
+        await Assert.That(vm.IsInternetAvailable).IsTrue();
     }
 
     [Test]
@@ -146,7 +147,8 @@ public class RideTimeViewModelTests
             timeProvider,
             new IGpsManagerImposter().Instance(),
             localize,
-            new INotificationManagerImposter().Instance()
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
         );
     }
 

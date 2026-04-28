@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using OpenAI;
 using Shiny.Jobs;
 using ShinyWonderland.Delegates;
+using ShinyWonderland.Features.Rides;
 
 namespace ShinyWonderland;
 
@@ -46,6 +47,11 @@ public static class MauiProgram
                     .UseMaui(false),
                 false
             )
+            .AddInfrastructureModules(
+                new AIModule(),
+                new MealTimesModule(),
+                new RideModule()
+            )
 #if RELEASE
             .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
 #endif
@@ -56,46 +62,17 @@ public static class MauiProgram
             });
 
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
-        builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealPass"));
         builder.Services.AddWonderlandLocalization();
-        
         builder.Services.AddGeneratedServices();
         builder.Services.AddShinyService<AppSettings>();
-
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TextToSpeech.Default);
         builder.Services.AddSingleton(SpeechToText.Default);
         builder.Services.AddSingleton(TimeProvider.System);
-
-        builder.Services.AddChatClient(sp =>
-        {
-            var config = sp.GetRequiredService<IConfiguration>();
-            var apiKey = config["GitHubCopilot:ApiKey"] ?? "";
-            var model = config["GitHubCopilot:Model"] ?? "gpt-4o";
-
-            var client = new OpenAIClient(
-                new ApiKeyCredential(apiKey),
-                new OpenAIClientOptions
-                {
-                    Endpoint = new Uri("https://api.githubcopilot.com")
-                }
-            );
-            return client.GetChatClient(model).AsIChatClient();
-        });
-
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
-        builder.Services.AddGeofencing<MyGeofenceDelegate>();
         builder.Services.AddGps<MyGpsDelegate>();
-        builder.Services.AddJob(
-            typeof(RideTimeJob),
-            requiredNetwork: InternetAccess.Any,
-            runInForeground: true
-        );
-        builder.Services.AddJob(
-            typeof(MealTimeJob),
-            runInForeground: true
-        );
+        
         var app = builder.Build();
 
         return app;

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ShinyWonderland.Features.StartupPage"
+             AutomationId="StartupPage"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid BackgroundColor="{StaticResource Primary}">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource Tertiary}" Offset="0.0" />
+                <GradientStop Color="{StaticResource Primary}" Offset="0.5" />
+                <GradientStop Color="#7C3AED" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <VerticalStackLayout VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="24">
+
+            <Border StrokeThickness="0"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Center"
+                    HeightRequest="160"
+                    WidthRequest="160">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="80" />
+                </Border.StrokeShape>
+                <Image Source="shiny.png"
+                       HeightRequest="160"
+                       WidthRequest="160"
+                       Aspect="AspectFit" />
+            </Border>
+
+            <Label Text="Wonderland"
+                   AutomationId="StartupTitle"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   FontFamily="OpenSansSemibold" />
+
+            <Label Text="Your magical theme park companion"
+                   FontSize="14"
+                   TextColor="#C4B5FD"
+                   HorizontalOptions="Center"
+                   Opacity="0.9" />
+
+            <ActivityIndicator IsRunning="True"
+                               AutomationId="StartupSpinner"
+                               Color="White"
+                               HeightRequest="36"
+                               WidthRequest="36"
+                               HorizontalOptions="Center"
+                               Margin="0,16,0,0" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -1,4 +1,4 @@
-using ShinyWonderland.Handlers;
+using ShinyWonderland.Features.MealTimes.Handlers;
 
 namespace ShinyWonderland.Tests.ViewModels;
 
@@ -6,25 +6,37 @@ public class MealTimeViewModelTests
 {
     readonly TestMediator mediator;
     readonly StringsLocalized localize;
-    readonly IOptions<MealTimeOptions> options;
-    readonly FakeTimeProvider timeProvider;
+    readonly CoreServices services;
     readonly MealTimeViewModel viewModel;
 
     public MealTimeViewModelTests()
     {
         mediator = new TestMediator();
         localize = TestLocalization.Create();
-        options = Options.Create(new MealTimeOptions
-        {
-            Enabled = true,
-            DrinkTimeWait = TimeSpan.FromMinutes(15),
-            FoodTimeWait = TimeSpan.FromMinutes(90)
-        });
-        timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+        var timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
+        services = new CoreServices(
+            mediator,
+            Options.Create(new ParkOptions
+            {
+                Name = "Wonderland",
+                EntityId = "test-park",
+                Latitude = 33.8121,
+                Longitude = -117.9190,
+                NotificationDistanceMeters = 1000
+            }),
+            new AppSettings(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
+            timeProvider,
+            new IGpsManagerImposter().Instance(),
+            localize,
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
+        );
 
         SetupDefaultAvailability();
 
-        viewModel = new MealTimeViewModel(mediator, options, timeProvider, localize);
+        viewModel = new MealTimeViewModel(services);
     }
 
     void SetupDefaultAvailability()

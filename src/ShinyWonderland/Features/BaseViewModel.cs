@@ -10,15 +10,17 @@ public partial class BaseViewModel(CoreServices services) :
     IConnectivityEventHandler,
     IDisposable
 {
+    protected CoreServices Services => services;
     protected INavigator Navigator => services.Navigator;
     protected IDialogs Dialogs => services.Dialogs;
     protected IMediator Mediator => services.Mediator;
+    public StringsLocalized Localize => services.Localized;
     
     [ObservableProperty]
     public partial bool IsBusy { get; protected set; }
     
     [ObservableProperty]
-    public partial string? Title { get; protected set; }
+    public virtual partial string? Title { get; protected set; }
     
     [ObservableProperty]
     public partial bool IsInternetAvailable { get; private set; }

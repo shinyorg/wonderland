@@ -6,7 +6,7 @@ public class MyGeofenceDelegateTests
 {
     readonly AppSettings appSettings;
     readonly INotificationManagerImposter notifications;
-    readonly MyGeofenceDelegate geofenceDelegate;
+    readonly ParkingReminderGeofenceDelegate geofenceDelegate;
 
     public MyGeofenceDelegateTests()
     {
@@ -29,8 +29,8 @@ public class MyGeofenceDelegateTests
 
         notifications = new INotificationManagerImposter();
 
-        geofenceDelegate = new MyGeofenceDelegate(
-            new ILoggerImposter<MyGeofenceDelegate>().Instance(),
+        geofenceDelegate = new ParkingReminderGeofenceDelegate(
+            new ILoggerImposter<ParkingReminderGeofenceDelegate>().Instance(),
             appSettings,
             localized,
             parkOptions,

@@ -38,7 +38,8 @@ public class RideTimeJobTests
             timeProvider,
             new IGpsManagerImposter().Instance(),
             localized,
-            notifications.Instance()
+            notifications.Instance(),
+            NullLoggerFactory.Instance
         );
 
         job = new RideTimeJob(

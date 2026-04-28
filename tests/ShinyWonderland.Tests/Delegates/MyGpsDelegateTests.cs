@@ -31,7 +31,8 @@ public class MyGpsDelegateTests
             new FakeTimeProvider(DateTimeOffset.UtcNow),
             new IGpsManagerImposter().Instance(),
             localized,
-            new INotificationManagerImposter().Instance()
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
         );
 
         gpsDelegate = new MyGpsDelegate(

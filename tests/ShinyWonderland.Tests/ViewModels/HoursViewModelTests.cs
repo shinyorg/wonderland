@@ -7,6 +7,7 @@ public class HoursViewModelTests
     readonly TestMediator mediator;
     readonly FakeTimeProvider timeProvider;
     readonly StringsLocalized localize;
+    readonly CoreServices services;
     readonly HoursViewModel viewModel;
 
     public HoursViewModelTests()
@@ -18,7 +19,29 @@ public class HoursViewModelTests
             ["Today"] = "Today"
         });
 
-        viewModel = new HoursViewModel(mediator, timeProvider, localize);
+        var parkOptions = Options.Create(new ParkOptions
+        {
+            Name = "Wonderland",
+            EntityId = "test-park",
+            Latitude = 33.8121,
+            Longitude = -117.9190,
+            NotificationDistanceMeters = 1000
+        });
+
+        services = new CoreServices(
+            mediator,
+            parkOptions,
+            new AppSettings(),
+            new TestNavigator(),
+            new IDialogsImposter().Instance(),
+            timeProvider,
+            new IGpsManagerImposter().Instance(),
+            localize,
+            new INotificationManagerImposter().Instance(),
+            NullLoggerFactory.Instance
+        );
+
+        viewModel = new HoursViewModel(services);
     }
 
     [Test]

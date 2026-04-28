@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:shinyWonderland="clr-namespace:ShinyWonderland.Features.AI.Pages"
+             x:Class="ShinyWonderland.Features.AI.Pages.AiLoadingPage"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False"
+             x:DataType="shinyWonderland:AiLoadingViewModel"
+             BackgroundColor="Transparent">
+
+    <Grid>
+        <!-- Full-screen gradient backdrop -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0.3,1">
+                <GradientStop Color="#0D001A" Offset="0.0" />
+                <GradientStop Color="#1A0533" Offset="0.3" />
+                <GradientStop Color="{StaticResource Tertiary}" Offset="0.7" />
+                <GradientStop Color="{StaticResource Primary}" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Decorative background glow -->
+        <BoxView Color="#7C3AED"
+                 Opacity="0.15"
+                 WidthRequest="300"
+                 HeightRequest="300"
+                 CornerRadius="150"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center"
+                 Margin="0,0,0,80" />
+
+        <!-- Main content -->
+        <VerticalStackLayout Spacing="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Padding="40,0">
+
+            <!-- Pulsing orb container -->
+            <Grid HorizontalOptions="Center"
+                  HeightRequest="160"
+                  WidthRequest="160"
+                  Margin="0,0,0,12">
+
+                <!-- Outer pulse ring -->
+                <Border x:Name="OuterRing"
+                        StrokeThickness="1.5"
+                        Stroke="#33FFFFFF"
+                        BackgroundColor="Transparent"
+                        HeightRequest="140"
+                        WidthRequest="140"
+                        Opacity="0.4"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="70" />
+                    </Border.StrokeShape>
+                </Border>
+
+                <!-- Middle pulse ring -->
+                <Border x:Name="MiddleRing"
+                        StrokeThickness="1"
+                        Stroke="#44FFFFFF"
+                        BackgroundColor="Transparent"
+                        HeightRequest="110"
+                        WidthRequest="110"
+                        Opacity="0.5"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="55" />
+                    </Border.StrokeShape>
+                </Border>
+
+                <!-- Inner glowing orb -->
+                <Border x:Name="InnerOrb"
+                        StrokeThickness="0"
+                        HeightRequest="80"
+                        WidthRequest="80"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="40" />
+                    </Border.StrokeShape>
+                    <Border.Background>
+                        <RadialGradientBrush Center="0.5,0.5" Radius="0.5">
+                            <GradientStop Color="#A78BFA" Offset="0.0" />
+                            <GradientStop Color="{StaticResource Primary}" Offset="0.5" />
+                            <GradientStop Color="{StaticResource Tertiary}" Offset="1.0" />
+                        </RadialGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#7C3AED"
+                                Offset="0,0"
+                                Radius="30"
+                                Opacity="0.6" />
+                    </Border.Shadow>
+
+                    <!-- Microphone-style indicator -->
+                    <ActivityIndicator IsRunning="True"
+                                       Color="White"
+                                       HeightRequest="36"
+                                       WidthRequest="36"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <!-- Title -->
+            <Label Text="AI Assistant"
+                   FontSize="28"
+                   FontFamily="OpenSansSemibold"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8" />
+
+            <!-- Status label -->
+            <Label x:Name="StatusLabel"
+                   Text="Listening..."
+                   FontSize="16"
+                   FontFamily="OpenSansRegular"
+                   TextColor="#C4B5FD"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,48" />
+
+            <!-- Animated dots -->
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="8"
+                                   Margin="0,0,0,48">
+                <BoxView x:Name="Dot1"
+                         Color="#A78BFA"
+                         WidthRequest="8"
+                         HeightRequest="8"
+                         CornerRadius="4"
+                         Opacity="0.3" />
+                <BoxView x:Name="Dot2"
+                         Color="#A78BFA"
+                         WidthRequest="8"
+                         HeightRequest="8"
+                         CornerRadius="4"
+                         Opacity="0.3" />
+                <BoxView x:Name="Dot3"
+                         Color="#A78BFA"
+                         WidthRequest="8"
+                         HeightRequest="8"
+                         CornerRadius="4"
+                         Opacity="0.3" />
+            </HorizontalStackLayout>
+
+            <!-- Cancel button -->
+            <Border StrokeThickness="1.5"
+                    Stroke="#33FFFFFF"
+                    BackgroundColor="#18FFFFFF"
+                    HeightRequest="50"
+                    WidthRequest="180"
+                    HorizontalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25" />
+                </Border.StrokeShape>
+                <Button Text="Cancel"
+                        BackgroundColor="Transparent"
+                        TextColor="#C4B5FD"
+                        FontFamily="OpenSansSemibold"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        Command="{Binding Cancel}" />
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

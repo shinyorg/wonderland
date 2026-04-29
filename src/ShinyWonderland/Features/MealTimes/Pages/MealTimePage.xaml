@@ -7,72 +7,264 @@
              x:Class="ShinyWonderland.Features.MealTimes.Pages.MealTimePage"
              AutomationId="MealTimePage"
              Title="{Binding Localize.Title}">
-    <Grid RowDefinitions="Auto, Auto, *" Padding="10">
 
-        <!-- Drink Section -->
-        <VerticalStackLayout Grid.Row="0" Spacing="5" Padding="5">
-            <Label Text="Drink Passes" FontAttributes="Bold" HorizontalOptions="Center" />
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Button Text="-"
-                        AutomationId="RemoveDrinkPassButton"
-                        Command="{Binding RemoveDrinkPassCommand}"
-                        WidthRequest="44" />
-                <Label Text="{Binding DrinkPassCount}"
-                       VerticalOptions="Center"
-                       AutomationId="DrinkPassCountLabel"
-                       FontSize="18" />
-                <Button Text="+"
-                        AutomationId="AddDrinkPassButton"
-                        Command="{Binding AddDrinkPassCommand}"
-                        WidthRequest="44" />
-            </HorizontalStackLayout>
-            <Button Text="{Binding DrinkButtonText}"
-                    AutomationId="DrinkPassButton"
-                    Command="{Binding UseDrinkPassCommand}"
-                    IsEnabled="{Binding IsDrinkAvailable}"
-                    HorizontalOptions="Fill" />
+    <ScrollView>
+        <VerticalStackLayout Spacing="12" Padding="16,12">
+
+            <!-- ═══ Drink Pass Card ═══ -->
+            <Border StrokeThickness="0"
+                    Padding="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                            Offset="0,2" Radius="8" Opacity="1" />
+                </Border.Shadow>
+                <Grid RowDefinitions="Auto, *" Padding="0">
+                    <!-- Header -->
+                    <Border StrokeThickness="0" Padding="16,14" Grid.Row="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16,16,0,0" />
+                        </Border.StrokeShape>
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="{StaticResource MealDrink}" Offset="0.0" />
+                                <GradientStop Color="#0891B2" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#x1F964;"
+                                   FontSize="20"
+                                   VerticalOptions="Center" />
+                            <Label Text="Drink Passes"
+                                   FontSize="18"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Body -->
+                    <VerticalStackLayout Grid.Row="1" Padding="20,16" Spacing="14">
+                        <!-- Counter -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="16">
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"
+                                    HeightRequest="44" WidthRequest="44"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Button Text="-"
+                                        AutomationId="RemoveDrinkPassButton"
+                                        Command="{Binding RemoveDrinkPassCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                        FontSize="20"
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        HeightRequest="44" WidthRequest="44" />
+                            </Border>
+
+                            <Label Text="{Binding DrinkPassCount}"
+                                   AutomationId="DrinkPassCountLabel"
+                                   FontSize="32"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource MealDrink}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   WidthRequest="60"
+                                   HorizontalTextAlignment="Center" />
+
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"
+                                    HeightRequest="44" WidthRequest="44"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Button Text="+"
+                                        AutomationId="AddDrinkPassButton"
+                                        Command="{Binding AddDrinkPassCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                        FontSize="20"
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        HeightRequest="44" WidthRequest="44" />
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Use Pass button -->
+                        <Button Text="{Binding DrinkButtonText}"
+                                AutomationId="DrinkPassButton"
+                                Command="{Binding UseDrinkPassCommand}"
+                                IsEnabled="{Binding IsDrinkAvailable}"
+                                BackgroundColor="{StaticResource MealDrink}"
+                                TextColor="White"
+                                HorizontalOptions="Fill"
+                                CornerRadius="12"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="15" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ Food Pass Card ═══ -->
+            <Border StrokeThickness="0"
+                    Padding="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                            Offset="0,2" Radius="8" Opacity="1" />
+                </Border.Shadow>
+                <Grid RowDefinitions="Auto, *" Padding="0">
+                    <!-- Header -->
+                    <Border StrokeThickness="0" Padding="16,14" Grid.Row="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16,16,0,0" />
+                        </Border.StrokeShape>
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="{StaticResource MealFood}" Offset="0.0" />
+                                <GradientStop Color="#EA580C" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="&#x1F354;"
+                                   FontSize="20"
+                                   VerticalOptions="Center" />
+                            <Label Text="Food Passes"
+                                   FontSize="18"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Body -->
+                    <VerticalStackLayout Grid.Row="1" Padding="20,16" Spacing="14">
+                        <!-- Counter -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="16">
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"
+                                    HeightRequest="44" WidthRequest="44"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Button Text="-"
+                                        AutomationId="RemoveFoodPassButton"
+                                        Command="{Binding RemoveFoodPassCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                        FontSize="20"
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        HeightRequest="44" WidthRequest="44" />
+                            </Border>
+
+                            <Label Text="{Binding FoodPassCount}"
+                                   AutomationId="FoodPassCountLabel"
+                                   FontSize="32"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource MealFood}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   WidthRequest="60"
+                                   HorizontalTextAlignment="Center" />
+
+                            <Border StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"
+                                    HeightRequest="44" WidthRequest="44"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Button Text="+"
+                                        AutomationId="AddFoodPassButton"
+                                        Command="{Binding AddFoodPassCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                        FontSize="20"
+                                        FontAttributes="Bold"
+                                        Padding="0"
+                                        HeightRequest="44" WidthRequest="44" />
+                            </Border>
+                        </HorizontalStackLayout>
+
+                        <!-- Use Pass button -->
+                        <Button Text="{Binding FoodButtonText}"
+                                AutomationId="FoodPassButton"
+                                Command="{Binding UseFoodPassCommand}"
+                                IsEnabled="{Binding IsFoodAvailable}"
+                                BackgroundColor="{StaticResource MealFood}"
+                                TextColor="White"
+                                HorizontalOptions="Fill"
+                                CornerRadius="12"
+                                FontFamily="OpenSansSemibold"
+                                FontSize="15" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ═══ History Section ═══ -->
+            <Label Text="Recent Activity"
+                   FontSize="14"
+                   FontFamily="OpenSansSemibold"
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                   Margin="4,8,0,0" />
+
+            <CollectionView AutomationId="MealHistoryCollectionView"
+                            ItemsSource="{Binding History}"
+                            HeightRequest="300">
+                <CollectionView.EmptyView>
+                    <controls:NoItemsView />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="shinyWonderland:MealTimeHistoryRecord">
+                        <Border Margin="0,3"
+                                StrokeThickness="0"
+                                Padding="14,12"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <HorizontalStackLayout Spacing="12">
+                                <Border StrokeThickness="0"
+                                        HeightRequest="36" WidthRequest="36"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Type}"
+                                           FontSize="12"
+                                           FontFamily="OpenSansSemibold"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryLight}}" />
+                                </Border>
+                                <Label Text="{Binding Timestamp, StringFormat='{0:g}'}"
+                                       VerticalOptions="Center"
+                                       FontSize="13"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
-
-        <!-- Food Section -->
-        <VerticalStackLayout Grid.Row="1" Spacing="5" Padding="5">
-            <Label Text="Food Passes" FontAttributes="Bold" HorizontalOptions="Center" />
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Button Text="-"
-                        AutomationId="RemoveFoodPassButton"
-                        Command="{Binding RemoveFoodPassCommand}"
-                        WidthRequest="44" />
-                <Label Text="{Binding FoodPassCount}"
-                       VerticalOptions="Center"
-                       AutomationId="FoodPassCountLabel"
-                       FontSize="18" />
-                <Button Text="+"
-                        AutomationId="AddFoodPassButton"
-                        Command="{Binding AddFoodPassCommand}"
-                        WidthRequest="44" />
-            </HorizontalStackLayout>
-            <Button Text="{Binding FoodButtonText}"
-                    AutomationId="FoodPassButton"
-                    Command="{Binding UseFoodPassCommand}"
-                    IsEnabled="{Binding IsFoodAvailable}"
-                    HorizontalOptions="Fill" />
-        </VerticalStackLayout>
-
-        <!-- History -->
-        <CollectionView AutomationId="MealHistoryCollectionView"
-                        ItemsSource="{Binding History}"
-                        Grid.Row="2">
-            <CollectionView.EmptyView>
-                <controls:NoItemsView />
-            </CollectionView.EmptyView>
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="shinyWonderland:MealTimeHistoryRecord">
-                    <HorizontalStackLayout Padding="10" Spacing="10">
-                        <Label Text="{Binding Type}" VerticalOptions="Center" />
-                        <Label Text="{Binding Timestamp, StringFormat='{0:g}'}" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Grid>
+    </ScrollView>
 </ContentPage>

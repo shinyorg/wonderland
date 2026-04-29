@@ -1,33 +1,72 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary 
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
+    <!-- Brand -->
+    <Color x:Key="Primary">#6C3AE0</Color>
+    <Color x:Key="PrimaryDark">#5228B8</Color>
+    <Color x:Key="PrimaryLight">#A78BFA</Color>
+    <Color x:Key="Secondary">#EDE9FE</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
-    <Color x:Key="Gray100">#E1E1E1</Color>
-    <Color x:Key="Gray200">#C8C8C8</Color>
-    <Color x:Key="Gray300">#ACACAC</Color>
-    <Color x:Key="Gray400">#919191</Color>
-    <Color x:Key="Gray500">#6E6E6E</Color>
-    <Color x:Key="Gray600">#404040</Color>
-    <Color x:Key="Gray900">#212121</Color>
-    <Color x:Key="Gray950">#141414</Color>
-    <Color x:Key="Yellow100Accent">#F7B548</Color>
-    <Color x:Key="Yellow200Accent">#FFD590</Color>
-    <Color x:Key="Yellow300Accent">#FFE5B9</Color>
-    <Color x:Key="Cyan100Accent">#28C2D1</Color>
-    <Color x:Key="Cyan200Accent">#7BDDEF</Color>
-    <Color x:Key="Cyan300Accent">#C3F2F4</Color>
-    <Color x:Key="Blue100Accent">#3E8EED</Color>
-    <Color x:Key="Blue200Accent">#72ACF1</Color>
-    <Color x:Key="Blue300Accent">#A7CBF6</Color>
-    <Color x:Key="DarkRed">#8B0000</Color>
-    
+
+    <!-- Surfaces -->
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="SurfaceDark">#1E1E2E</Color>
+    <Color x:Key="CardLight">#FFFFFF</Color>
+    <Color x:Key="CardDark">#2A2A3D</Color>
+    <Color x:Key="PageLight">#F4F1FB</Color>
+    <Color x:Key="PageDark">#121220</Color>
+
+    <!-- Grays -->
+    <Color x:Key="Gray100">#F1F0F5</Color>
+    <Color x:Key="Gray200">#E2E0EA</Color>
+    <Color x:Key="Gray300">#B8B5C5</Color>
+    <Color x:Key="Gray400">#908DA0</Color>
+    <Color x:Key="Gray500">#6B687D</Color>
+    <Color x:Key="Gray600">#49475A</Color>
+    <Color x:Key="Gray900">#1E1E2E</Color>
+    <Color x:Key="Gray950">#13131F</Color>
+
+    <!-- Semantic -->
+    <Color x:Key="Success">#22C55E</Color>
+    <Color x:Key="SuccessLight">#DCFCE7</Color>
+    <Color x:Key="SuccessDark">#166534</Color>
+    <Color x:Key="Warning">#F59E0B</Color>
+    <Color x:Key="WarningLight">#FEF3C7</Color>
+    <Color x:Key="WarningDark">#92400E</Color>
+    <Color x:Key="Danger">#EF4444</Color>
+    <Color x:Key="DangerLight">#FEE2E2</Color>
+    <Color x:Key="DangerDark">#991B1B</Color>
+    <Color x:Key="Info">#3B82F6</Color>
+    <Color x:Key="InfoLight">#DBEAFE</Color>
+    <Color x:Key="InfoDark">#1E40AF</Color>
+
+    <!-- Feature Accents -->
+    <Color x:Key="RideAccent">#8B5CF6</Color>
+    <Color x:Key="WaitLow">#22C55E</Color>
+    <Color x:Key="WaitMedium">#F59E0B</Color>
+    <Color x:Key="WaitHigh">#EF4444</Color>
+    <Color x:Key="MealDrink">#06B6D4</Color>
+    <Color x:Key="MealFood">#F97316</Color>
+    <Color x:Key="ParkingAccent">#10B981</Color>
+
+    <!-- Legacy compat -->
+    <Color x:Key="Yellow100Accent">#F59E0B</Color>
+    <Color x:Key="Yellow200Accent">#FCD34D</Color>
+    <Color x:Key="Yellow300Accent">#FDE68A</Color>
+    <Color x:Key="Cyan100Accent">#06B6D4</Color>
+    <Color x:Key="Cyan200Accent">#67E8F9</Color>
+    <Color x:Key="Cyan300Accent">#CFFAFE</Color>
+    <Color x:Key="Blue100Accent">#3B82F6</Color>
+    <Color x:Key="Blue200Accent">#93C5FD</Color>
+    <Color x:Key="Blue300Accent">#BFDBFE</Color>
+    <Color x:Key="DarkRed">#991B1B</Color>
+
+    <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

@@ -6,54 +6,88 @@
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid BackgroundColor="{StaticResource Primary}">
+    <Grid>
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="{StaticResource Tertiary}" Offset="0.0" />
-                <GradientStop Color="{StaticResource Primary}" Offset="0.5" />
-                <GradientStop Color="#7C3AED" Offset="1.0" />
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0.5,1">
+                <GradientStop Color="#0D001A" Offset="0.0" />
+                <GradientStop Color="{StaticResource Tertiary}" Offset="0.4" />
+                <GradientStop Color="{StaticResource Primary}" Offset="0.7" />
+                <GradientStop Color="#9333EA" Offset="1.0" />
             </LinearGradientBrush>
         </Grid.Background>
 
+        <!-- Subtle background glow -->
+        <BoxView Color="#A78BFA"
+                 Opacity="0.08"
+                 WidthRequest="400"
+                 HeightRequest="400"
+                 CornerRadius="200"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center"
+                 Margin="0,0,0,100" />
+
         <VerticalStackLayout VerticalOptions="Center"
                              HorizontalOptions="Center"
-                             Spacing="24">
+                             Spacing="20">
 
-            <Border StrokeThickness="0"
-                    BackgroundColor="Transparent"
+            <!-- Logo in a frosted ring -->
+            <Border StrokeThickness="2"
+                    Stroke="#30FFFFFF"
+                    BackgroundColor="#15FFFFFF"
                     HorizontalOptions="Center"
                     HeightRequest="160"
                     WidthRequest="160">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="80" />
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#7C3AED"
+                            Offset="0,0"
+                            Radius="40"
+                            Opacity="0.4" />
+                </Border.Shadow>
                 <Image Source="shiny.png"
-                       HeightRequest="160"
-                       WidthRequest="160"
-                       Aspect="AspectFit" />
+                       HeightRequest="120"
+                       WidthRequest="120"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
             </Border>
 
+            <!-- App name -->
             <Label Text="Wonderland"
                    AutomationId="StartupTitle"
-                   FontSize="36"
+                   FontSize="40"
                    FontAttributes="Bold"
                    TextColor="White"
                    HorizontalOptions="Center"
                    FontFamily="OpenSansSemibold" />
 
             <Label Text="Your magical theme park companion"
-                   FontSize="14"
+                   FontSize="15"
                    TextColor="#C4B5FD"
                    HorizontalOptions="Center"
-                   Opacity="0.9" />
+                   Opacity="0.85" />
+
+            <!-- Loading dots -->
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="8"
+                                   Margin="0,24,0,0">
+                <BoxView Color="#A78BFA" Opacity="0.6"
+                         WidthRequest="8" HeightRequest="8" CornerRadius="4" />
+                <BoxView Color="#A78BFA" Opacity="0.4"
+                         WidthRequest="8" HeightRequest="8" CornerRadius="4" />
+                <BoxView Color="#A78BFA" Opacity="0.2"
+                         WidthRequest="8" HeightRequest="8" CornerRadius="4" />
+            </HorizontalStackLayout>
 
             <ActivityIndicator IsRunning="True"
                                AutomationId="StartupSpinner"
-                               Color="White"
-                               HeightRequest="36"
-                               WidthRequest="36"
+                               Color="#C4B5FD"
+                               HeightRequest="28"
+                               WidthRequest="28"
                                HorizontalOptions="Center"
-                               Margin="0,16,0,0" />
+                               Margin="0,8,0,0" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

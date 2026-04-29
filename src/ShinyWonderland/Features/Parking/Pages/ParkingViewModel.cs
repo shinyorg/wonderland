@@ -86,7 +86,7 @@ public partial class ParkingViewModel(
         }
         catch (Exception ex)
         {
-            
+            Logger.LogError(ex, "Failed to capture photo");
         }
     }
 
@@ -95,7 +95,7 @@ public partial class ParkingViewModel(
         try
         {
             this.IsBusy = true;
-            var result = await services.TrySetParking(CancellationToken.None);
+            var result = await services.TrySetParking(this.DeactivateToken);
 
             if (result.IsWithinPark)
             {

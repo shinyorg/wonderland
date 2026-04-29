@@ -88,7 +88,7 @@ public class RideTimeJob(
             if (currentRide is { IsOpen: true } && currentRide.WaitTimeMinutes < ride.WaitTimeMinutes)
             {
                 var currentWait = currentRide.WaitTimeMinutes;
-                var waitDiff = currentRide.WaitTimeMinutes! - ride.WaitTimeMinutes!;
+                var waitDiff = ride.WaitTimeMinutes! - currentRide.WaitTimeMinutes!;
                 
                 await services.Notifications.Send(new Notification
                 {
@@ -106,7 +106,7 @@ public class RideTimeJob(
         if (this.LastSnapshotTime == null)
             return true;
 
-        var ts = this.LastSnapshotTime.Value.Subtract(services.TimeProvider.GetUtcNow());
+        var ts = services.TimeProvider.GetUtcNow().Subtract(this.LastSnapshotTime.Value);
         logger.LogInformation("Job last ran {mins} mins ago", ts.TotalMinutes);
         return ts.TotalMinutes >= 5;
     }

@@ -14,34 +14,80 @@
         <CollectionView.EmptyView>
             <controls:NoItemsView />
         </CollectionView.EmptyView>
-        
+
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="shinyWonderland:VmParkSchedule">
                 <controls:ListItemView>
-                    
-                    <Grid RowDefinitions="Auto, Auto"
-                          Padding="16">
-                        
-                        <Label Text="{Binding DateString}"
-                               FontSize="Medium"
-                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
-                               FontAttributes="Bold"
-                               Grid.Row="0" />
-                               
-                        <VerticalStackLayout Grid.Row="1" 
-                                           Margin="0,8,0,0">
-                            <Label Text="{Binding HoursOfOperation}"
-                                   IsVisible="{Binding IsOpen}"
-                                   TextColor="{StaticResource Blue100Accent}"
-                                   FontAttributes="Bold"
-                                   FontSize="Small" />
-                                   
-                            <Label Text="{Binding Localize.ParkClosed}"
-                                   IsVisible="{Binding IsClosed}"
-                                   TextColor="{StaticResource Yellow100Accent}"
-                                   FontAttributes="Bold"
-                                   FontSize="Small" />
-                        </VerticalStackLayout>
+                    <Grid ColumnDefinitions="4, *"
+                          Padding="0">
+                        <!-- Color strip: green for open, amber for closed -->
+                        <BoxView Grid.Column="0"
+                                 Color="{StaticResource Success}"
+                                 CornerRadius="0"
+                                 VerticalOptions="Fill"
+                                 IsVisible="{Binding IsOpen}" />
+                        <BoxView Grid.Column="0"
+                                 Color="{StaticResource Warning}"
+                                 CornerRadius="0"
+                                 VerticalOptions="Fill"
+                                 IsVisible="{Binding IsClosed}" />
+
+                        <Grid Grid.Column="1"
+                              ColumnDefinitions="*, Auto"
+                              Padding="16,14"
+                              ColumnSpacing="12">
+
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="{Binding DateString}"
+                                       FontSize="16"
+                                       FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+
+                                <Label Text="{Binding HoursOfOperation}"
+                                       IsVisible="{Binding IsOpen}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+
+                                <Label Text="{Binding Localize.ParkClosed}"
+                                       IsVisible="{Binding IsClosed}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Warning}" />
+                            </VerticalStackLayout>
+
+                            <!-- Status badge -->
+                            <Border Grid.Column="1"
+                                    IsVisible="{Binding IsOpen}"
+                                    StrokeThickness="0"
+                                    Padding="10,5"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource SuccessLight}, Dark=#162E1B}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Label Text="Open"
+                                       FontSize="12"
+                                       FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource SuccessDark}, Dark={StaticResource Success}}" />
+                            </Border>
+
+                            <Border Grid.Column="1"
+                                    IsVisible="{Binding IsClosed}"
+                                    StrokeThickness="0"
+                                    Padding="10,5"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarningLight}, Dark=#2E2510}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Label Text="Closed"
+                                       FontSize="12"
+                                       FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarningDark}, Dark={StaticResource Warning}}" />
+                            </Border>
+                        </Grid>
                     </Grid>
                 </controls:ListItemView>
             </DataTemplate>

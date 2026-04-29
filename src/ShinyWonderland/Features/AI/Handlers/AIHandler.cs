@@ -89,8 +89,9 @@ public partial class AIHandler(
         {
             // user cancelled — nothing to do
         }
-        catch
+        catch (Exception ex)
         {
+            logger.LogError(ex, "AI handler failed");
             await textToSpeech.SpeakAsync("oh oh - something went wrong");
         }
     }

@@ -53,6 +53,20 @@ public partial class GetWeatherHandler(
         var dates = daily.GetProperty("time");
 
         var dayIndex = FindDayIndex(dates, targetDate);
+        if (dayIndex < 0)
+        {
+            return new WeatherResult(
+                LocationName: park.Name,
+                Date: request.When,
+                TemperatureCelsius: 0, FeelsLikeCelsius: 0,
+                HighCelsius: 0, LowCelsius: 0,
+                HumidityPercent: 0, WindSpeedKmh: 0,
+                Condition: "Unknown",
+                PrecipitationProbabilityPercent: 0,
+                PrecipitationMm: 0, UvIndex: 0,
+                Summary: $"Weather forecast is not available for {targetDate:MMMM dd, yyyy}. Only the next 16 days are supported."
+            );
+        }
 
         double temp, feelsLike;
         int humidity;
@@ -129,7 +143,7 @@ public partial class GetWeatherHandler(
             if (dates[i].GetString() == target)
                 return i;
         }
-        return 0;
+        return -1;
     }
 
     static double GetDailyDouble(JsonElement daily, string property, int index)

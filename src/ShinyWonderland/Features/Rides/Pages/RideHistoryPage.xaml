@@ -7,29 +7,36 @@
              x:Class="ShinyWonderland.Features.Rides.Pages.RideHistoryPage"
              AutomationId="RideHistoryPage"
              Title="{Binding Localize.Title}">
-    
+
     <CollectionView ItemsSource="{Binding History}"
                     AutomationId="RideHistoryCollectionView"
                     Margin="0,8,0,0">
         <CollectionView.EmptyView>
             <controls:NoItemsView />
         </CollectionView.EmptyView>
-        
+
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="shinyWonderland:RideHistoryItemViewModel">
                 <controls:ListItemView>
-                    <VerticalStackLayout Padding="16">
-                        <Label Text="{Binding RideName}" 
-                               FontSize="Medium"
-                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
-                               FontAttributes="Bold" />
-                        
-                        <Label Text="{Binding TimeAgo}"
-                               TextColor="{StaticResource Blue100Accent}"
-                               FontAttributes="Bold"
-                               FontSize="Small"
-                               Margin="0,8,0,0" />
-                    </VerticalStackLayout>
+                    <Grid ColumnDefinitions="4, *"
+                          Padding="0">
+                        <BoxView Grid.Column="0"
+                                 Color="{StaticResource RideAccent}"
+                                 CornerRadius="0"
+                                 VerticalOptions="Fill" />
+                        <VerticalStackLayout Grid.Column="1"
+                                             Padding="16,14"
+                                             Spacing="4">
+                            <Label Text="{Binding RideName}"
+                                   FontSize="16"
+                                   FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Label Text="{Binding TimeAgo}"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}" />
+                        </VerticalStackLayout>
+                    </Grid>
                 </controls:ListItemView>
             </DataTemplate>
         </CollectionView.ItemTemplate>

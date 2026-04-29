@@ -7,55 +7,73 @@
              x:Class="ShinyWonderland.Features.Parking.Pages.ParkingPage"
              AutomationId="ParkingPage"
              Title="{Binding Localize.Title}">
-    
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style TargetType="Button" BaseResourceKey="BaseButtonStyle">
-                <Setter Property="HeightRequest" Value="50" />
-                <Setter Property="WidthRequest" Value="300"/>
-                <Setter Property="VerticalOptions" Value="End"/>
-                <Setter Property="Margin" Value="20" />
-                <Setter Property="Shadow">
-                    <Setter.Value>
-                        <Shadow Opacity="0.25" 
-                                Radius="4"
-                                Brush="#000000"/>
-                        </Setter.Value>
-                </Setter>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    
-    <ContentPage.Content>
-        <Grid>
-            <Image Source="{Binding ImageUri}"
-                   AutomationId="ParkingImage"
-                   IsVisible="{Binding HasParkedImage}">
-                <Image.Shadow>
-                    <Shadow Opacity="0.25" 
-                            Radius="4"
-                            Brush="#000000"/>
-                </Image.Shadow>
-            </Image>
-            
-            <maps:Map x:Name="ParkingMap"
-                      AutomationId="ParkingMap"
-                      MapType="Street"
-                      IsShowingUser="True" 
-                      IsZoomEnabled="True"
-                      IsScrollEnabled="True" 
-                      HorizontalOptions="Fill"
-                      VerticalOptions="Fill" />
-            
-            <!--
-            <Button Text="{Binding Localize.TakePhoto}" 
-                    Command="{Binding TakePhotoCommand}"
-                    IsVisible="{Binding IsParked}" />
-            -->
-            
-            <Button Text="{Binding CommandText}"
-                    AutomationId="ToggleParkingButton"
-                    Command="{Binding ToggleSetLocationCommand}"/>
+
+    <Grid>
+        <!-- Parked photo -->
+        <Image Source="{Binding ImageUri}"
+               AutomationId="ParkingImage"
+               IsVisible="{Binding HasParkedImage}"
+               Aspect="AspectFill" />
+
+        <!-- Map -->
+        <maps:Map x:Name="ParkingMap"
+                  AutomationId="ParkingMap"
+                  MapType="Street"
+                  IsShowingUser="True"
+                  IsZoomEnabled="True"
+                  IsScrollEnabled="True"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill" />
+
+        <!-- Bottom action area -->
+        <Border StrokeThickness="0"
+                Padding="20,16,20,24"
+                VerticalOptions="End"
+                HorizontalOptions="Fill"
+                Margin="16,0,16,16">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{AppThemeBinding Light=#F0FFFFFF, Dark=#F01E1E2E}" Offset="0.0" />
+                    <GradientStop Color="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E2E}" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Shadow>
+                <Shadow Brush="{AppThemeBinding Light=#30000000, Dark=#60000000}"
+                        Offset="0,-2" Radius="12" Opacity="1" />
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="8">
+                <Label IsVisible="{Binding IsParked}"
+                       Text="Your car is parked here"
+                       FontSize="13"
+                       FontFamily="OpenSansSemibold"
+                       TextColor="{AppThemeBinding Light={StaticResource ParkingAccent}, Dark={StaticResource ParkingAccent}}"
+                       HorizontalOptions="Center" />
+
+                <Button Text="{Binding CommandText}"
+                        AutomationId="ToggleParkingButton"
+                        Command="{Binding ToggleSetLocationCommand}"
+                        BackgroundColor="{StaticResource ParkingAccent}"
+                        TextColor="White"
+                        CornerRadius="14"
+                        FontFamily="OpenSansSemibold"
+                        FontSize="16"
+                        HeightRequest="52"
+                        HorizontalOptions="Fill" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Loading overlay -->
+        <Grid IsVisible="{Binding IsBusy}"
+              BackgroundColor="{AppThemeBinding Light=#80FFFFFF, Dark=#80000000}">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               HeightRequest="48"
+                               WidthRequest="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
         </Grid>
-    </ContentPage.Content>
+    </Grid>
 </ContentPage>

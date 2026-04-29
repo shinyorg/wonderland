@@ -14,8 +14,15 @@ public partial class RideHistoryViewModel(
     
     public override async void OnAppearing()
     {
-        var items = await Mediator.Request(new GetRideHistory(this.RideId));
-        this.History = items.Result.Select(x => new RideHistoryItemViewModel(humanizer, x)).ToList();
+        try
+        {
+            var items = await Mediator.Request(new GetRideHistory(this.RideId));
+            this.History = items.Result.Select(x => new RideHistoryItemViewModel(humanizer, x)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load ride history");
+        }
     }
 }
 

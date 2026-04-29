@@ -18,8 +18,13 @@ public class AIModule : IMauiModule
                 Endpoint = new Uri("https://api.githubcopilot.com")
             }
         );
-        var chatClient = client.GetChatClient(model).AsIChatClient();
-        
+        var chatClient = client
+            .GetChatClient(model)
+            .AsIChatClient()
+            .AsBuilder()
+            .UseFunctionInvocation()
+            .Build();
+
         builder.Services.AddSingleton(chatClient);
     }
 

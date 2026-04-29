@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ShinyWonderland.Features.Rides.Pages"
@@ -17,34 +17,62 @@
     <Grid RowDefinitions="Auto, Auto, *"
           RowSpacing="0"
           Padding="0">
-        <Label Text="{Binding Localize.YouAreOffline}"
-               AutomationId="OfflineBanner"
-               IsVisible="{Binding IsNotConnected}"
-               VerticalTextAlignment="Center"
-               BackgroundColor="{StaticResource Yellow100Accent}"
-               TextColor="{StaticResource Gray900}"
-               FontAttributes="Bold"
-               Padding="16,10"
-               Margin="0"
-               Grid.Row="0" />
 
-        <Label AutomationId="DataTimestampLabel"
-               BackgroundColor="{StaticResource Primary}"
-               TextColor="{StaticResource White}"
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center"
-               Padding="16,8"
-               Margin="0"
-               Grid.Row="1">
-            <Label.FormattedText>
-                <FormattedString>
-                    <Span Text="{Binding Localize.DataFrom}" />
-                    <Span Text=" " />
-                    <Span Text="{Binding DataTimestamp}" />
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
+        <!-- Offline Banner -->
+        <Border IsVisible="{Binding IsNotConnected}"
+                StrokeThickness="0"
+                BackgroundColor="{StaticResource Warning}"
+                Padding="16,10"
+                Grid.Row="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0" />
+            </Border.StrokeShape>
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="&#x26A0;"
+                       FontSize="14"
+                       TextColor="White"
+                       VerticalOptions="Center" />
+                <Label Text="{Binding Localize.YouAreOffline}"
+                       AutomationId="OfflineBanner"
+                       TextColor="White"
+                       FontFamily="OpenSansSemibold"
+                       FontAttributes="Bold"
+                       FontSize="13"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </Border>
 
+        <!-- Data timestamp pill -->
+        <Border Margin="16,12,16,4"
+                StrokeThickness="0"
+                Padding="14,8"
+                Grid.Row="1"
+                HorizontalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20" />
+            </Border.StrokeShape>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
+                    <GradientStop Color="{StaticResource RideAccent}" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <Label TextColor="White"
+                   AutomationId="DataTimestampLabel"
+                   FontSize="12"
+                   FontFamily="OpenSansSemibold"
+                   HorizontalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding Localize.DataFrom}" />
+                        <Span Text="  " />
+                        <Span Text="{Binding DataTimestamp}" FontAttributes="Bold" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </Border>
+
+        <!-- Rides list -->
         <RefreshView Command="{Binding LoadCommand}"
                      AutomationId="RideTimesRefreshView"
                      IsRefreshing="{Binding IsBusy}"
@@ -52,7 +80,7 @@
 
             <CollectionView ItemsSource="{Binding Rides}"
                             AutomationId="RidesCollectionView"
-                            Margin="0,8,0,0">
+                            Margin="0,4,0,0">
                 <CollectionView.EmptyView>
                     <controls:NoItemsView />
                 </CollectionView.EmptyView>
@@ -60,93 +88,139 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RideTimeViewModel">
                         <controls:ListItemView>
-                            <Grid RowDefinitions="Auto, Auto, Auto"
-                                  ColumnDefinitions="2*, 2*, 1*"
-                                  Padding="16">
+                            <Grid ColumnDefinitions="4, *"
+                                  Padding="0">
 
-                                <Label Text="{Binding Name}"
-                                       FontSize="Large"
-                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Secondary}}"
-                                       FontAttributes="Bold"
-                                       Grid.Row="0"
-                                       Grid.ColumnSpan="3" />
+                                <!-- Color accent strip on left edge -->
+                                <BoxView Grid.Column="0"
+                                         CornerRadius="0"
+                                         VerticalOptions="Fill"
+                                         Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryLight}}"
+                                         IsVisible="{Binding IsOpen}" />
+                                <BoxView Grid.Column="0"
+                                         CornerRadius="0"
+                                         VerticalOptions="Fill"
+                                         Color="{StaticResource Gray300}"
+                                         IsVisible="{Binding IsClosed}" />
 
-                                <Label IsVisible="{Binding HasWaitTime}"
-                                       TextColor="{StaticResource Blue100Accent}"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Start"
-                                       Grid.Row="1"
-                                       Grid.Column="0">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding WaitTimeMinutes}" />
-                                            <Span Text=" " />
-                                            <Span Text="{Binding Localize.Mins}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
+                                <!-- Card content -->
+                                <Grid Grid.Column="1"
+                                      RowDefinitions="Auto, Auto, Auto"
+                                      ColumnDefinitions="*, Auto"
+                                      Padding="16,14"
+                                      RowSpacing="6"
+                                      ColumnSpacing="12">
 
-                                <Label IsVisible="{Binding HasPaidWaitTime}"
-                                       TextColor="{StaticResource Blue100Accent}"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Start"
-                                       Grid.Row="1"
-                                       Grid.Column="1">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding Localize.Paid}" />
-                                            <Span Text=": " />
-                                            <Span Text="{Binding PaidWaitTimeMinutes}" />
-                                            <Span Text=" " />
-                                            <Span Text="{Binding Localize.Mins}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-
-                                <Label HorizontalTextAlignment="Start"
-                                       VerticalTextAlignment="Start"
-                                       TextColor="{StaticResource Blue100Accent}"
-                                       IsVisible="{Binding HasLastRide}"
-                                       Grid.Row="2"
-                                       Grid.Column="1"
-                                       Grid.ColumnSpan="2">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding Localize.LastRide}" />
-                                            <Span Text=": " />
-                                            <Span Text="{Binding LastRidden}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-
-                                <!--IsVisible="{Binding IsOpen}"-->
-                                <Label Text="{Binding DistanceText}"
-                                       TextColor="{StaticResource Blue100Accent}"
-                                       FontAttributes="Bold"
-                                       HorizontalTextAlignment="Start"
-                                       Grid.Row="3"
-                                       Grid.Column="0" />
-
-                                <Button Text="{Binding Localize.AddRide}"
-                                        Command="{Binding AddRideCommand}"
-                                        HorizontalOptions="Center"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="3"
-                                        Grid.Column="3" />
-
-                                <Border IsVisible="{Binding IsClosed}"
-                                        StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 4"
-                                        BackgroundColor="{StaticResource Gray950}"
-                                        Padding="8,4"
-                                        HorizontalOptions="Center"
-                                        Grid.Row="1"
-                                        Grid.Column="0">
-                                    <Label Text="{Binding Localize.Closed}"
-                                           TextColor="White"
+                                    <!-- Ride name -->
+                                    <Label Text="{Binding Name}"
+                                           FontSize="17"
+                                           FontFamily="OpenSansSemibold"
                                            FontAttributes="Bold"
-                                           HorizontalTextAlignment="Center" />
-                                </Border>
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                           LineBreakMode="TailTruncation"
+                                           Grid.Row="0"
+                                           Grid.Column="0" />
+
+                                    <!-- Add Ride button -->
+                                    <Button Text="{Binding Localize.AddRide}"
+                                            Command="{Binding AddRideCommand}"
+                                            FontSize="12"
+                                            Padding="14,8"
+                                            CornerRadius="8"
+                                            VerticalOptions="Center"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="3"
+                                            Grid.Column="1" />
+
+                                    <!-- Wait times row -->
+                                    <HorizontalStackLayout Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           Spacing="16">
+                                        <!-- Regular wait badge -->
+                                        <Border IsVisible="{Binding HasWaitTime}"
+                                                StrokeThickness="0"
+                                                Padding="10,5"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark=#2A2545}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="{Binding WaitTimeMinutes}"
+                                                       FontSize="16"
+                                                       FontFamily="OpenSansSemibold"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryLight}}"
+                                                       VerticalOptions="Center" />
+                                                <Label Text="{Binding Localize.Mins}"
+                                                       FontSize="11"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                                       VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+
+                                        <!-- Paid wait badge -->
+                                        <Border IsVisible="{Binding HasPaidWaitTime}"
+                                                StrokeThickness="0"
+                                                Padding="10,5"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource InfoLight}, Dark=#1E2A45}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="{Binding Localize.Paid}"
+                                                       FontSize="11"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Info}, Dark={StaticResource Blue200Accent}}"
+                                                       VerticalOptions="Center" />
+                                                <Label Text="{Binding PaidWaitTimeMinutes}"
+                                                       FontSize="16"
+                                                       FontFamily="OpenSansSemibold"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Info}, Dark={StaticResource Blue200Accent}}"
+                                                       VerticalOptions="Center" />
+                                                <Label Text="{Binding Localize.Mins}"
+                                                       FontSize="11"
+                                                       TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                                                       VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                        </Border>
+
+                                        <!-- Closed badge -->
+                                        <Border IsVisible="{Binding IsClosed}"
+                                                StrokeThickness="0"
+                                                Padding="10,5"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource DangerLight}, Dark=#3D1F1F}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Localize.Closed}"
+                                                   FontSize="12"
+                                                   FontFamily="OpenSansSemibold"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark=#F87171}" />
+                                        </Border>
+                                    </HorizontalStackLayout>
+
+                                    <!-- Meta row: distance + last ridden -->
+                                    <HorizontalStackLayout Grid.Row="2"
+                                                           Grid.Column="0"
+                                                           Spacing="16">
+                                        <Label Text="{Binding DistanceText}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}" />
+
+                                        <Label IsVisible="{Binding HasLastRide}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Localize.LastRide}" />
+                                                    <Span Text=": " />
+                                                    <Span Text="{Binding LastRidden}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </HorizontalStackLayout>
+                                </Grid>
                             </Grid>
                         </controls:ListItemView>
                     </DataTemplate>

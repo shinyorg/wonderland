@@ -2,14 +2,16 @@
 <Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         x:Class="ShinyWonderland.Controls.ListItemView"
-        Margin="16,8"
+        Margin="16,6"
         Padding="0"
-        Stroke="Transparent"
-        StrokeShape="RoundRectangle 10"
-        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray600}}">
+        Stroke="{AppThemeBinding Light=#10000000, Dark=#10FFFFFF}"
+        StrokeThickness="1"
+        StrokeShape="RoundRectangle 16"
+        BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
     <Border.Shadow>
-        <Shadow Brush="#000000" 
-                Opacity="0.25"
-                Radius="4" />
+        <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                Offset="0,2"
+                Radius="8"
+                Opacity="1" />
     </Border.Shadow>
 </Border>

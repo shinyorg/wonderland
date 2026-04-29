@@ -7,17 +7,24 @@ public partial class HoursViewModel(ViewModelServices services) : BaseViewModel(
 
     public async void OnAppearing()
     {
-        var scheduleDates = await Mediator.Request(new GetUpcomingParkHours());
-        
-        var now = DateOnly.FromDateTime(Services.TimeProvider.GetLocalNow().Date);
-        this.Schedule = scheduleDates
-            .Result
-            .Select(x =>
-            {
-                var today = x.Date == now;
-                return new VmParkSchedule(x, today, this.Localize);
-            })
-            .ToList();
+        try
+        {
+            var scheduleDates = await Mediator.Request(new GetUpcomingParkHours());
+
+            var now = DateOnly.FromDateTime(Services.TimeProvider.GetLocalNow().Date);
+            this.Schedule = scheduleDates
+                .Result
+                .Select(x =>
+                {
+                    var today = x.Date == now;
+                    return new VmParkSchedule(x, today, this.Localize);
+                })
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load park hours");
+        }
     }
 }
 

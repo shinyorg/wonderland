@@ -1,4 +1,4 @@
-﻿namespace ShinyWonderland;
+namespace ShinyWonderland;
 
 public partial class App : Application
 {
@@ -13,8 +13,5 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-    {
-        var shell = new AppShell(this.localize, this.navigator);
-        return new Window(shell);
-    }
+        => new (new AppShell(this.localize, this.navigator));
 }

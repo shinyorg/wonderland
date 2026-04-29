@@ -21,10 +21,10 @@ public partial class AIHandler(
             ChatRole.System,
             "You are a helpful theme park assistant. Use the available tools to answer questions about rides, wait times, meals, and park hours."
         ),
-        // new(
-        //     ChatRole.System,
-        //     shellTools.Prompt
-        // )
+        new(
+            ChatRole.System,
+            shellTools.Prompt
+        )
     ];
 
     Task SendPhase(AiPhase phase, CancellationToken ct)
@@ -75,7 +75,7 @@ public partial class AIHandler(
                 await SendPhase(AiPhase.Thinking, cancellationToken);
 
                 var tools = aitools.ToList();
-                // tools.AddRange(shellTools.Tools);
+                tools.AddRange(shellTools.Tools);
 
                 var copy = this.SystemMessages.ToList();
                 copy.Add(new ChatMessage(ChatRole.User, userText));

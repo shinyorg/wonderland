@@ -1,6 +1,9 @@
 namespace ShinyWonderland.Features.Hours.Pages;
 
-[ShellMap<HoursPage>(registerRoute: false)]
+[ShellMap<HoursPage>(
+    description: "View the park hours for the upcoming week",
+    registerRoute: false
+)]
 public partial class HoursViewModel(ViewModelServices services) : BaseViewModel(services)
 {
     [ObservableProperty] List<VmParkSchedule> schedule;

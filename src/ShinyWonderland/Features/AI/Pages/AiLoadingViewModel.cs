@@ -1,7 +1,8 @@
 namespace ShinyWonderland.Features.AI.Pages;
 
 [ShellMap<AiLoadingPage>]
-public partial class AiLoadingViewModel(ViewModelServices services) : BaseViewModel(services),
+public partial class AiLoadingViewModel(ViewModelServices services) : 
+    BaseViewModel(services),
     IEventHandler<AiPhaseChanged>
 {
     public event Action<AiPhase>? PhaseChanged;
@@ -11,8 +12,15 @@ public partial class AiLoadingViewModel(ViewModelServices services) : BaseViewMo
 
     public override async void OnAppearing()
     {
-        await Mediator.Send(new AskAI(), this.DeactivateToken);
-        await Navigator.GoBack();
+        try
+        {
+            await Mediator.Send(new AskAI(), this.DeactivateToken);
+            await Navigator.GoBack();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "An error occured");
+        }
     }
 
     [MainThread]

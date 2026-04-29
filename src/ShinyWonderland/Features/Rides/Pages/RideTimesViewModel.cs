@@ -19,12 +19,6 @@ public partial class RideTimesViewModel(
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
 
-    [NotifyPropertyChangedFor(nameof(IsNotConnected))]
-    [ObservableProperty]
-    public partial bool IsConnected { get; private set; }
-    public bool IsNotConnected => !IsConnected;
-    
-    
     public override void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);

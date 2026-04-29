@@ -288,7 +288,7 @@
                         FontFamily="OpenSansSemibold"
                         FontAttributes="Bold"
                         FontSize="15"
-                        Command="{Binding Cancel}" />
+                        Command="{Binding CancelCommand}" />
             </Border>
         </VerticalStackLayout>
     </Grid>

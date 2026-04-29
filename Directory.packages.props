@@ -1,13 +1,13 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>4.1.0-beta-0093</ClientVersion>
-        <MediatorVersion>6.3.0-beta-0004</MediatorVersion>
-        <ShellVersion>6.0.1</ShellVersion>
+        <ClientVersion>4.1.0-beta-0108</ClientVersion>
+        <MediatorVersion>6.3.0</MediatorVersion>
+        <ShellVersion>6.0.3</ShellVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.0" />
-        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.0" />
+        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.0"/>
+        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.0"/>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>

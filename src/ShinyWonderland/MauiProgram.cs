@@ -1,13 +1,8 @@
 ﻿#if PLATFORM
-using System.ClientModel;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
-using OpenAI;
-using Shiny.Jobs;
 using ShinyWonderland.Delegates;
-using ShinyWonderland.Features.Rides;
 
 namespace ShinyWonderland;
 
@@ -63,7 +58,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
-
+        
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddGeneratedServices();
@@ -77,7 +72,6 @@ public static class MauiProgram
         builder.Services.AddGps<MyGpsDelegate>();
         
         var app = builder.Build();
-
         return app;
     }
 }

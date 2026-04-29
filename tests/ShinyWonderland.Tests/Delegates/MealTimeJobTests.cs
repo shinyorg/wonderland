@@ -53,21 +53,6 @@ public class MealTimeJobTests
     }
 
     [Test]
-    public async Task Handle_GpsEvent_ShouldNotThrow()
-    {
-        var gpsEvent = new GpsEvent(new Position(33.8121, -117.9190));
-        var context = new TestMediatorContext();
-
-        await job.Handle(gpsEvent, context, CancellationToken.None);
-    }
-
-    [Test]
-    public async Task MealTimeJob_ShouldImplementIEventHandler()
-    {
-        await Assert.That(job).IsAssignableTo<IEventHandler<GpsEvent>>();
-    }
-
-    [Test]
     public async Task Run_ExpiredPass_ShouldSendNotificationAndMarkNotified()
     {
         var now = timeProvider.GetUtcNow();

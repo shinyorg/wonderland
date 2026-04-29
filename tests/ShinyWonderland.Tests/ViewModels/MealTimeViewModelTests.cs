@@ -6,7 +6,7 @@ public class MealTimeViewModelTests
 {
     readonly TestMediator mediator;
     readonly StringsLocalized localize;
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly MealTimeViewModel viewModel;
 
     public MealTimeViewModelTests()
@@ -14,7 +14,7 @@ public class MealTimeViewModelTests
         mediator = new TestMediator();
         localize = TestLocalization.Create();
         var timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
-        services = new CoreServices(
+        services = new ViewModelServices(
             mediator,
             Options.Create(new ParkOptions
             {

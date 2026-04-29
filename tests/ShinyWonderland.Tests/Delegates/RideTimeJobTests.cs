@@ -29,7 +29,7 @@ public class RideTimeJobTests
         notifications = new INotificationManagerImposter();
         timeProvider = new FakeTimeProvider(new DateTimeOffset(2026, 1, 26, 12, 0, 0, TimeSpan.Zero));
 
-        var services = new CoreServices(
+        var services = new ViewModelServices(
             new TestMediator(),
             parkOptions,
             new AppSettings(),
@@ -72,13 +72,11 @@ public class RideTimeJobTests
     [Test]
     public async Task IsTimeToRun_WhenLastRunMoreThan5MinutesAgo_ShouldReturnTrue()
     {
-        // NOTE: Production code subtracts in reverse (LastSnapshotTime - Now),
-        // so TotalMinutes is always negative for past times and never >= 5
         job.LastSnapshotTime = timeProvider.GetUtcNow().AddMinutes(-6);
 
         var result = job.IsTimeToRun();
 
-        await Assert.That(result).IsFalse();
+        await Assert.That(result).IsTrue();
     }
 
     [Test]

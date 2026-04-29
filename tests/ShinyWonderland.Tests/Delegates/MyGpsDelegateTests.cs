@@ -22,36 +22,32 @@ public class MyGpsDelegateTests
             NotificationDistanceMeters = 1000
         });
 
-        var services = new CoreServices(
-            new TestMediator(),
-            parkOptions,
-            new AppSettings(),
-            new TestNavigator(),
-            new IDialogsImposter().Instance(),
-            new FakeTimeProvider(DateTimeOffset.UtcNow),
-            new IGpsManagerImposter().Instance(),
-            localized,
-            new INotificationManagerImposter().Instance(),
-            NullLoggerFactory.Instance
-        );
-
         gpsDelegate = new MyGpsDelegate(
+            new AppSettings(),
+            localized,
             new ILoggerImposter<MyGpsDelegate>().Instance(),
-            services
+            parkOptions,
+            new IGpsManagerImposter().Instance(),
+            new INotificationManagerImposter().Instance(),
+            new TestMediator()
         );
     }
 
     [Test]
-    public async Task Constructor_ShouldSetMinimumDistance()
+    public async Task Constructor_ShouldNotThrow()
     {
-        await Assert.That(gpsDelegate.MinimumDistance).IsNotNull();
-        await Assert.That(gpsDelegate.MinimumDistance!.TotalMeters).IsEqualTo(10);
+        await Assert.That(gpsDelegate).IsNotNull();
     }
 
     [Test]
-    public async Task Constructor_ShouldSetMinimumTime()
+    public async Task MinimumDistance_ShouldBeNullBeforeFirstReading()
     {
-        await Assert.That(gpsDelegate.MinimumTime).IsNotNull();
-        await Assert.That(gpsDelegate.MinimumTime!.Value.TotalSeconds).IsEqualTo(10);
+        await Assert.That(gpsDelegate.MinimumDistance).IsNull();
+    }
+
+    [Test]
+    public async Task MinimumTime_ShouldBeNullBeforeFirstReading()
+    {
+        await Assert.That(gpsDelegate.MinimumTime).IsNull();
     }
 }

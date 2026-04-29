@@ -3,19 +3,18 @@ namespace ShinyWonderland;
 
 public partial class AppShell : ShinyShell
 {
-    readonly IMediator mediator;
+    readonly INavigator navigator;
 
-    public AppShell(StringsLocalized localize, IMediator mediator)
+    public AppShell(StringsLocalized localize, INavigator navigator)
     {
         this.Localize = localize;
-        this.mediator = mediator;
+        this.navigator = navigator;
         this.BindingContext = this;
         this.InitializeComponent();
     }
 
-
     public StringsLocalized Localize { get; }
 
     [RelayCommand]
-    Task AskAI() => this.mediator.Send(new AskAI());
+    Task AskAI() => navigator.NavigateToAiLoading();
 }

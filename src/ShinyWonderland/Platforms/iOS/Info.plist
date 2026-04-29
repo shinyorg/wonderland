@@ -26,6 +26,10 @@
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Say something useful here that your users will understand</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>The AI assistant needs microphone access to listen to your voice commands</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>The AI assistant uses speech recognition to understand your questions</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Say something useful here that your users will understand</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

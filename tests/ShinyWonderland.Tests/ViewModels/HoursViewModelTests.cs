@@ -7,7 +7,7 @@ public class HoursViewModelTests
     readonly TestMediator mediator;
     readonly FakeTimeProvider timeProvider;
     readonly StringsLocalized localize;
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly HoursViewModel viewModel;
 
     public HoursViewModelTests()
@@ -28,7 +28,7 @@ public class HoursViewModelTests
             NotificationDistanceMeters = 1000
         });
 
-        services = new CoreServices(
+        services = new ViewModelServices(
             mediator,
             parkOptions,
             new AppSettings(),

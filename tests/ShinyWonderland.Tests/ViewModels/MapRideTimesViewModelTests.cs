@@ -6,7 +6,7 @@ public class MapRideTimesViewModelTests
 {
     readonly TestMediator mediator;
     readonly IOptions<ParkOptions> parkOptions;
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly MapRideTimesViewModel viewModel;
 
     public MapRideTimesViewModelTests()
@@ -24,7 +24,7 @@ public class MapRideTimesViewModelTests
         };
         parkOptions = Options.Create(options);
 
-        services = new CoreServices(
+        services = new ViewModelServices(
             mediator,
             parkOptions,
             new AppSettings(),

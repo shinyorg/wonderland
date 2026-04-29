@@ -2,7 +2,7 @@ namespace ShinyWonderland.Tests.ViewModels;
 
 public class RideTimesViewModelTests
 {
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly ILogger<RideTimesViewModel> logger;
     readonly Humanizer humanizer;
     readonly StringsLocalized localize;
@@ -39,7 +39,7 @@ public class RideTimesViewModelTests
             MapStartZoomDistanceMeters = 500
         };
 
-        services = new CoreServices(
+        services = new ViewModelServices(
             new TestMediator(),
             Options.Create(parkOptions),
             new AppSettings(),
@@ -111,7 +111,7 @@ public class RideTimeViewModelTests
 {
     readonly StringsLocalized localize;
     readonly Humanizer humanizer;
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly FakeTimeProvider timeProvider;
 
     public RideTimeViewModelTests()
@@ -138,7 +138,7 @@ public class RideTimeViewModelTests
             NotificationDistanceMeters = 1000
         };
 
-        services = new CoreServices(
+        services = new ViewModelServices(
             new TestMediator(),
             Options.Create(parkOptions),
             new AppSettings(),

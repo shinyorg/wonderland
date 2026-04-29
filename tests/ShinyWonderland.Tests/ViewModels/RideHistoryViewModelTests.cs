@@ -6,7 +6,7 @@ public class RideHistoryViewModelTests
     readonly FakeTimeProvider timeProvider;
     readonly Humanizer humanizer;
     readonly StringsLocalized localize;
-    readonly CoreServices services;
+    readonly ViewModelServices services;
     readonly RideHistoryViewModel viewModel;
 
     public RideHistoryViewModelTests()
@@ -32,7 +32,7 @@ public class RideHistoryViewModelTests
         timeProvider = new FakeTimeProvider(DateTimeOffset.UtcNow);
         humanizer = new Humanizer(timeProvider, localize);
 
-        services = new CoreServices(
+        services = new ViewModelServices(
             mediator,
             Options.Create(new ParkOptions
             {

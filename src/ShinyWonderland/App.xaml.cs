@@ -1,22 +1,20 @@
-﻿using Shiny.Mediator;
-
-namespace ShinyWonderland;
+﻿namespace ShinyWonderland;
 
 public partial class App : Application
 {
     readonly StringsLocalized localize;
-    readonly IMediator mediator;
+    readonly INavigator navigator;
 
-    public App(StringsLocalized localize, IMediator mediator)
+    public App(StringsLocalized localize, INavigator navigator)
     {
         this.localize = localize;
-        this.mediator = mediator;
+        this.navigator = navigator;
         this.InitializeComponent();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var shell = new AppShell(this.localize, this.mediator);
+        var shell = new AppShell(this.localize, this.navigator);
         return new Window(shell);
     }
 }

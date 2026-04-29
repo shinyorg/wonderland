@@ -36,7 +36,7 @@ public class ParkingViewModelTests
             MapStartZoomDistanceMeters = 500
         };
 
-        var services = new CoreServices(
+        var services = new ViewModelServices(
             new TestMediator(),
             Options.Create(parkOptions),
             appSettings,

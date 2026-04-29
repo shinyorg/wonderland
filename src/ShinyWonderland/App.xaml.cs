@@ -3,15 +3,13 @@ namespace ShinyWonderland;
 public partial class App : Application
 {
     readonly StringsLocalized localize;
-    readonly INavigator navigator;
 
-    public App(StringsLocalized localize, INavigator navigator)
+    public App(StringsLocalized localize)
     {
         this.localize = localize;
-        this.navigator = navigator;
         this.InitializeComponent();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
-        => new (new AppShell(this.localize, this.navigator));
+        => new(new AppShell(this.localize));
 }

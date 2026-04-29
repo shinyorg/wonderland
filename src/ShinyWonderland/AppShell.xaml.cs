@@ -3,12 +3,9 @@ namespace ShinyWonderland;
 
 public partial class AppShell : ShinyShell
 {
-    readonly INavigator navigator;
-
-    public AppShell(StringsLocalized localize, INavigator navigator)
+    public AppShell(StringsLocalized localize)
     {
         this.Localize = localize;
-        this.navigator = navigator;
         this.BindingContext = this;
         this.InitializeComponent();
     }
@@ -16,5 +13,9 @@ public partial class AppShell : ShinyShell
     public StringsLocalized Localize { get; }
 
     [RelayCommand]
-    Task AskAI() => navigator.NavigateToAiLoading();
+    Task AskAI()
+    {
+        var navigator = Handler!.MauiContext!.Services.GetRequiredService<INavigator>();
+        return navigator.NavigateToAiLoading();
+    }
 }

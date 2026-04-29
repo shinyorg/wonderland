@@ -4,7 +4,7 @@
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland.Features.AI.Pages"
              x:Class="ShinyWonderland.Features.AI.Pages.AiLoadingPage"
              Shell.NavBarIsVisible="False"
-             NavigationPage.HasNavigationBar="False"
+             Shell.PresentationMode="ModalAnimated"
              x:DataType="shinyWonderland:AiLoadingViewModel"
              BackgroundColor="Transparent">
 

@@ -23,7 +23,9 @@ public partial class BaseViewModel(ViewModelServices services) :
     public virtual partial string? Title { get; protected set; }
     
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotConnected))]
     public partial bool IsInternetAvailable { get; private set; }
+    public bool IsNotConnected => !this.IsInternetAvailable;
     
     public virtual void OnAppearing()
     {

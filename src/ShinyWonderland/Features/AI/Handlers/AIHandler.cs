@@ -7,6 +7,7 @@ public record AskAI : ICommand;
 
 [MediatorSingleton]
 public partial class AIHandler(
+    ILogger<AIHandler> logger,
     IChatClient chatClient,
     AiMauiShellTools shellTools,
     IEnumerable<AITool> aitools,
@@ -55,11 +56,11 @@ public partial class AIHandler(
                     ShouldReportPartialResults = false
                 }, cancellationToken);
 
-                using var reg = cancellationToken.Register(() => tcs.TrySetCanceled());
+                await using var reg = cancellationToken.Register(() => tcs.TrySetCanceled());
                 var userText = await tcs.Task;
-
+                logger.LogDebug($"User: {userText}");
+                
                 await speechToText.StopListenAsync(cancellationToken);
-
                 if (string.IsNullOrWhiteSpace(userText))
                     return;
 

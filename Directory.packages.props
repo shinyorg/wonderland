@@ -18,8 +18,8 @@
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="2.0.4"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0028"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="3.0.0"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0045"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>

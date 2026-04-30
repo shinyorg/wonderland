@@ -30,7 +30,8 @@ public class Humanizer(
         
         if (timeSpan.TotalHours < 24)
         {
-            var hours = (int)timeSpan.TotalHours;
+            var hours = (int)Math.Round(timeSpan.TotalHours);
+            if (hours < 1) hours = 1;
             return hours == 1 ? $"1 {localized.Hour}" : $"{hours} {localized.Hours}";
         }
         

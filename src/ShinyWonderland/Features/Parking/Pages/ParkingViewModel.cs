@@ -7,28 +7,30 @@ public partial class ParkingViewModel(
     IMediaPicker mediaPicker
 ) : BaseViewModel(services)
 {
-    // const string PhotoFileName = "parked_photo.png";
-    
+    const string PhotoFileName = "parked_photo.png";
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsParked))]
     [NotifyPropertyChangedFor(nameof(CommandText))]
     Position? parkLocation;
 
     [ObservableProperty] bool isBusy;
-    
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasParkedImage))]
-    string imageUri;
+    string? imageUri;
 
     public bool HasParkedImage => ImageUri != null;
     public bool IsParked => this.ParkLocation != null;
-    public string CommandText => this.ParkLocation == null 
+    public string CommandText => this.ParkLocation == null
         ? Localize.SetParking
         : Localize.RemoveParking;
 
     public Position CenterOfPark => services.ParkOptions.Value.CenterOfPark;
     public int MapStartZoomDistanceMeters => services.ParkOptions.Value.MapStartZoomDistanceMeters;
-    
+
+    static string PhotoPath => Path.Combine(FileSystem.AppDataDirectory, PhotoFileName);
+
     [RelayCommand]
     async Task ToggleSetLocation()
     {
@@ -52,25 +54,17 @@ public partial class ParkingViewModel(
         else
         {
             var confirm = await services.Dialogs.Confirm(
-                Localize.Reset, 
+                Localize.Reset,
                 Localize.ConfirmReset
             );
             if (confirm)
             {
                 services.AppSettings.ParkingLocation = null;
                 this.ParkLocation = null;
-                
-                // TODO: delete photo
+                DeletePhoto();
             }
         }
     }
-
-
-    // [RelayCommand]
-    // async Task TogglePhotoZoom()
-    // {
-    //     // TODO: zoom in or out on photo
-    // }
 
     [RelayCommand]
     async Task TakePhoto()
@@ -80,14 +74,30 @@ public partial class ParkingViewModel(
             var result = await mediaPicker.CapturePhotoAsync();
             if (result != null)
             {
-                // TODO: save photo to local storage
-                // TODO: change imageUri to the saved photo path
+                await using var sourceStream = await result.OpenReadAsync();
+                await using var destStream = File.Create(PhotoPath);
+                await sourceStream.CopyToAsync(destStream);
+                this.ImageUri = PhotoPath;
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to capture photo");
         }
+    }
+
+    void DeletePhoto()
+    {
+        try
+        {
+            if (File.Exists(PhotoPath))
+                File.Delete(PhotoPath);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to delete parking photo");
+        }
+        this.ImageUri = null;
     }
 
     async Task DoLocation()
@@ -123,7 +133,8 @@ public partial class ParkingViewModel(
     public void OnAppearing()
     {
         ParkLocation = services.AppSettings.ParkingLocation;
-        // TODO: load imageUri from local storage if exists
+        if (File.Exists(PhotoPath))
+            this.ImageUri = PhotoPath;
     }
 
     public void OnDisappearing() {}

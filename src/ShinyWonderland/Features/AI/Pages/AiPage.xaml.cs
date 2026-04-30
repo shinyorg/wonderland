@@ -1,6 +1,6 @@
 namespace ShinyWonderland.Features.AI.Pages;
 
-public partial class AiLoadingPage : ContentPage
+public partial class AiPage : ContentPage
 {
     AiPhase currentPhase = AiPhase.Idle;
     bool isAnimating;
@@ -8,7 +8,7 @@ public partial class AiLoadingPage : ContentPage
     BoxView[] thinkDotsArr = null!;
     Border[] ripplesArr = null!;
 
-    public AiLoadingPage()
+    public AiPage()
     {
         this.InitializeComponent();
     }
@@ -23,7 +23,7 @@ public partial class AiLoadingPage : ContentPage
         thinkDotsArr = [ThinkDot1, ThinkDot2, ThinkDot3];
         ripplesArr = [Ripple1, Ripple2, Ripple3];
 
-        if (BindingContext is AiLoadingViewModel vm)
+        if (BindingContext is AiViewModel vm)
             vm.PhaseChanged += OnPhaseChanged;
 
         StartAmbientAnimations(particlesArr);
@@ -32,6 +32,23 @@ public partial class AiLoadingPage : ContentPage
 
     void OnPhaseChanged(AiPhase phase)
         => TransitionToPhase(phase);
+
+    async void AnimateOrbActivation()
+    {
+        await Task.WhenAll(
+            InnerOrb.ScaleTo(0.8, 80, Easing.CubicIn),
+            OuterRing.ScaleTo(1.25, 100, Easing.CubicOut),
+            MiddleRing.ScaleTo(1.2, 100, Easing.CubicOut),
+            BackgroundGlow.FadeTo(0.3, 100)
+        );
+        await Task.WhenAll(
+            InnerOrb.ScaleTo(1.15, 150, Easing.SpringOut),
+            OuterRing.ScaleTo(1.0, 200, Easing.CubicIn),
+            MiddleRing.ScaleTo(1.0, 200, Easing.CubicIn),
+            BackgroundGlow.FadeTo(0.12, 200)
+        );
+        await InnerOrb.ScaleTo(1.0, 100, Easing.CubicOut);
+    }
 
     void TransitionToPhase(AiPhase newPhase)
     {
@@ -43,6 +60,15 @@ public partial class AiLoadingPage : ContentPage
 
         switch (newPhase)
         {
+            case AiPhase.Idle:
+                StatusLabel.Text = "Tap to Ask";
+                SubtitleLabel.Text = "Powered by AI";
+                PhaseIcon.Text = "\U0001F399";
+                WaveformBars.FadeToAsync(0, 200);
+                ThinkingDots.FadeToAsync(0, 200);
+                OrbitalRing.FadeToAsync(0, 200);
+                break;
+
             case AiPhase.Prompting:
                 StatusLabel.Text = "Getting ready...";
                 SubtitleLabel.Text = "Preparing your assistant";
@@ -50,6 +76,7 @@ public partial class AiLoadingPage : ContentPage
                 WaveformBars.FadeToAsync(0, 200);
                 ThinkingDots.FadeToAsync(0, 200);
                 OrbitalRing.FadeToAsync(0, 200);
+                AnimateOrbActivation();
                 StartPromptingAnimation();
                 break;
 
@@ -332,7 +359,7 @@ public partial class AiLoadingPage : ContentPage
         base.OnDisappearing();
         isAnimating = false;
 
-        if (BindingContext is AiLoadingViewModel vm)
+        if (BindingContext is AiViewModel vm)
             vm.PhaseChanged -= OnPhaseChanged;
 
         this.AbortAnimation("OrbBreathe");

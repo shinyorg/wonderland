@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <shiny:ShinyShell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                    xmlns:local="clr-namespace:ShinyWonderland"
                    xmlns:features="clr-namespace:ShinyWonderland.Features"
+                   xmlns:aiPages="clr-namespace:ShinyWonderland.Features.AI.Pages"
                    xmlns:hoursPages="clr-namespace:ShinyWonderland.Features.Hours.Pages"
                    xmlns:mealTimesPages="clr-namespace:ShinyWonderland.Features.MealTimes.Pages"
                    xmlns:parkingPages="clr-namespace:ShinyWonderland.Features.Parking.Pages"
@@ -12,24 +12,18 @@
                    x:Class="ShinyWonderland.AppShell"
                    x:DataType="local:AppShell">
 
-    <Shell.ToolbarItems>
-        <ToolbarItem Text="AI"
-                     AutomationId="AskAIToolbarButton"
-                     Command="{Binding AskAICommand}" />
-    </Shell.ToolbarItems>
-
-    <ShellContent ContentTemplate="{DataTemplate features:StartupPage}" 
+    <ShellContent ContentTemplate="{DataTemplate features:StartupPage}"
                   Route="startup"/>
 
     <TabBar Route="main">
         <Tab Title="{Binding Localize.RideTimes}" Icon="ride_time" Route="ridetimes" AutomationId="RideTimesTab">
             <ShellContent ContentTemplate="{DataTemplate ridePages:RideTimesPage}"/>
         </Tab>
-        <Tab Title="{Binding Localize.RideTimes}" Icon="ride_time" Route="ridetimesmap" AutomationId="MapRideTimesTab">
+        <Tab Title="Map" Icon="map" Route="ridetimesmap" AutomationId="MapRideTimesTab">
             <ShellContent ContentTemplate="{DataTemplate ridePages:MapRideTimesPage}"/>
         </Tab>
-        <Tab Title="{Binding Localize.Settings}" Icon="settings" Route="settings" AutomationId="SettingsTab">
-            <ShellContent ContentTemplate="{DataTemplate features:SettingsPage}"/>
+        <Tab Title="AI" Icon="ai" Route="ai" AutomationId="AITab">
+            <ShellContent ContentTemplate="{DataTemplate aiPages:AiPage}"/>
         </Tab>
         <Tab Title="{Binding Localize.Parking}" Icon="parking" Route="parking" AutomationId="ParkingTab">
             <ShellContent ContentTemplate="{DataTemplate parkingPages:ParkingPage}"/>
@@ -39,6 +33,9 @@
         </Tab>
         <Tab Title="{Binding Localize.Hours}" Icon="hours" Route="hours" AutomationId="HoursTab">
             <ShellContent ContentTemplate="{DataTemplate hoursPages:HoursPage}"/>
+        </Tab>
+        <Tab Title="{Binding Localize.Settings}" Icon="settings" Route="settings" AutomationId="SettingsTab">
+            <ShellContent ContentTemplate="{DataTemplate features:SettingsPage}"/>
         </Tab>
     </TabBar>
 </shiny:ShinyShell>

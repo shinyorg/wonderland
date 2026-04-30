@@ -1,6 +1,7 @@
 ﻿#if PLATFORM
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
+using MauiDevFlow.Agent;
 using Microsoft.Extensions.Configuration;
 using ShinyWonderland.Delegates;
 
@@ -19,6 +20,7 @@ public static class MauiProgram
         builder.Configuration.AddJsonPlatformBundle("debug");
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
         builder.Logging.AddDebug();
+        builder.AddMauiDevFlowAgent();
 #else
         builder.Configuration.AddJsonPlatformBundle();
 #endif

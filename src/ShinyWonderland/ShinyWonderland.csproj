@@ -151,9 +151,6 @@
       <MauiXaml Update="Features\Hours\Pages\HoursPage.xaml">
         <SubType>Designer</SubType>
       </MauiXaml>
-      <MauiXaml Update="Features\AI\Pages\AiLoadingPage.xaml">
-        <SubType>Designer</SubType>
-      </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
@@ -187,10 +184,6 @@
       </Compile>
       <Compile Update="Features\Hours\Pages\HoursPage.xaml.cs">
         <DependentUpon>HoursPage.xaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Features\AI\Pages\AiLoadingPage.xaml.cs">
-        <DependentUpon>AiLoadingPage.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

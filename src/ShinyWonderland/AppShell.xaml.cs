@@ -11,11 +11,4 @@ public partial class AppShell : ShinyShell
     }
 
     public StringsLocalized Localize { get; }
-
-    [RelayCommand]
-    Task AskAI()
-    {
-        var navigator = Handler!.MauiContext!.Services.GetRequiredService<INavigator>();
-        return navigator.NavigateToAiLoading();
-    }
 }

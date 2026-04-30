@@ -5,6 +5,7 @@
 
 # User-specific files
 .idea/
+.claude/
 .idea
 .DS_Store
 .idea/

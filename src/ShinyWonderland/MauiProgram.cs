@@ -1,9 +1,11 @@
 ﻿#if PLATFORM
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
-using MauiDevFlow.Agent;
 using Microsoft.Extensions.Configuration;
 using ShinyWonderland.Delegates;
+#if DEBUG
+using MauiDevFlow.Agent;
+#endif
 
 namespace ShinyWonderland;
 

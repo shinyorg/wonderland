@@ -44,60 +44,42 @@ public partial class AIHandler(
             var granted = await speechToText.RequestPermissions(cancellationToken);
             if (!granted)
                 return;
+            
+            await SendPhase(AiPhase.Prompting, cancellationToken);
+            await textToSpeech.SpeakAsync("What would you like to know?", cancelToken: cancellationToken);
 
-            var tcs = new TaskCompletionSource<string?>();
-            void OnCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
-                => tcs.TrySetResult(e.RecognitionResult.Text);
+            // allow audio session to fully release before starting speech recognition
+            await Task.Delay(500, cancellationToken);
 
-            speechToText.RecognitionResultCompleted += OnCompleted;
-            try
+            await SendPhase(AiPhase.Listening, cancellationToken);
+
+            var userText = await speechToText.WaitForSpeechToText(cancellationToken);
+            logger.LogDebug($"User: {userText}");
+            if (string.IsNullOrWhiteSpace(userText))
+                return;
+
+            // TODO: could even say - one sec - thinking
+            await SendPhase(AiPhase.Thinking, cancellationToken);
+            
+            var tools = aitools.ToList();
+            tools.AddRange(shellTools.Tools);
+
+            var copy = this.SystemMessages.ToList();
+            copy.Add(new ChatMessage(ChatRole.User, userText));
+            var chatOptions = new ChatOptions
             {
-                await SendPhase(AiPhase.Prompting, cancellationToken);
+                Tools = tools
+            };
 
-                await speechToText.StartListenAsync(new CommunityToolkit.Maui.Media.SpeechToTextOptions
-                {
-                    Culture = System.Globalization.CultureInfo.CurrentCulture,
-                    ShouldReportPartialResults = false
-                }, cancellationToken);
+            var response = await chatClient.GetResponseAsync(copy, chatOptions, cancellationToken);
+            var assistantText = response.Text;
+            logger.LogDebug($"Assistant: {assistantText}");
 
-                await textToSpeech.SpeakAsync("What would you like to know?", cancelToken: cancellationToken);
+            if (String.IsNullOrWhiteSpace(assistantText))
+                assistantText = "I have nothing useful to say";
 
-                await SendPhase(AiPhase.Listening, cancellationToken);
-
-                await using var reg = cancellationToken.Register(() => tcs.TrySetCanceled());
-                var userText = await tcs.Task;
-                logger.LogDebug($"User: {userText}");
-
-                await speechToText.StopListenAsync(cancellationToken);
-                if (string.IsNullOrWhiteSpace(userText))
-                    return;
-
-                await SendPhase(AiPhase.Thinking, cancellationToken);
-
-                var tools = aitools.ToList();
-                tools.AddRange(shellTools.Tools);
-
-                var copy = this.SystemMessages.ToList();
-                copy.Add(new ChatMessage(ChatRole.User, userText));
-                var chatOptions = new ChatOptions
-                {
-                    Tools = tools
-                };
-
-                var response = await chatClient.GetResponseAsync(copy, chatOptions, cancellationToken);
-                var assistantText = response.Text;
-                logger.LogDebug($"Assistant: {assistantText}");
-
-                if (String.IsNullOrWhiteSpace(assistantText))
-                    assistantText = "I have nothing useful to say";
-
-                await SendPhase(AiPhase.Speaking, cancellationToken);
-                await textToSpeech.SpeakAsync(assistantText, cancelToken: cancellationToken);
-            }
-            finally
-            {
-                speechToText.RecognitionResultCompleted -= OnCompleted;
-            }
+            await SendPhase(AiPhase.Speaking, cancellationToken);
+            await textToSpeech.SpeakAsync(assistantText, cancelToken: cancellationToken);
         }
         catch (OperationCanceledException)
         {

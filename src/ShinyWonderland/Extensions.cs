@@ -1,8 +1,41 @@
+using CommunityToolkit.Maui.Media;
+
 namespace ShinyWonderland;
 
 
 public static class Extensions
 {
+    public static async Task<string?> WaitForSpeechToText(
+        this ISpeechToText speechToText,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var tcs = new TaskCompletionSource<string?>();
+        using var ctr = cancellationToken.Register(() => tcs.TrySetResult(null));
+
+        void OnCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
+            => tcs.TrySetResult(e.RecognitionResult.Text);
+
+        speechToText.RecognitionResultCompleted += OnCompleted;
+        try
+        {
+            await speechToText.StartListenAsync(new SpeechToTextOptions
+            {
+                Culture = System.Globalization.CultureInfo.CurrentCulture,
+                ShouldReportPartialResults = false,
+                AutoStopSilenceTimeout = TimeSpan.FromSeconds(2)
+            }, cancellationToken);
+
+            var result = await tcs.Task.ConfigureAwait(false);
+            return result;
+        }
+        finally
+        {
+            speechToText.RecognitionResultCompleted -= OnCompleted;
+            await speechToText.StopListenAsync();
+        }
+    }
+    
     public static async Task<bool> IsWithinPark(
         this IGpsManager gpsManager, 
         ParkOptions parkOptions, 

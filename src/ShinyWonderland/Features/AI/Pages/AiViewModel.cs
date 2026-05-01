@@ -13,7 +13,7 @@ public partial class AiViewModel(ViewModelServices services) :
 
     public bool IsActive => CurrentPhase != AiPhase.Idle;
 
-    [RelayCommand]
+    [RelayCommand(AllowConcurrentExecutions = true)]
     async Task ToggleAi()
     {
         if (this.IsActive)

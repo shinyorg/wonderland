@@ -1,6 +1,5 @@
 ﻿#if PLATFORM
 using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Configuration;
 using ShinyWonderland.Delegates;
 #if DEBUG
@@ -69,7 +68,7 @@ public static class MauiProgram
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TextToSpeech.Default);
-        builder.Services.AddSingleton(SpeechToText.Default);
+        builder.Services.AddSpeechToText();
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();

@@ -1,5 +1,5 @@
-using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.AI;
+using Shiny.Speech;
 
 namespace ShinyWonderland.Features.AI.Handlers;
 
@@ -41,10 +41,10 @@ public partial class AIHandler(
 
         try
         {
-            var granted = await speechToText.RequestPermissions(cancellationToken);
-            if (!granted)
+            var access = await speechToText.RequestAccess();
+            if (access != Shiny.Speech.AccessState.Available)
                 return;
-            
+
             await SendPhase(AiPhase.Prompting, cancellationToken);
             await textToSpeech.SpeakAsync("What would you like to know?", cancelToken: cancellationToken);
 
@@ -53,7 +53,7 @@ public partial class AIHandler(
 
             await SendPhase(AiPhase.Listening, cancellationToken);
 
-            var userText = await speechToText.WaitForSpeechToText(cancellationToken);
+            var userText = await speechToText.ListenUntilSilence(cancellationToken: cancellationToken);
             logger.LogDebug($"User: {userText}");
             if (string.IsNullOrWhiteSpace(userText))
                 return;

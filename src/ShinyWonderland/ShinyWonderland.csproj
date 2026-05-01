@@ -122,6 +122,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Shiny.Speech\Shiny.Speech.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.ApiClient\ShinyWonderland.ApiClient.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
     </ItemGroup>

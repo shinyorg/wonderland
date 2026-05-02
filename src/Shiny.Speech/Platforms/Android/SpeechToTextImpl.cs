@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Shiny.Speech;
 
-public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToText
+public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToTextService
 {
     public bool IsSupported =>
         Android.Speech.SpeechRecognizer.IsRecognitionAvailable(Android.App.Application.Context);

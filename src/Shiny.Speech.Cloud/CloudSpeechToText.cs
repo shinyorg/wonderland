@@ -5,14 +5,14 @@ using Shiny.Speech;
 namespace Shiny.Speech.Cloud;
 
 /// <summary>
-/// ISpeechToText implementation that captures audio from the platform microphone
+/// ISpeechToTextService implementation that captures audio from the platform microphone
 /// and delegates recognition to a pluggable ISpeechToTextProvider (Azure, Google, etc.).
 /// </summary>
 public class CloudSpeechToText(
     ISpeechToTextProvider provider,
     IAudioSource audioSource,
     ILogger<CloudSpeechToText> logger
-) : ISpeechToText
+) : ISpeechToTextService
 {
     public bool IsSupported => true;
 

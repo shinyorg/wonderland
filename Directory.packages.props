@@ -38,6 +38,9 @@
         <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ClientVersion)"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageVersion Include="Microsoft.CognitiveServices.Speech" Version="1.42.0"/>
+    </ItemGroup>
+    <ItemGroup>
         <PackageVersion Include="Redth.MauiDevFlow.Agent" Version="0.23.1"/>
         <PackageVersion Include="coverlet.collector" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.5.0"/>

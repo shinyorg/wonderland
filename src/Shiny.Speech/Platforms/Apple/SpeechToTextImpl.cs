@@ -8,7 +8,7 @@ using Speech;
 
 namespace Shiny.Speech;
 
-public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToText
+public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToTextService
 {
     public bool IsSupported =>
         SFSpeechRecognizer.AuthorizationStatus != SFSpeechRecognizerAuthorizationStatus.Restricted;

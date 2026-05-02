@@ -9,7 +9,13 @@ public static class SpeechServiceCollectionExtensions
 {
     public static IServiceCollection AddSpeechToText(this IServiceCollection services)
     {
-        services.TryAddSingleton<ISpeechToText, SpeechToTextImpl>();
+        services.TryAddSingleton<ISpeechToTextService, SpeechToTextImpl>();
+        return services;
+    }
+
+    public static IServiceCollection AddTextToSpeech(this IServiceCollection services)
+    {
+        services.TryAddSingleton<ITextToSpeechService, TextToSpeechImpl>();
         return services;
     }
 }

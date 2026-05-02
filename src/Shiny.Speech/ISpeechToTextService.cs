@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 namespace Shiny.Speech;
 
-public interface ISpeechToText
+public interface ISpeechToTextService
 {
     /// <summary>
     /// Whether speech recognition is available on this device

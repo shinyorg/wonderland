@@ -9,8 +9,12 @@
     <File Path=".github\workflows\build-android.yml" />
     <File Path=".github\workflows\build-ios.yml" />
   </Folder>
-  <Project Path="src/Shiny.Speech/Shiny.Speech.csproj" />
-  <Project Path="src/Shiny.Speech.Cloud/Shiny.Speech.Cloud.csproj" />
+  <Folder Name="/Speech/">
+    <Project Path="src/Shiny.Speech.Azure/Shiny.Speech.Azure.csproj" />
+    <Project Path="src/Shiny.Speech.Cloud/Shiny.Speech.Cloud.csproj" />
+    <Project Path="src/Shiny.Speech.ElevenLabs/Shiny.Speech.ElevenLabs.csproj" />
+    <Project Path="src/Shiny.Speech/Shiny.Speech.csproj" />
+  </Folder>
   <Project Path="src/ShinyWonderland/ShinyWonderland.csproj" />
   <Project Path="src/ShinyWonderland.ApiClient/ShinyWonderland.ApiClient.csproj" />
   <Project Path="src/ShinyWonderland.Localization/ShinyWonderland.Localization.csproj" />

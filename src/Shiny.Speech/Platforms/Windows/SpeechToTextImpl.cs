@@ -7,7 +7,7 @@ using Windows.Media.SpeechRecognition;
 
 namespace Shiny.Speech;
 
-public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToText
+public class SpeechToTextImpl(ILogger<SpeechToTextImpl> logger) : ISpeechToTextService
 {
     public bool IsSupported => true;
 

@@ -11,8 +11,8 @@ public partial class AIHandler(
     IChatClient chatClient,
     AiMauiShellTools shellTools,
     IEnumerable<AITool> aitools,
-    ISpeechToText speechToText,
-    ITextToSpeech textToSpeech,
+    ISpeechToTextService speechToText,
+    ITextToSpeechService textToSpeech,
     IMediator mediator
 ) : ICommandHandler<AskAI>
 {
@@ -35,7 +35,7 @@ public partial class AIHandler(
         if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
         {
             await SendPhase(AiPhase.Speaking, cancellationToken);
-            await textToSpeech.SpeakAsync("You are not connected to the internet.", cancelToken: cancellationToken);
+            await textToSpeech.SpeakAsync("You are not connected to the internet.", cancellationToken: cancellationToken);
             return;
         }
 
@@ -46,7 +46,7 @@ public partial class AIHandler(
                 return;
 
             await SendPhase(AiPhase.Prompting, cancellationToken);
-            await textToSpeech.SpeakAsync("What would you like to know?", cancelToken: cancellationToken);
+            await textToSpeech.SpeakAsync("What would you like to know?", cancellationToken: cancellationToken);
 
             // allow audio session to fully release before starting speech recognition
             await Task.Delay(500, cancellationToken);
@@ -58,7 +58,7 @@ public partial class AIHandler(
             if (string.IsNullOrWhiteSpace(userText))
                 return;
 
-            // TODO: could even say - one sec - thinking
+            await textToSpeech.SpeakAsync("Thinking...",  cancellationToken: cancellationToken);
             await SendPhase(AiPhase.Thinking, cancellationToken);
             
             var tools = aitools.ToList();
@@ -79,7 +79,7 @@ public partial class AIHandler(
                 assistantText = "I have nothing useful to say";
 
             await SendPhase(AiPhase.Speaking, cancellationToken);
-            await textToSpeech.SpeakAsync(assistantText, cancelToken: cancellationToken);
+            await textToSpeech.SpeakAsync(assistantText, cancellationToken: cancellationToken);
         }
         catch (OperationCanceledException)
         {

@@ -1,5 +1,4 @@
 ﻿#if PLATFORM
-using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using ShinyWonderland.Delegates;
 #if DEBUG
@@ -27,7 +26,6 @@ public static class MauiProgram
         
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
             .UseMauiMaps()
             .UseShiny()
             .UseShinyControls()

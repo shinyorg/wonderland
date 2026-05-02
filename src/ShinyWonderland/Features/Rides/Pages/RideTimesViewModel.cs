@@ -26,12 +26,12 @@ public partial class RideTimesViewModel(
         this.gpsEventSubj
             .Sample(TimeSpan.FromSeconds(3))
             .Where(x => this.Rides.Any(r => r.DistanceMeters != null)) // only update if we have at least one ride with a known distance
-            .Subscribe(@event =>
+            .Subscribe(@event => Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
             {
                 var rides = this.Rides.ToList();
                 foreach (var ride in rides)
                     ride.UpdateDistance(@event.Position);
-        
+
                 this.currentPosition = @event.Position;
                 if (services.AppSettings.Ordering == RideOrder.Distance)
                 {
@@ -40,7 +40,7 @@ public partial class RideTimesViewModel(
                         .ThenBy(x => x.Name)
                         .ToList();
                 }
-            })
+            }))
             .DisposedBy(this.DeactivateWith);
     }
     

@@ -90,7 +90,6 @@
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
         <PackageReference Include="Microsoft.Extensions.AI"/>
         <PackageReference Include="Microsoft.Extensions.AI.OpenAI"/>
-        <PackageReference Include="CommunityToolkit.Maui"/>
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>

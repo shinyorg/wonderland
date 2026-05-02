@@ -1,4 +1,3 @@
-#if PLATFORM
 using Microsoft.Extensions.DependencyInjection;
 using Shiny.Speech.ElevenLabs;
 
@@ -6,6 +5,10 @@ namespace Shiny;
 
 public static class ElevenLabsServiceCollectionExtensions
 {
+    /// <summary>
+    /// Register ElevenLabs text-to-speech.
+    /// Requires IAudioPlayer to be registered (call AddAudioPlayer() from Shiny.Speech).
+    /// </summary>
     public static IServiceCollection AddElevenLabsTextToSpeech(this IServiceCollection services, string apiKey)
     {
         services.AddSingleton(new ElevenLabsConfig { ApiKey = apiKey });
@@ -13,6 +16,10 @@ public static class ElevenLabsServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Register ElevenLabs text-to-speech.
+    /// Requires IAudioPlayer to be registered (call AddAudioPlayer() from Shiny.Speech).
+    /// </summary>
     public static IServiceCollection AddElevenLabsTextToSpeech(this IServiceCollection services, ElevenLabsConfig config)
     {
         services.AddSingleton(config);
@@ -20,4 +27,3 @@ public static class ElevenLabsServiceCollectionExtensions
         return services;
     }
 }
-#endif

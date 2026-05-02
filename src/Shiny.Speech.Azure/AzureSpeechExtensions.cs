@@ -1,4 +1,3 @@
-#if PLATFORM
 using Microsoft.Extensions.DependencyInjection;
 using Shiny.Speech.Azure;
 
@@ -8,6 +7,7 @@ public static class AzureSpeechExtensions
 {
     /// <summary>
     /// Register Azure AI Speech for both speech-to-text and text-to-speech.
+    /// Requires IAudioSource/IAudioPlayer to be registered (call AddAudioSource()/AddAudioPlayer() from Shiny.Speech).
     /// </summary>
     public static IServiceCollection AddAzureSpeech(
         this IServiceCollection services,
@@ -27,6 +27,7 @@ public static class AzureSpeechExtensions
 
     /// <summary>
     /// Register Azure AI Speech for both speech-to-text and text-to-speech.
+    /// Requires IAudioSource/IAudioPlayer to be registered (call AddAudioSource()/AddAudioPlayer() from Shiny.Speech).
     /// </summary>
     public static IServiceCollection AddAzureSpeech(
         this IServiceCollection services,
@@ -46,4 +47,3 @@ public static class AzureSpeechExtensions
         return services;
     }
 }
-#endif

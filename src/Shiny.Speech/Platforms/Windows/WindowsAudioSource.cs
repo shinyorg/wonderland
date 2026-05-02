@@ -5,7 +5,7 @@ using Windows.Media.Audio;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 
-namespace Shiny.Speech.Cloud;
+namespace Shiny.Speech;
 
 public class WindowsAudioSource(ILogger<WindowsAudioSource> logger) : IAudioSource
 {

@@ -1,4 +1,4 @@
-namespace Shiny.Speech.Cloud;
+namespace Shiny.Speech;
 
 /// <summary>
 /// Platform-specific audio playback for synthesized speech.

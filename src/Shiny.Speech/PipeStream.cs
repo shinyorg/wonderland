@@ -1,4 +1,4 @@
-namespace Shiny.Speech.Cloud;
+namespace Shiny.Speech;
 
 /// <summary>
 /// A thread-safe stream that allows one thread to write and another to read.

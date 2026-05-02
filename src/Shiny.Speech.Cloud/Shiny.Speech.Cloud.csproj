@@ -1,53 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>$(BaseTargetFramework)</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);$(BaseTargetFramework)-ios;$(BaseTargetFramework)-maccatalyst</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);$(BaseTargetFramework)-windows10.0.19041.0</TargetFrameworks>
-
         <RootNamespace>Shiny.Speech.Cloud</RootNamespace>
         <LangVersion>preview</LangVersion>
-        <UseMaui>false</UseMaui>
-        <SingleProject>true</SingleProject>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-        <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-        <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
-        <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-        <TargetPlatformVersion>36</TargetPlatformVersion>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-        <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Shiny.Speech\Shiny.Speech.csproj" />
-    </ItemGroup>
-
-    <!-- Remove all platform files first, then conditionally include -->
-    <ItemGroup>
-        <Compile Remove="Platforms\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-        <Compile Include="Platforms\Apple\**\*.cs" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-        <Compile Include="Platforms\Android\**\*.cs" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-        <Compile Include="Platforms\Windows\**\*.cs" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
     </ItemGroup>
 </Project>

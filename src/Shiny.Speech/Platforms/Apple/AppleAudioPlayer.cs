@@ -3,7 +3,7 @@ using AVFoundation;
 using Foundation;
 using Microsoft.Extensions.Logging;
 
-namespace Shiny.Speech.Cloud;
+namespace Shiny.Speech;
 
 public class AppleAudioPlayer(ILogger<AppleAudioPlayer> logger) : IAudioPlayer
 {

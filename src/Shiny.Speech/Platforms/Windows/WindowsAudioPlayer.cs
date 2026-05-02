@@ -4,7 +4,7 @@ using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage.Streams;
 
-namespace Shiny.Speech.Cloud;
+namespace Shiny.Speech;
 
 public class WindowsAudioPlayer(ILogger<WindowsAudioPlayer> logger) : IAudioPlayer
 {

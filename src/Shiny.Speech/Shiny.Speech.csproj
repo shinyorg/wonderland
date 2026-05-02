@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <TargetFrameworks>$(BaseTargetFramework);$(BaseTargetFramework)-ios;$(BaseTargetFramework)-android</TargetFrameworks>
+        <!--
         <TargetFrameworks>$(BaseTargetFramework)</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);$(BaseTargetFramework)-ios;$(BaseTargetFramework)-maccatalyst</TargetFrameworks>
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
         <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);$(BaseTargetFramework)-windows10.0.19041.0</TargetFrameworks>
-
+        -->
         <RootNamespace>Shiny.Speech</RootNamespace>
         <LangVersion>preview</LangVersion>
         <UseMaui>false</UseMaui>

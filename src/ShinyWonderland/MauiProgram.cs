@@ -16,7 +16,6 @@ public static class MauiProgram
     {
         var builder = MauiApp.CreateBuilder();
         
-        
 #if DEBUG
         builder.Configuration.AddJsonPlatformBundle("debug");
         builder.Logging.SetMinimumLevel(LogLevel.Trace);
@@ -68,8 +67,8 @@ public static class MauiProgram
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TextToSpeech.Default);
-        builder.Services.AddSpeechToText();
         builder.Services.AddSingleton(TimeProvider.System);
+        builder.Services.AddSpeechServices();
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
         builder.Services.AddGps<MyGpsDelegate>();

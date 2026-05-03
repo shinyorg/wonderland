@@ -9,8 +9,7 @@
                    xmlns:parkingPages="clr-namespace:ShinyWonderland.Features.Parking.Pages"
                    xmlns:ridePages="clr-namespace:ShinyWonderland.Features.Rides.Pages"
                    xmlns:shiny="clr-namespace:Shiny;assembly=Shiny.Maui.Shell"
-                   x:Class="ShinyWonderland.AppShell"
-                   x:DataType="local:AppShell">
+                   x:Class="ShinyWonderland.AppShell">
 
     <ShellContent ContentTemplate="{DataTemplate features:StartupPage}"
                   Route="startup"/>

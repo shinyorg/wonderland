@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shinyWonderland="clr-namespace:ShinyWonderland.Features.MealTimes.Pages"
              xmlns:controls="clr-namespace:ShinyWonderland.Controls"
+             xmlns:data="clr-namespace:ShinyWonderland;assembly=ShinyWonderland"
              x:DataType="shinyWonderland:MealTimeViewModel"
              x:Class="ShinyWonderland.Features.MealTimes.Pages.MealTimePage"
              AutomationId="MealTimePage"
@@ -232,9 +233,8 @@
                     <controls:NoItemsView />
                 </CollectionView.EmptyView>
 
-                <!--
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="shinyWonderland:MealTimeHistoryRecord">
+                    <DataTemplate x:DataType="data:MealTimeHistoryRecord">
                         <Border Margin="0,3"
                                 StrokeThickness="0"
                                 Padding="14,12"
@@ -266,7 +266,6 @@
                     </DataTemplate>
                     
                 </CollectionView.ItemTemplate>
-                -->
             </CollectionView>
         </VerticalStackLayout>
     </ScrollView>

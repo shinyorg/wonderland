@@ -25,6 +25,7 @@ public class AIModule : IMauiModule
             .UseFunctionInvocation()
             .Build();
 
+        builder.Services.AddSpeechServices();
         builder.Services.AddSingleton(chatClient);
     }
 

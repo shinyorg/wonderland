@@ -232,6 +232,7 @@
                     <controls:NoItemsView />
                 </CollectionView.EmptyView>
 
+                <!--
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="shinyWonderland:MealTimeHistoryRecord">
                         <Border Margin="0,3"
@@ -263,7 +264,9 @@
                             </HorizontalStackLayout>
                         </Border>
                     </DataTemplate>
+                    
                 </CollectionView.ItemTemplate>
+                -->
             </CollectionView>
         </VerticalStackLayout>
     </ScrollView>

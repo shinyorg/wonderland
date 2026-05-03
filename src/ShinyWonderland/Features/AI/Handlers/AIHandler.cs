@@ -89,7 +89,7 @@ public partial class AIHandler(
         {
             logger.LogError(ex, "AI handler failed");
             await SendPhase(AiPhase.Speaking, CancellationToken.None);
-            await textToSpeech.SpeakAsync("oh oh - something went wrong");
+            await textToSpeech.SpeakAsync("oh oh - something went wrong", cancellationToken: cancellationToken);
         }
     }
 }

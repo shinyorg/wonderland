@@ -104,6 +104,7 @@
         <PackageReference Include="Shiny.Notifications"/>
         <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
         <PackageReference Include="Shiny.DocumentDb.Extensions.DependencyInjection"/>
+        <PackageReference Include="Shiny.Speech" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
@@ -121,7 +122,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Shiny.Speech\Shiny.Speech.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.ApiClient\ShinyWonderland.ApiClient.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
     </ItemGroup>

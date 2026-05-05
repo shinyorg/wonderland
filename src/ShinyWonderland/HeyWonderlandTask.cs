@@ -15,7 +15,7 @@ public class HeyWonderTask(
 
     public void Initialize(IServiceProvider services)
     {
-        appsettings.PropertyChanged += (sender, args) =>
+        appsettings.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(AppSettings.IsHeyWonderlandEnabled))
             {
@@ -42,7 +42,7 @@ public class HeyWonderTask(
         cts?.Cancel();
         cts?.Dispose();
         cts = null;
-        mediator.Publish(new Features.AI.AiPhaseChanged(Features.AI.AiPhase.Idle));
+        mediator.Publish(new AiPhaseChanged(AiPhase.Idle));
     }
 
     async Task ListenLoop(CancellationToken ct)

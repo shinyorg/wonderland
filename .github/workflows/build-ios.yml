@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  XCODE_VERSION: 26.3.0
+  XCODE_VERSION: 26.4.0
   DOTNET_TFM: 'net10.0'
   DOTNET_VERSION: '10.0.203'
   APP_PROJECT: './src/ShinyWonderland/ShinyWonderland.csproj'

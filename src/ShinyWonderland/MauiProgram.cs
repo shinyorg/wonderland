@@ -10,7 +10,6 @@ namespace ShinyWonderland;
 
 public static class MauiProgram
 {
-    
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -28,7 +27,7 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .UseMauiMaps()
             .UseShiny()
-            .UseShinyControls()
+            .UseShinyControls(x => x.AddDefaultMauiControlFeedback())
             .UseShinyShell(x => x
                 .AddGeneratedMaps()
                 .UseUxDiversDialogs()

@@ -6,29 +6,63 @@ namespace ShinyWonderland;
 [Singleton]
 public class HeyWonderTask(
     AppSettings appsettings,
-    ISpeechToTextService speechToTextService
+    ISpeechToTextService speechToTextService,
+    IMediator mediator,
+    ILogger<HeyWonderTask> logger
 ) : IMauiInitializeService
 {
+    CancellationTokenSource? cts;
+
     public void Initialize(IServiceProvider services)
     {
         appsettings.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == nameof(AppSettings.IsHeyWonderlandEnabled))
             {
-
+                if (appsettings.IsHeyWonderlandEnabled)
+                    Start();
+                else
+                    Stop();
             }
         };
-        _ = this.HeyWonderland();
+
+        if (appsettings.IsHeyWonderlandEnabled)
+            Start();
     }
 
-    async Task HeyWonderland()
+    void Start()
     {
-        // TODO: cancellation token to stop listening when disabled
-        // TODO: should also continue to loop listen after taking a command and handing it to AI
-        // TODO: if the user presses the AI button, we should stop this listener somehow or just trigger the "hey wonderland".... ?
-        if (appsettings.IsHeyWonderlandEnabled)
+        Stop();
+        cts = new CancellationTokenSource();
+        _ = ListenLoop(cts.Token);
+    }
+
+    void Stop()
+    {
+        cts?.Cancel();
+        cts?.Dispose();
+        cts = null;
+        mediator.Publish(new Features.AI.AiPhaseChanged(Features.AI.AiPhase.Idle));
+    }
+
+    async Task ListenLoop(CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
         {
-            await speechToTextService.ListenWithWakeWord("Hey Wonderland");
+            try
+            {
+                await mediator.Publish(new AiPhaseChanged(AiPhase.Listening), ct);
+                var userText = await speechToTextService.ListenWithWakeWord("Hey Wonderland", cancellationToken: ct);
+                await mediator.Send(new AskAI(userText), ct);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Hey Wonderland listener error");
+            }
         }
     }
 }

@@ -5,7 +5,10 @@ namespace ShinyWonderland.Features;
 public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject
 {
     public string AppVersion => AssemblyInfo.ApplicationDisplayVersion;
-    
+
+#if IOS
+    [ObservableProperty] public partial bool IsHeyWonderlandEnabled { get; set; } = appSettings.IsHeyWonderlandEnabled;
+#endif
     [ObservableProperty] public partial RideOrder Ordering { get; set; } = appSettings.Ordering;
     [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
     [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; } = appSettings.EnableTimeRideNotifications;
@@ -18,30 +21,35 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
     {
         switch (e.PropertyName)
         {
+#if IOS
+            case nameof(IsHeyWonderlandEnabled):
+                appSettings.IsHeyWonderlandEnabled = this.IsHeyWonderlandEnabled;
+                break;
+#endif
             case nameof(Ordering):
                 appSettings.Ordering = this.Ordering;
                 break;
-            
+
             case nameof(ShowOpenOnly):
                 appSettings.ShowOpenOnly = this.ShowOpenOnly;
                 break;
-            
+
             case nameof(ShowTimedOnly):
                 appSettings.ShowTimedOnly = this.ShowTimedOnly;
                 break;
-            
+
             case nameof(EnableGeofenceNotifications):
                 appSettings.EnableGeofenceNotifications = this.EnableGeofenceNotifications;
                 break;
-            
+
             case nameof(EnableMealNotifications):
                 appSettings.EnableMealNotifications = this.EnableMealNotifications;
                 break;
-            
+
             case nameof(EnableDrinkNotifications):
                 appSettings.EnableDrinkNotifications = this.EnableDrinkNotifications;
                 break;
-            
+
             case nameof(EnableTimeRideNotifications):
                 appSettings.EnableTimeRideNotifications = this.EnableTimeRideNotifications;
                 break;

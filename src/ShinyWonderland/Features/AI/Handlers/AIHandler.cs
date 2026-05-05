@@ -3,7 +3,7 @@ using Shiny.Speech;
 
 namespace ShinyWonderland.Features.AI.Handlers;
 
-public record AskAI : ICommand;
+public record AskAI(string? UserText = null) : ICommand;
 
 [MediatorSingleton]
 public partial class AIHandler(
@@ -66,22 +66,27 @@ public partial class AIHandler(
 
         try
         {
-            var access = await speechToText.RequestAccess();
-            if (access != Shiny.Speech.AccessState.Available)
-                return;
-
-            await SendPhase(AiPhase.Prompting, cancellationToken);
-            await textToSpeech.SpeakAsync("What would you like to know?", cancellationToken: cancellationToken);
-
-            // allow audio session to fully release before starting speech recognition
-            await Task.Delay(500, cancellationToken);
-
-            await SendPhase(AiPhase.Listening, cancellationToken);
-
-            var userText = await speechToText.ListenUntilSilence(cancellationToken: cancellationToken);
-            logger.LogDebug($"User: {userText}");
+            var userText = command.UserText;
             if (string.IsNullOrWhiteSpace(userText))
-                return;
+            {
+                var access = await speechToText.RequestAccess();
+                if (access != Shiny.Speech.AccessState.Available)
+                    return;
+
+                await SendPhase(AiPhase.Prompting, cancellationToken);
+                await textToSpeech.SpeakAsync("What would you like to know?", cancellationToken: cancellationToken);
+
+                // allow audio session to fully release before starting speech recognition
+                await Task.Delay(500, cancellationToken);
+
+                await SendPhase(AiPhase.Listening, cancellationToken);
+
+                userText = await speechToText.ListenUntilSilence(cancellationToken: cancellationToken);
+                if (string.IsNullOrWhiteSpace(userText))
+                    return;
+            }
+
+            logger.LogDebug($"User: {userText}");
 
             await textToSpeech.SpeakAsync("Thinking...",  cancellationToken: cancellationToken);
             await SendPhase(AiPhase.Thinking, cancellationToken);

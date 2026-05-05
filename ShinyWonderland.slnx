@@ -2,7 +2,6 @@
   <Folder Name="/Solution/">
     <File Path="Directory.build.props" />
     <File Path="Directory.packages.props" />
-    <File Path="global.json" />
     <File Path="readme.md" />
     <File Path="themeparkapi.http" />
     <File Path=".editorconfig" />

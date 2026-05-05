@@ -1,14 +1,15 @@
-using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using Microsoft.Maui.DevFlow.Driver;
 
 namespace ShinyWonderland.UITests;
 
 public class MauiDevFlowDriver : IAsyncDisposable
 {
     readonly string screenshotDir;
+    AgentClient? client;
 
     public Platform? TargetPlatform { get; init; }
+    public int Port { get; init; } = 9223;
 
     public MauiDevFlowDriver(string? screenshotDir = null)
     {
@@ -19,173 +20,216 @@ public class MauiDevFlowDriver : IAsyncDisposable
         Directory.CreateDirectory(this.screenshotDir);
     }
 
-    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    public AgentClient Client => client ?? throw new InvalidOperationException("Driver not connected. Call WaitForAgent first.");
 
-    public async Task<string> RunCommand(string args, int timeoutMs = 30_000)
+    public ValueTask DisposeAsync()
     {
-        var platformArg = TargetPlatform switch
-        {
-            Platform.iOS => "-p ios ",
-            Platform.Android => "-p android ",
-            _ => ""
-        };
-
-        using var process = new Process();
-        process.StartInfo = new ProcessStartInfo
-        {
-            FileName = "maui-devflow",
-            Arguments = platformArg + args,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-        process.Start();
-
-        using var cts = new CancellationTokenSource(timeoutMs);
-        var output = await process.StandardOutput.ReadToEndAsync(cts.Token);
-        var error = await process.StandardError.ReadToEndAsync(cts.Token);
-        await process.WaitForExitAsync(cts.Token);
-
-        if (process.ExitCode != 0)
-            throw new MauiDevFlowException(process.ExitCode, error, output);
-
-        return output.Trim();
+        client?.Dispose();
+        return ValueTask.CompletedTask;
     }
 
-    public async Task<JsonNode?> RunJsonCommand(string args, int timeoutMs = 30_000)
+    public async Task WaitForAgent(int timeoutSeconds = 120)
     {
-        var output = await RunCommand(args + " --json", timeoutMs);
-        if (string.IsNullOrWhiteSpace(output))
-            return null;
+        client = new AgentClient("localhost", Port);
+        var deadline = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+        Exception? lastException = null;
 
-        return JsonNode.Parse(output);
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                await client.GetStatusAsync();
+                return;
+            }
+            catch (Exception ex)
+            {
+                lastException = ex;
+                await Task.Delay(1000);
+            }
+        }
+
+        throw new TimeoutException(
+            $"DevFlow agent did not respond within {timeoutSeconds}s",
+            lastException
+        );
     }
-
-    public Task WaitForAgent(int timeoutSeconds = 120)
-        => RunCommand($"wait --timeout {timeoutSeconds}", timeoutSeconds * 1000 + 5000);
 
     public Task Navigate(string route)
-        => RunCommand($"MAUI navigate \"{route}\"");
+        => Client.NavigateAsync(route);
 
-    public Task<JsonNode?> Tree(int depth = 15, string? fields = null)
-    {
-        var fieldsArg = fields != null ? $" --fields \"{fields}\"" : "";
-        return RunJsonCommand($"MAUI tree --depth {depth}{fieldsArg}");
-    }
+    public async Task<List<ElementInfo>> Tree(int depth = 15)
+        => await Client.GetTreeAsync(maxDepth: depth);
 
-    public Task<JsonNode?> Query(
+    public async Task<List<ElementInfo>> Query(
         string? automationId = null,
         string? type = null,
-        string? text = null,
-        string? fields = null)
+        string? text = null)
+        => await Client.QueryAsync(type: type, automationId: automationId, text: text);
+
+    async Task<ElementInfo> FindElementAsync(string automationId, int timeoutSeconds = 30)
     {
-        var args = "MAUI query";
-        if (automationId != null) args += $" --automationId \"{automationId}\"";
-        if (type != null) args += $" --type \"{type}\"";
-        if (text != null) args += $" --text \"{text}\"";
-        if (fields != null) args += $" --fields \"{fields}\"";
-        return RunJsonCommand(args);
+        var deadline = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+        Exception? lastException = null;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                var results = await Client.QueryAsync(automationId: automationId);
+                if (results.Count > 0)
+                    return results[0];
+            }
+            catch (Exception ex)
+            {
+                lastException = ex;
+            }
+            await Task.Delay(500);
+        }
+
+        throw new TimeoutException(
+            $"Element with AutomationId '{automationId}' not found within {timeoutSeconds}s",
+            lastException
+        );
     }
 
-    public Task<JsonNode?> WaitUntilExists(string automationId, int timeoutSeconds = 30)
-        => RunJsonCommand(
-            $"MAUI query --automationId \"{automationId}\" --wait-until exists --timeout {timeoutSeconds}",
-            (timeoutSeconds + 5) * 1000);
-
-    public Task<JsonNode?> WaitUntilGone(string automationId, int timeoutSeconds = 30)
-        => RunJsonCommand(
-            $"MAUI query --automationId \"{automationId}\" --wait-until gone --timeout {timeoutSeconds}",
-            (timeoutSeconds + 5) * 1000);
-
-    public Task Tap(string? automationId = null, string? elementId = null, string? type = null, int? index = null)
+    public async Task<List<ElementInfo>> WaitUntilExists(string automationId, int timeoutSeconds = 30)
     {
-        var args = "MAUI tap";
-        if (elementId != null) args += $" {elementId}";
-        if (automationId != null) args += $" --automationId \"{automationId}\"";
-        if (type != null) args += $" --type \"{type}\"";
-        if (index != null) args += $" --index {index}";
-        return RunCommand(args);
+        var element = await FindElementAsync(automationId, timeoutSeconds);
+        return [element];
     }
 
-    public Task Fill(string text, string? automationId = null, string? elementId = null)
+    public async Task WaitUntilGone(string automationId, int timeoutSeconds = 30)
     {
-        var args = "MAUI fill";
-        if (elementId != null) args += $" {elementId}";
-        args += $" \"{text}\"";
-        if (automationId != null) args += $" --automationId \"{automationId}\"";
-        return RunCommand(args);
+        var deadline = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                var results = await Client.QueryAsync(automationId: automationId);
+                if (results.Count == 0)
+                    return;
+            }
+            catch
+            {
+                return;
+            }
+            await Task.Delay(500);
+        }
+
+        throw new TimeoutException(
+            $"Element with AutomationId '{automationId}' still present after {timeoutSeconds}s"
+        );
     }
 
-    public Task Clear(string? automationId = null, string? elementId = null)
+    public async Task Tap(string? automationId = null, string? elementId = null, string? type = null, int? index = null)
     {
-        var args = "MAUI clear";
-        if (elementId != null) args += $" {elementId}";
-        if (automationId != null) args += $" --automationId \"{automationId}\"";
-        return RunCommand(args);
+        var id = elementId;
+        if (id == null && automationId != null)
+        {
+            var results = await Client.QueryAsync(automationId: automationId);
+            var target = index != null && index < results.Count ? results[index.Value] : results[0];
+            id = target.Id;
+        }
+        else if (id == null && type != null)
+        {
+            var results = await Client.QueryAsync(type: type);
+            var target = index != null && index < results.Count ? results[index.Value] : results[0];
+            id = target.Id;
+        }
+
+        if (id == null)
+            throw new InvalidOperationException("No element identifier provided for Tap");
+
+        await Client.TapAsync(id);
+    }
+
+    public async Task Fill(string text, string? automationId = null, string? elementId = null)
+    {
+        var id = elementId;
+        if (id == null && automationId != null)
+        {
+            var element = await FindElementAsync(automationId, 10);
+            id = element.Id;
+        }
+
+        if (id == null)
+            throw new InvalidOperationException("No element identifier provided for Fill");
+
+        await Client.FillAsync(id, text);
+    }
+
+    public async Task Clear(string? automationId = null, string? elementId = null)
+    {
+        var id = elementId;
+        if (id == null && automationId != null)
+        {
+            var element = await FindElementAsync(automationId, 10);
+            id = element.Id;
+        }
+
+        if (id == null)
+            throw new InvalidOperationException("No element identifier provided for Clear");
+
+        await Client.ClearAsync(id);
     }
 
     public async Task AssertProperty(string property, string expected, string? automationId = null, string? elementId = null)
     {
-        var args = "MAUI assert";
-        if (elementId != null) args += $" --id {elementId}";
-        if (automationId != null) args += $" --automationId \"{automationId}\"";
-        args += $" {property} \"{expected}\"";
-        await RunCommand(args);
+        var id = elementId;
+        if (id == null && automationId != null)
+        {
+            var element = await FindElementAsync(automationId, 10);
+            id = element.Id;
+        }
+
+        if (id == null)
+            throw new InvalidOperationException("No element identifier provided for AssertProperty");
+
+        var actual = await Client.GetPropertyAsync(id, property);
+        if (!string.Equals(actual, expected, StringComparison.Ordinal))
+            throw new InvalidOperationException($"Property '{property}' expected '{expected}' but was '{actual}'");
     }
 
-    public async Task<string> GetProperty(string elementId, string property)
-        => await RunCommand($"MAUI property {elementId} {property}");
+    public async Task<string?> GetProperty(string elementId, string property)
+        => await Client.GetPropertyAsync(elementId, property);
 
-    public Task Screenshot(string filename, string? elementAutomationId = null)
+    public async Task Screenshot(string filename, string? elementAutomationId = null)
     {
-        var path = Path.Combine(screenshotDir, filename);
-        var args = $"MAUI screenshot --output \"{path}\" --overwrite";
+        string? elId = null;
         if (elementAutomationId != null)
-            args = $"MAUI screenshot --output \"{path}\" --overwrite --selector \"{elementAutomationId}\"";
-        return RunCommand(args);
+        {
+            var element = await FindElementAsync(elementAutomationId, 10);
+            elId = element.Id;
+        }
+
+        var bytes = await Client.ScreenshotAsync(elementId: elId)
+            ?? throw new InvalidOperationException("Screenshot returned no data");
+        var path = Path.Combine(screenshotDir, filename);
+        await File.WriteAllBytesAsync(path, bytes);
     }
 
-    public Task<JsonNode?> Element(string elementId)
-        => RunJsonCommand($"MAUI element {elementId}");
-
-    public Task Scroll(string? elementId = null, int? dy = null, int? itemIndex = null)
+    public async Task Scroll(string? elementId = null, int? dy = null, int? itemIndex = null)
     {
-        var args = "MAUI scroll";
-        if (elementId != null) args += $" --element {elementId}";
-        if (dy != null) args += $" --dy {dy}";
-        if (itemIndex != null) args += $" --item-index {itemIndex}";
-        return RunCommand(args);
+        await Client.ScrollAsync(
+            elementId: elementId,
+            deltaX: 0,
+            deltaY: dy ?? 0,
+            animated: true,
+            itemIndex: itemIndex
+        );
     }
-
-    public async Task<JsonNode?> Status()
-        => await RunJsonCommand("MAUI status");
 
     public async Task<bool> IsElementVisible(string automationId)
     {
         try
         {
-            var result = await Query(automationId: automationId);
-            return result != null;
+            var results = await Client.QueryAsync(automationId: automationId);
+            return results.Count > 0;
         }
-        catch (MauiDevFlowException)
+        catch
         {
             return false;
         }
-    }
-}
-
-public class MauiDevFlowException : Exception
-{
-    public int ExitCode { get; }
-    public string StdErr { get; }
-    public string StdOut { get; }
-
-    public MauiDevFlowException(int exitCode, string stdErr, string stdOut)
-        : base($"maui-devflow exited with code {exitCode}: {stdErr}")
-    {
-        ExitCode = exitCode;
-        StdErr = stdErr;
-        StdOut = stdOut;
     }
 }

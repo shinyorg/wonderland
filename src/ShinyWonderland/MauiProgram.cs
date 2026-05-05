@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using ShinyWonderland.Delegates;
 #if DEBUG
-using MauiDevFlow.Agent;
+using Microsoft.Maui.DevFlow.Agent;
 #endif
 
 namespace ShinyWonderland;

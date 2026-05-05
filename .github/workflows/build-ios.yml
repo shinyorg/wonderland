@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
   
 env:
-  XCODE_VERSION: 26.4.0
+  XCODE_VERSION: 26.4.1
   DOTNET_TFM: 'net10.0'
   DOTNET_VERSION: '10.0.203'
   APP_PROJECT: './src/ShinyWonderland/ShinyWonderland.csproj'
@@ -26,7 +26,7 @@ env:
   APPSETTINGS_JSON_FILE: './src/ShinyWonderland/appsettings.json'
   PACKAGE_NAME: 'org.shiny.wonderland'
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    
+
 jobs:
   build:
     runs-on: macos-26

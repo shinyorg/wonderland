@@ -78,5 +78,9 @@ public abstract class PlatformFixture : IAsyncInitializer, IAsyncDisposable
         await Task.Delay(5000);
     }
 
-    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+    public async ValueTask DisposeAsync()
+    {
+        if (Driver != null)
+            await Driver.DisposeAsync();
+    }
 }

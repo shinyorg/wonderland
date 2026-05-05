@@ -4,6 +4,9 @@ namespace ShinyWonderland.Services;
 [Reflector]
 public partial class AppSettings : ObservableObject
 {
+#if IOS
+    [ObservableProperty] public partial bool IsHeyWonderlandEnabled { get; set; }
+#endif    
     [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; } = true;
     [ObservableProperty] public partial bool EnableGeofenceNotifications { get; set; } = true;
     [ObservableProperty] public partial bool EnableDrinkNotifications { get; set; } = true;

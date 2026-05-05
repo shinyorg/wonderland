@@ -6,8 +6,8 @@
         <ShellVersion>6.0.3</ShellVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.0"/>
-        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.0"/>
+        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.1"/>
+        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.1"/>
         <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7"/>
@@ -21,7 +21,7 @@
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="3.0.0"/>
         <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0050"/>
-        <PackageVersion Include="Shiny.Speech" Version="1.0.0"/>
+        <PackageVersion Include="Shiny.Speech" Version="1.1.0"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
@@ -47,6 +47,6 @@
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
         <PackageVersion Include="Imposter" Version="0.1.9"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
-        <PackageVersion Include="TUnit" Version="1.34.5"/>
+        <PackageVersion Include="TUnit" Version="1.43.11"/>
     </ItemGroup>
 </Project>

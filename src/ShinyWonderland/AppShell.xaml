@@ -27,7 +27,7 @@
         <Tab Title="{Binding Localize.Parking}" Icon="parking" Route="parking" AutomationId="ParkingTab">
             <ShellContent ContentTemplate="{DataTemplate parkingPages:ParkingPage}"/>
         </Tab>
-        <Tab Title="{Binding Localize.MealTimes}" Icon="hours" Route="mealtimes" AutomationId="MealTimesTab">
+        <Tab Title="{Binding Localize.MealTimes}" Icon="hours" Route="mealtimes" AutomationId="MealTimesTab" IsVisible="{Binding IsMealPassEnabled}">
             <ShellContent ContentTemplate="{DataTemplate mealTimesPages:MealTimePage}"/>
         </Tab>
         <Tab Title="{Binding Localize.Hours}" Icon="hours" Route="hours" AutomationId="HoursTab">

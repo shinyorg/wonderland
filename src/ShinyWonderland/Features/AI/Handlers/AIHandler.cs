@@ -13,19 +13,44 @@ public partial class AIHandler(
     IEnumerable<AITool> aitools,
     ISpeechToTextService speechToText,
     ITextToSpeechService textToSpeech,
-    IMediator mediator
+    IMediator mediator,
+    TimeProvider timeProvider
 ) : ICommandHandler<AskAI>
 {
-    readonly List<ChatMessage> SystemMessages = [
-        new(
-            ChatRole.System,
-            "You are a helpful theme park assistant. Use the available tools to answer questions about rides, wait times, meals, and park hours."
-        ),
-        new(
-            ChatRole.System,
-            shellTools.Prompt
-        )
-    ];
+    string? rideListPrompt;
+
+    async Task<List<ChatMessage>> GetSystemMessages(IMediatorContext context, CancellationToken ct)
+    {
+        if (rideListPrompt == null)
+        {
+            try
+            {
+                var rides = await context.Request(new Features.Rides.Pages.GetCurrentRideTimes(), ct);
+                var lines = rides
+                    .OrderBy(r => r.Name)
+                    .Select(r => $"- {r.Name} (ID: {r.Id})");
+                rideListPrompt = "Here are all the rides in the park with their IDs. Always use the ride ID when calling tools:\n" + string.Join('\n', lines);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to fetch ride list for system prompt");
+                rideListPrompt = "";
+            }
+        }
+
+        var now = timeProvider.GetLocalNow();
+        var messages = new List<ChatMessage>
+        {
+            new(ChatRole.System, "You are a helpful theme park assistant. Use the available tools to answer questions about rides, wait times, meals, and park hours."),
+            new(ChatRole.System, $"The current date and time is {now:dddd, MMMM d, yyyy h:mm tt}."),
+            new(ChatRole.System, shellTools.Prompt)
+        };
+
+        if (!string.IsNullOrEmpty(rideListPrompt))
+            messages.Add(new(ChatRole.System, rideListPrompt));
+
+        return messages;
+    }
 
     Task SendPhase(AiPhase phase, CancellationToken ct)
         => mediator.Publish(new AiPhaseChanged(phase), ct);
@@ -64,7 +89,7 @@ public partial class AIHandler(
             var tools = aitools.ToList();
             tools.AddRange(shellTools.Tools);
 
-            var copy = this.SystemMessages.ToList();
+            var copy = await GetSystemMessages(context, cancellationToken);
             copy.Add(new ChatMessage(ChatRole.User, userText));
             var chatOptions = new ChatOptions
             {

@@ -2,10 +2,10 @@ using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland.Features.Rides.Tools;
 
-[Description("Gets current ride wait times. Can find the shortest queue or the wait time for a specific ride by name.")]
+[Description("Gets current ride wait times. Can find the shortest queue or the wait time for a specific ride by ID.")]
 public record GetRideWaitTimes(
-    [Description("Optional ride name to look up. Leave null to return all open rides sorted by shortest wait time.")]
-    string? RideName = null
+    [Description("Optional ride ID to look up. Leave null to return all open rides sorted by shortest wait time.")]
+    string? RideId = null
 ) : IRequest<string>;
 
 [MediatorSingleton]
@@ -16,13 +16,13 @@ public partial class FastRideHandler : IRequestHandler<GetRideWaitTimes, string>
     {
         var rides = await context.Request(new GetCurrentRideTimes(), cancellationToken);
 
-        if (!string.IsNullOrWhiteSpace(request.RideName))
+        if (!string.IsNullOrWhiteSpace(request.RideId))
         {
             var match = rides.FirstOrDefault(r =>
-                r.Name.Contains(request.RideName, StringComparison.OrdinalIgnoreCase));
+                r.Id.Equals(request.RideId, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
-                return $"No ride found matching '{request.RideName}'.";
+                return $"No ride found with ID '{request.RideId}'.";
 
             if (!match.IsOpen)
                 return $"{match.Name} is currently closed.";

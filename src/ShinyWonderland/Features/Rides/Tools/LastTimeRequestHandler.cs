@@ -2,10 +2,10 @@ using ShinyWonderland.Features.Rides.Handlers;
 
 namespace ShinyWonderland.Features.Rides.Tools;
 
-[Description("Checks when you last went on a specific ride. Tries an exact name match first, then a partial match.")]
+[Description("Checks when you last went on a specific ride by its ID.")]
 public record GetLastRideTimeRequest(
-    [Description("The name of the ride to look up (e.g. 'Leviathan', 'Behemoth')")]
-    string RideName
+    [Description("The ID of the ride to look up")]
+    string RideId
 ) : IRequest<string>;
 
 [MediatorSingleton]
@@ -18,16 +18,11 @@ public partial class LastTimeRequestHandler(TimeProvider timeProvider) : IReques
         if (history.Count == 0)
             return "No ride history has been recorded yet.";
 
-        // exact match first
         var match = history.FirstOrDefault(r =>
-            r.RideName.Equals(request.RideName, StringComparison.OrdinalIgnoreCase));
-
-        // partial match fallback
-        match ??= history.FirstOrDefault(r =>
-            r.RideName.Contains(request.RideName, StringComparison.OrdinalIgnoreCase));
+            r.RideId.Equals(request.RideId, StringComparison.OrdinalIgnoreCase));
 
         if (match == null)
-            return $"No ride history found for '{request.RideName}'.";
+            return $"No ride history found for ride ID '{request.RideId}'.";
 
         var ago = timeProvider.GetLocalNow() - match.Timestamp;
         var agoText = ago.TotalMinutes < 60

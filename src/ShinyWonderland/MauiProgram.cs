@@ -63,7 +63,6 @@ public static class MauiProgram
         builder.Services.AddGeneratedServices();
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddSingleton(MediaPicker.Default);
-        builder.Services.AddSingleton(TextToSpeech.Default);
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddSpeechServices();
         builder.Services.AddDatabase();

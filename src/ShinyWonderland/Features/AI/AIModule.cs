@@ -1,6 +1,4 @@
-using System.ClientModel;
-using Microsoft.Extensions.AI;
-using OpenAI;
+using Shiny.AiConversation;
 
 namespace ShinyWonderland.Features.AI;
 
@@ -8,28 +6,29 @@ public class AIModule : IMauiModule
 {
     public void Add(MauiAppBuilder builder)
     {
-        var apiKey = builder.Configuration["GitHubCopilot:ApiKey"] ?? throw new InvalidOperationException("GitHubCopilot ApiKey not found");
-        var model = builder.Configuration["GitHubCopilot:Model"] ?? "gpt-4o";
+        builder.Services.AddShinyAiConversation(opts =>
+        {
+            var apiKey = builder.Configuration["GitHubCopilot:ApiKey"] ?? throw new InvalidOperationException("GitHubCopilot ApiKey not found");
+            var model = builder.Configuration["GitHubCopilot:Model"] ?? "gpt-4o";
 
-        var client = new OpenAIClient(
-            new ApiKeyCredential(apiKey),
-            new OpenAIClientOptions
-            {
-                Endpoint = new Uri("https://api.githubcopilot.com")
-            }
-        );
-        var chatClient = client
-            .GetChatClient(model)
-            .AsIChatClient()
-            .AsBuilder()
-            .UseFunctionInvocation()
-            .Build();
-
-        builder.Services.AddSpeechServices();
-        builder.Services.AddSingleton(chatClient);
+            opts.AddStaticGithubCopilotChatClient(apiKey, model);
+        });
     }
 
     public void Use(IPlatformApplication app)
     {
+        var aiService = app.Services.GetRequiredService<IAiConversationService>();
+
+        // aiService.SystemPrompts.Add(
+        //     "You are a helpful theme park assistant for Canada's Wonderland. " +
+        //     "Use the available tools to answer questions about rides, wait times, meals, weather, and park hours. " +
+        //     "When asked about rides, use the GetCurrentRideTimes tool to look them up. " +
+        //     "Always use the ride ID when calling ride-related tools."
+        // );
+        //
+        // var shellTools = app.Services.GetRequiredService<AiMauiShellTools>();
+        // aiService.SystemPrompts.Add(shellTools.Prompt);
+        //
+        // aiService.Acknowledgement = AiAcknowledgement.LessWordy;
     }
 }

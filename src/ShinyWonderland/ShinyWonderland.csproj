@@ -8,12 +8,12 @@
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <LangVersion>preview</LangVersion>
-        
+
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
         <ShinyMediatorGenerateAITools>true</ShinyMediatorGenerateAITools>
         <ShinyMauiShell_GenerateAiExtensions>true</ShinyMauiShell_GenerateAiExtensions>
-        
+
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -49,11 +49,15 @@
         <SentryUploadAndroidProguardMapping>true</SentryUploadAndroidProguardMapping>
     </PropertyGroup>
 
+    <!--
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <ApplicationId>$(ApplicationId).dev</ApplicationId>
+        <UseInterpreter>true</UseInterpreter>
         <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
-        <!--        <CodesignKey>Apple Development: Allan Ritchie (34FQ4253P2)</CodesignKey>-->
+        <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
+        <CodesignKey>iPhone Developer</CodesignKey>
+        <CodesignProvision>Wonderland Dev</CodesignProvision>
     </PropertyGroup>
+    -->
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
@@ -71,7 +75,7 @@
 
         <CustomEntitlements Include="keychain-access-groups" Type="StringArray" Value="%24(AppIdentifierPrefix)$(ApplicationId)" Visible="false"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.png" Color="#512BD4"/>
         <MauiSplashScreen Include="Resources\Splash\splash.png" Color="#512BD4" BaseSize="128,128"/>
@@ -88,8 +92,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls"/>
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
-        <PackageReference Include="Microsoft.Extensions.AI"/>
-        <PackageReference Include="Microsoft.Extensions.AI.OpenAI"/>
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>
@@ -104,7 +106,8 @@
         <PackageReference Include="Shiny.Notifications"/>
         <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
         <PackageReference Include="Shiny.DocumentDb.Extensions.DependencyInjection"/>
-        <PackageReference Include="Shiny.Speech" />
+        <PackageReference Include="Shiny.AiConversation"/>
+        <PackageReference Include="Shiny.AiConversation.OpenAi"/>
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">

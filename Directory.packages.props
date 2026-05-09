@@ -1,14 +1,11 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>4.1.0-beta-0108</ClientVersion>
+        <ClientVersion>4.1.0-beta-0113</ClientVersion>
         <MediatorVersion>6.3.1</MediatorVersion>
         <ShellVersion>6.0.3</ShellVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.AI" Version="10.5.1"/>
-        <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.5.1"/>
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.7"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7"/>
@@ -20,8 +17,9 @@
     <ItemGroup>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="3.0.0"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0067"/>
-        <PackageVersion Include="Shiny.Speech" Version="1.1.1"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0071"/>
+        <PackageVersion Include="Shiny.AiConversation" Version="1.0.0-beta-0026"/>
+        <PackageVersion Include="Shiny.AiConversation.OpenAi" Version="1.0.0-beta-0026"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="$(ShellVersion)"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
@@ -29,16 +27,13 @@
         <PackageVersion Include="Shiny.Locations" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Jobs" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Notifications" Version="$(ClientVersion)"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="4.0.0"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="4.0.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="5.0.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="5.0.0"/>
         <PackageVersion Include="Shiny.Reflector" Version="1.7.2"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ClientVersion)"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageVersion Include="Microsoft.CognitiveServices.Speech" Version="1.42.0"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.7.26229.11"/>

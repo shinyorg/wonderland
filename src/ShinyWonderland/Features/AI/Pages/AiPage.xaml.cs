@@ -1,8 +1,10 @@
+using Shiny.AiConversation;
+
 namespace ShinyWonderland.Features.AI.Pages;
 
 public partial class AiPage : ContentPage
 {
-    AiPhase currentPhase = AiPhase.Idle;
+    AiState currentState = AiState.Idle;
     bool isAnimating;
     BoxView[] barsArr = null!;
     BoxView[] thinkDotsArr = null!;
@@ -24,14 +26,14 @@ public partial class AiPage : ContentPage
         ripplesArr = [Ripple1, Ripple2, Ripple3];
 
         if (BindingContext is AiViewModel vm)
-            vm.PhaseChanged += OnPhaseChanged;
+            vm.StateChanged += OnStateChanged;
 
         StartAmbientAnimations(particlesArr);
         StartOrbBreathing();
     }
 
-    void OnPhaseChanged(AiPhase phase)
-        => TransitionToPhase(phase);
+    void OnStateChanged(AiState state)
+        => TransitionToState(state);
 
     async void AnimateOrbActivation()
     {
@@ -50,17 +52,17 @@ public partial class AiPage : ContentPage
         await InnerOrb.ScaleTo(1.0, 100, Easing.CubicOut);
     }
 
-    void TransitionToPhase(AiPhase newPhase)
+    void TransitionToState(AiState newState)
     {
         if (!isAnimating) return;
-        var oldPhase = currentPhase;
-        currentPhase = newPhase;
+        var oldState = currentState;
+        currentState = newState;
 
-        StopPhaseAnimations(oldPhase);
+        StopStateAnimations(oldState);
 
-        switch (newPhase)
+        switch (newState)
         {
-            case AiPhase.Idle:
+            case AiState.Idle:
                 StatusLabel.Text = "Tap to Ask";
                 SubtitleLabel.Text = "Powered by AI";
                 PhaseIcon.Text = "\U0001F399";
@@ -69,29 +71,19 @@ public partial class AiPage : ContentPage
                 OrbitalRing.FadeToAsync(0, 200);
                 break;
 
-            case AiPhase.Prompting:
-                StatusLabel.Text = "Getting ready...";
-                SubtitleLabel.Text = "Preparing your assistant";
-                PhaseIcon.Text = "\u2728";
-                WaveformBars.FadeToAsync(0, 200);
-                ThinkingDots.FadeToAsync(0, 200);
-                OrbitalRing.FadeToAsync(0, 200);
-                AnimateOrbActivation();
-                StartPromptingAnimation();
-                break;
-
-            case AiPhase.Listening:
+            case AiState.Listening:
                 StatusLabel.Text = "Listening...";
                 SubtitleLabel.Text = "Speak now";
                 PhaseIcon.Text = "\U0001F399";
                 ThinkingDots.FadeToAsync(0, 200);
                 OrbitalRing.FadeToAsync(0, 200);
                 WaveformBars.FadeToAsync(1, 300);
+                AnimateOrbActivation();
                 StartWaveformAnimation();
                 StartListeningOrbPulse();
                 break;
 
-            case AiPhase.Thinking:
+            case AiState.Thinking:
                 StatusLabel.Text = "Thinking...";
                 SubtitleLabel.Text = "Processing your request";
                 PhaseIcon.Text = "\U0001F9E0";
@@ -103,7 +95,7 @@ public partial class AiPage : ContentPage
                 StartThinkingOrbPulse();
                 break;
 
-            case AiPhase.Speaking:
+            case AiState.Responding:
                 StatusLabel.Text = "Speaking...";
                 SubtitleLabel.Text = "Listen to the response";
                 PhaseIcon.Text = "\U0001F50A";
@@ -116,28 +108,24 @@ public partial class AiPage : ContentPage
         }
     }
 
-    void StopPhaseAnimations(AiPhase phase)
+    void StopStateAnimations(AiState state)
     {
-        switch (phase)
+        switch (state)
         {
-            case AiPhase.Prompting:
-                this.AbortAnimation("PromptPulse");
-                break;
-
-            case AiPhase.Listening:
+            case AiState.Listening:
                 for (var i = 0; i < barsArr.Length; i++)
                     this.AbortAnimation($"Bar{i}");
                 this.AbortAnimation("ListenOrb");
                 break;
 
-            case AiPhase.Thinking:
+            case AiState.Thinking:
                 this.AbortAnimation("OrbitalSpin");
                 for (var i = 0; i < thinkDotsArr.Length; i++)
                     this.AbortAnimation($"ThinkDot{i}");
                 this.AbortAnimation("ThinkOrb");
                 break;
 
-            case AiPhase.Speaking:
+            case AiState.Responding:
                 for (var i = 0; i < ripplesArr.Length; i++)
                     this.AbortAnimation($"Ripple{i}");
                 this.AbortAnimation("SpeakOrb");
@@ -208,19 +196,6 @@ public partial class AiPage : ContentPage
         midFull.Commit(this, "MiddleBreathe", length: 2800, repeat: () => isAnimating, easing: Easing.SinInOut);
     }
 
-    // --- Prompting phase ---
-
-    void StartPromptingAnimation()
-    {
-        var fade = new Animation(v => InnerOrb.Opacity = v, 1.0, 0.7);
-        var fadeBack = new Animation(v => InnerOrb.Opacity = v, 0.7, 1.0);
-        var full = new Animation();
-        full.Add(0, 0.5, fade);
-        full.Add(0.5, 1.0, fadeBack);
-        full.Commit(this, "PromptPulse", length: 1500, repeat: () => isAnimating && currentPhase == AiPhase.Prompting,
-            easing: Easing.SinInOut);
-    }
-
     // --- Listening phase ---
 
     void StartWaveformAnimation()
@@ -241,7 +216,7 @@ public partial class AiPage : ContentPage
             full.Add(0, 0.5, grow);
             full.Add(0.5, 1.0, shrink);
             full.Commit(this, $"Bar{idx}", length: speed,
-                repeat: () => isAnimating && currentPhase == AiPhase.Listening,
+                repeat: () => isAnimating && currentState == AiState.Listening,
                 easing: Easing.SinInOut);
         }
     }
@@ -254,7 +229,7 @@ public partial class AiPage : ContentPage
         full.Add(0, 0.5, scale);
         full.Add(0.5, 1.0, scaleBack);
         full.Commit(this, "ListenOrb", length: 800,
-            repeat: () => isAnimating && currentPhase == AiPhase.Listening,
+            repeat: () => isAnimating && currentState == AiState.Listening,
             easing: Easing.SinInOut);
     }
 
@@ -264,7 +239,7 @@ public partial class AiPage : ContentPage
     {
         var spin = new Animation(v => OrbitalRing.Rotation = 360 * v, 0, 1);
         spin.Commit(this, "OrbitalSpin", length: 2000,
-            repeat: () => isAnimating && currentPhase == AiPhase.Thinking,
+            repeat: () => isAnimating && currentState == AiState.Thinking,
             easing: Easing.Linear);
     }
 
@@ -286,7 +261,7 @@ public partial class AiPage : ContentPage
             full.Add(0.5, 0.9, fadeOut);
             full.Add(0.5, 0.9, scaleDown);
             full.Commit(this, $"ThinkDot{idx}", length: 1200,
-                repeat: () => isAnimating && currentPhase == AiPhase.Thinking);
+                repeat: () => isAnimating && currentState == AiState.Thinking);
 
             if (i > 0)
                 dot.Scale = 0.8;
@@ -301,11 +276,11 @@ public partial class AiPage : ContentPage
         full.Add(0, 0.5, scale);
         full.Add(0.5, 1.0, scaleBack);
         full.Commit(this, "ThinkOrb", length: 1600,
-            repeat: () => isAnimating && currentPhase == AiPhase.Thinking,
+            repeat: () => isAnimating && currentState == AiState.Thinking,
             easing: Easing.SinInOut);
     }
 
-    // --- Speaking phase ---
+    // --- Speaking/Responding phase ---
 
     void StartRippleAnimation()
     {
@@ -332,7 +307,7 @@ public partial class AiPage : ContentPage
             full.Add(start, start + 0.7, expand);
             full.Add(start + 0.7, Math.Min(start + 0.75, 1.0), reset);
             full.Commit(this, $"Ripple{idx}", length: 2400,
-                repeat: () => isAnimating && currentPhase == AiPhase.Speaking,
+                repeat: () => isAnimating && currentState == AiState.Responding,
                 easing: Easing.CubicOut);
         }
     }
@@ -350,7 +325,7 @@ public partial class AiPage : ContentPage
         full.Add(0.5, 1.0, scaleBack);
         full.Add(0.5, 1.0, glowBack);
         full.Commit(this, "SpeakOrb", length: 1000,
-            repeat: () => isAnimating && currentPhase == AiPhase.Speaking,
+            repeat: () => isAnimating && currentState == AiState.Responding,
             easing: Easing.SinInOut);
     }
 
@@ -360,12 +335,11 @@ public partial class AiPage : ContentPage
         isAnimating = false;
 
         if (BindingContext is AiViewModel vm)
-            vm.PhaseChanged -= OnPhaseChanged;
+            vm.StateChanged -= OnStateChanged;
 
         this.AbortAnimation("OrbBreathe");
         this.AbortAnimation("OuterBreathe");
         this.AbortAnimation("MiddleBreathe");
-        this.AbortAnimation("PromptPulse");
         this.AbortAnimation("ListenOrb");
         this.AbortAnimation("ThinkOrb");
         this.AbortAnimation("SpeakOrb");

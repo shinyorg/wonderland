@@ -11,7 +11,7 @@ public partial class DirectionsToRideHandler : ICommandHandler<GetDirectionsToRi
 {
     public async Task Handle(GetDirectionsToRide command, IMediatorContext context, CancellationToken cancellationToken)
     {
-        var rides = await context.Request(new Features.Rides.Pages.GetCurrentRideTimes(), cancellationToken);
+        var rides = await context.Request(new GetCurrentRideTimes(), cancellationToken);
         var ride = rides.FirstOrDefault(r => r.Id.Equals(command.RideId, StringComparison.OrdinalIgnoreCase));
 
         if (ride == null)

@@ -1,5 +1,4 @@
-﻿using System.Reactive.Subjects;
-using ShinyWonderland.Contracts;
+﻿using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland.Features.Rides.Pages;
 
@@ -22,29 +21,8 @@ public partial class RideTimesViewModel(
     public override void OnAppearing()
     {
         this.LoadData(false).RunInBackground(logger);
-
-        this.gpsEventSubj
-            .Sample(TimeSpan.FromSeconds(3))
-            .Where(x => this.Rides.Any(r => r.DistanceMeters != null)) // only update if we have at least one ride with a known distance
-            .Subscribe(@event => Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
-            {
-                var rides = this.Rides.ToList();
-                foreach (var ride in rides)
-                    ride.UpdateDistance(@event.Position);
-
-                this.currentPosition = @event.Position;
-                if (services.AppSettings.Ordering == RideOrder.Distance)
-                {
-                    this.Rides = rides
-                        .OrderBy(x => x.DistanceMeters ?? 999)
-                        .ThenBy(x => x.Name)
-                        .ToList();
-                }
-            }))
-            .DisposedBy(this.DeactivateWith);
     }
     
-
     [RelayCommand]
     Task GoToHistory() => services.Navigator.NavigateToRideHistory();
 
@@ -55,11 +33,21 @@ public partial class RideTimesViewModel(
     public Task Handle(JobDataRefreshEvent @event, IMediatorContext context, CancellationToken cancellationToken)
         => this.LoadData(false);
     
-    readonly Subject<GpsEvent> gpsEventSubj = new();
     public Task Handle(GpsEvent @event, IMediatorContext context, CancellationToken cancellationToken)
     {
         logger.LogDebug("Received GPS event with position: {Position}", @event.Position);
-        this.gpsEventSubj.OnNext(@event);
+        var rides = this.Rides.ToList();
+        foreach (var ride in rides)
+            ride.UpdateDistance(@event.Position);
+
+        this.currentPosition = @event.Position;
+        if (services.AppSettings.Ordering == RideOrder.Distance)
+        {
+            this.Rides = rides
+                .OrderBy(x => x.DistanceMeters ?? 999)
+                .ThenBy(x => x.Name)
+                .ToList();
+        }
 
         return Task.CompletedTask;
     }
@@ -147,6 +135,7 @@ public partial class RideTimesViewModel(
 
     void StartDataTimer(DateTimeOffset? from)
     {
+        this.Deactivate(); // cancel previous timer
         from ??= services.TimeProvider.GetUtcNow();
         this.DataTimestamp = humanizer.TimeAgo(from.Value);
         

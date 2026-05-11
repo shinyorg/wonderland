@@ -1,5 +1,4 @@
-using Shiny.Notifications;
-using ShinyWonderland.Contracts;
+using ShinyWonderland.Features.Rides;
 
 namespace ShinyWonderland.Tests.Delegates;
 

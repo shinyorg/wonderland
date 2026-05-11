@@ -1,3 +1,5 @@
+using ShinyWonderland.Features.Rides;
+
 namespace ShinyWonderland.Tests.ViewModels;
 
 public class RideTimesViewModelTests

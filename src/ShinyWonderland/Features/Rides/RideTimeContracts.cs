@@ -1,4 +1,4 @@
-namespace ShinyWonderland.Features.Rides.Pages;
+namespace ShinyWonderland.Features.Rides;
 
 // don't put filters or sorts here
 public record GetCurrentRideTimes : IRequest<List<RideTime>>;

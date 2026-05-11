@@ -16,9 +16,10 @@ public class MyGpsDelegate(
 {
     protected override async Task OnGpsReading(GpsReading reading)
     {
-        // single reads are coming through here - this is a "bug" with Shiny.Locations
-        this.MinimumDistance = Distance.FromMeters(10);
-        this.MinimumTime = TimeSpan.FromSeconds(10);
+        this.MinimumDistance = Distance.FromMeters(20);
+        this.MinimumTime = TimeSpan.FromSeconds(30);
+        this.MaximumDistance = Distance.FromMeters(100);
+        this.MaximumTime = TimeSpan.FromSeconds(60);
 
         try
         {

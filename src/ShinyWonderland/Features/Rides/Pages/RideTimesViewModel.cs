@@ -80,15 +80,14 @@ public partial class RideTimesViewModel(
 
     void FilterSortBind(List<RideTime> rides)
     {
-        var query = rides
-            .Select(x =>
-            {
-                var vm = new RideTimeViewModel(x, humanizer, services);
-                if (this.currentPosition != null)
-                    vm.UpdateDistance(this.currentPosition);
-                
-                return vm;
-            });
+        var query = rides.Select(x =>
+        {
+            var vm = new RideTimeViewModel(x, humanizer, services);
+            if (this.currentPosition != null)
+                vm.UpdateDistance(this.currentPosition);
+            
+            return vm;
+        });
         
         logger.LogDebug("Received {Count} rides from API", query.Count());
         if (services.AppSettings.ShowOpenOnly)

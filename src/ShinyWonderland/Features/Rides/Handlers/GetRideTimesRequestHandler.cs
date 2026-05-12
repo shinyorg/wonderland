@@ -23,10 +23,7 @@ public class GetRideTimesRequestHandler(
         );
 
         var childDataTask = context.Request(
-            new GetEntityChildrenHttpRequest
-            {
-                EntityID = parkOptions.Value.EntityId
-            },
+            new GetParkRidesRequest(),
             cancellationToken
         );
 
@@ -38,10 +35,10 @@ public class GetRideTimesRequestHandler(
     }
     
 
-    static List<RideTime> MergeData(EntityLiveDataResponse liveData, EntityChildrenResponse childData, List<LastRideTime> lastRides)
+    static List<RideTime> MergeData(EntityLiveDataResponse liveData, IReadOnlyList<ParkRideInfo> rides, List<LastRideTime> lastRides)
     {
         var list = new List<RideTime>();
-        foreach (var rideInfo in childData.Children)
+        foreach (var rideInfo in rides)
         {
             var live = liveData
                 .LiveData?
@@ -52,8 +49,8 @@ public class GetRideTimesRequestHandler(
             int? paidWaitTime = null;
             Position? position = null;
 
-            if (rideInfo.Location is { Latitude: not null, Longitude: not null })
-                position = new Position(rideInfo.Location.Latitude!.Value, rideInfo.Location.Longitude!.Value);
+            if (rideInfo is { Latitude: not null, Longitude: not null })
+                position = new Position(rideInfo.Latitude!.Value, rideInfo.Longitude!.Value);
 
             if (live != null)
             {

@@ -3,7 +3,8 @@ namespace ShinyWonderland.Features.Hours;
 public record GetCurrentParkHours : IRequest<ParkHours>;
 public record GetUpcomingParkHours : IRequest<ParkHours[]>;
 
-public record ParkHours(
+[SourceGenerateJsonConverter]
+public partial record ParkHours(
     DateOnly Date,
     TimeRange? Hours
 )

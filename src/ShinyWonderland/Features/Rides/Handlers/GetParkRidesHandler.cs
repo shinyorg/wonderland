@@ -20,10 +20,11 @@ public partial class GetParkRidesHandler(IOptions<ParkOptions> parkOptions)  : I
             cancellationToken
         );
         return rides.Children?
+            .Where(x => x.EntityType == EntityType.ATTRACTION)
             .Select(x => new ParkRideInfo(
-                x.Id, 
+                x.Id,
                 x.Name,
-                x.Location?.Latitude, 
+                x.Location?.Latitude,
                 x.Location?.Longitude
             ))
             .ToList() ?? [];

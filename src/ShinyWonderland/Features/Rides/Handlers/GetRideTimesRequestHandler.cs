@@ -12,9 +12,8 @@ public class GetRideTimesRequestHandler(
     public async Task<List<RideTime>> Handle(GetCurrentRideTimes request, IMediatorContext context, CancellationToken cancellationToken)
     {
         // these calls are done sequentially as themepark api doesn't like multiple requests at the same time
-        
-        // these http calls are not cached - the outcome of this handler is which is why we don't do any filters or sorts here
-        var liveDataTask = context.Request(
+
+        var liveData = await context.Request(
             new GetEntityLiveDataHttpRequest
             {
                 EntityID = parkOptions.Value.EntityId
@@ -22,16 +21,11 @@ public class GetRideTimesRequestHandler(
             cancellationToken
         );
 
-        var childDataTask = context.Request(
-            new GetParkRidesRequest(),
-            cancellationToken
-        );
+        var rides = await context.Request(new GetParkRidesRequest(), cancellationToken);
 
-        var lastRidesTask = context.Request(new GetParkLastRiddenTimes(), cancellationToken);
-        
-        await Task.WhenAll(liveDataTask, childDataTask, lastRidesTask).ConfigureAwait(false);
+        var lastRides = await context.Request(new GetParkLastRiddenTimes(), cancellationToken);
 
-        return MergeData(liveDataTask.Result, childDataTask.Result, lastRidesTask.Result);
+        return MergeData(liveData, rides, lastRides);
     }
     
 

@@ -35,10 +35,14 @@ public class MyGpsDelegate(
 
                 appSettings.ParkingLocation = null;
                 await gpsManager.StopListener();
-                await notificationManager.Send(
-                    parkOptions.Value.Name,
-                    strings.LeaveParkNotificationMessage
-                );
+
+                if (this.LastReading != null)
+                {
+                    await notificationManager.Send(
+                        parkOptions.Value.Name,
+                        strings.LeaveParkNotificationMessage
+                    );
+                }
             }
         }
         catch (Exception ex)

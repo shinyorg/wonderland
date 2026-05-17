@@ -6,10 +6,8 @@ public class AIModule : IMauiModule
     {
         builder.Services.AddShinyAiConversation(opts =>
         {
-            var apiKey = builder.Configuration["GitHubCopilot:ApiKey"] ?? throw new InvalidOperationException("GitHubCopilot ApiKey not found");
-            var model = builder.Configuration["GitHubCopilot:Model"] ?? "gpt-4o";
-
-            opts.AddStaticGithubCopilotChatClient(apiKey, model);
+            opts.AddVoiceSelectionTools();
+            opts.AddGithubCopilotChatClient();
         });
     }
 

@@ -64,7 +64,6 @@ public static class MauiProgram
         builder.Services.AddShinyService<AppSettings>();
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddSpeechServices();
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
         builder.Services.AddGps<MyGpsDelegate>();

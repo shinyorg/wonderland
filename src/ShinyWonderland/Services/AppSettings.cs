@@ -15,6 +15,9 @@ public partial class AppSettings : ObservableObject
     [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = true;
     [ObservableProperty] public partial RideOrder Ordering { get; set; } = RideOrder.Name;
     [ObservableProperty] public partial Position? ParkingLocation { get; set; }
+    [ObservableProperty] public partial string? VoiceId { get; set; }
+    [ObservableProperty] public partial int SpeechRatePercent { get; set; } = 100;
+    [ObservableProperty] public partial int PitchPercent { get; set; } = 100;
 }
 
 public enum RideOrder

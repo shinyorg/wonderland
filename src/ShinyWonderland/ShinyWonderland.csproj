@@ -107,7 +107,7 @@
         <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
         <PackageReference Include="Shiny.DocumentDb.Extensions.DependencyInjection"/>
         <PackageReference Include="Shiny.AiConversation"/>
-        <PackageReference Include="Shiny.AiConversation.OpenAi"/>
+        <PackageReference Include="Shiny.AiConversation.Maui.GithubCopilot"/>
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">

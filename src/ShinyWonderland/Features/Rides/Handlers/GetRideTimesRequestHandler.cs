@@ -21,9 +21,9 @@ public class GetRideTimesRequestHandler(
             cancellationToken
         );
 
-        var rides = await context.Request(new GetParkRidesRequest(), cancellationToken);
-
         var lastRides = await context.Request(new GetParkLastRiddenTimes(), cancellationToken);
+
+        var rides = await context.Request(new GetParkRidesRequest(), cancellationToken);
 
         return MergeData(liveData, rides, lastRides);
     }

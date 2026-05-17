@@ -1,21 +1,78 @@
+using Shiny.Speech;
+
 namespace ShinyWonderland.Features;
 
 
 [ShellMap<SettingsPage>(registerRoute: false)]
-public partial class SettingsViewModel(AppSettings appSettings) : ObservableObject
+public partial class SettingsViewModel : ObservableObject
 {
+    readonly AppSettings appSettings;
+    readonly ITextToSpeechService tts;
+
+    public SettingsViewModel(AppSettings appSettings, ITextToSpeechService tts)
+    {
+        this.appSettings = appSettings;
+        this.tts = tts;
+
+#if IOS
+        this.IsHeyWonderlandEnabled = appSettings.IsHeyWonderlandEnabled;
+#endif
+        this.Ordering = appSettings.Ordering;
+        this.ShowOpenOnly = appSettings.ShowOpenOnly;
+        this.EnableTimeRideNotifications = appSettings.EnableTimeRideNotifications;
+        this.EnableDrinkNotifications = appSettings.EnableDrinkNotifications;
+        this.EnableMealNotifications = appSettings.EnableMealNotifications;
+        this.ShowTimedOnly = appSettings.ShowTimedOnly;
+        this.EnableGeofenceNotifications = appSettings.EnableGeofenceNotifications;
+        this.SpeechRatePercent = appSettings.SpeechRatePercent;
+        this.PitchPercent = appSettings.PitchPercent;
+    }
+
     public string AppVersion => AssemblyInfo.ApplicationDisplayVersion;
 
 #if IOS
-    [ObservableProperty] public partial bool IsHeyWonderlandEnabled { get; set; } = appSettings.IsHeyWonderlandEnabled;
+    [ObservableProperty] public partial bool IsHeyWonderlandEnabled { get; set; }
 #endif
-    [ObservableProperty] public partial RideOrder Ordering { get; set; } = appSettings.Ordering;
-    [ObservableProperty] public partial bool ShowOpenOnly { get; set; } = appSettings.ShowOpenOnly;
-    [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; } = appSettings.EnableTimeRideNotifications;
-    [ObservableProperty] public partial bool EnableDrinkNotifications { get; set; } = appSettings.EnableDrinkNotifications;
-    [ObservableProperty] public partial bool EnableMealNotifications { get; set; } = appSettings.EnableMealNotifications;
-    [ObservableProperty] public partial bool ShowTimedOnly { get; set; } = appSettings.ShowTimedOnly;
-    [ObservableProperty] public partial bool EnableGeofenceNotifications { get; set; } = appSettings.EnableGeofenceNotifications;
+    [ObservableProperty] public partial RideOrder Ordering { get; set; }
+    [ObservableProperty] public partial bool ShowOpenOnly { get; set; }
+    [ObservableProperty] public partial bool EnableTimeRideNotifications { get; set; }
+    [ObservableProperty] public partial bool EnableDrinkNotifications { get; set; }
+    [ObservableProperty] public partial bool EnableMealNotifications { get; set; }
+    [ObservableProperty] public partial bool ShowTimedOnly { get; set; }
+    [ObservableProperty] public partial bool EnableGeofenceNotifications { get; set; }
+
+    [ObservableProperty] public partial IReadOnlyList<VoiceInfo>? Voices { get; private set; }
+    [ObservableProperty] public partial VoiceInfo? SelectedVoice { get; set; }
+    [ObservableProperty] public partial int SpeechRatePercent { get; set; }
+    [ObservableProperty] public partial int PitchPercent { get; set; }
+
+    public async Task LoadVoices()
+    {
+        if (this.Voices != null)
+            return;
+
+        var voices = await this.tts.GetVoicesAsync();
+        this.Voices = voices
+            .OrderBy(v => v.Name)
+            .ToList();
+
+        if (!string.IsNullOrWhiteSpace(this.appSettings.VoiceId))
+            this.SelectedVoice = this.Voices.FirstOrDefault(v => v.Id == this.appSettings.VoiceId);
+    }
+
+    [RelayCommand]
+    async Task PlaySample()
+    {
+        await this.tts.SpeakAsync(
+            "Welcome to Wonderland! This is how I will sound.",
+            new TextToSpeechOptions
+            {
+                Voice = this.SelectedVoice,
+                SpeechRate = this.SpeechRatePercent / 100f,
+                Pitch = this.PitchPercent / 100f
+            }
+        );
+    }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
@@ -23,35 +80,47 @@ public partial class SettingsViewModel(AppSettings appSettings) : ObservableObje
         {
 #if IOS
             case nameof(IsHeyWonderlandEnabled):
-                appSettings.IsHeyWonderlandEnabled = this.IsHeyWonderlandEnabled;
+                this.appSettings.IsHeyWonderlandEnabled = this.IsHeyWonderlandEnabled;
                 break;
 #endif
             case nameof(Ordering):
-                appSettings.Ordering = this.Ordering;
+                this.appSettings.Ordering = this.Ordering;
                 break;
 
             case nameof(ShowOpenOnly):
-                appSettings.ShowOpenOnly = this.ShowOpenOnly;
+                this.appSettings.ShowOpenOnly = this.ShowOpenOnly;
                 break;
 
             case nameof(ShowTimedOnly):
-                appSettings.ShowTimedOnly = this.ShowTimedOnly;
+                this.appSettings.ShowTimedOnly = this.ShowTimedOnly;
                 break;
 
             case nameof(EnableGeofenceNotifications):
-                appSettings.EnableGeofenceNotifications = this.EnableGeofenceNotifications;
+                this.appSettings.EnableGeofenceNotifications = this.EnableGeofenceNotifications;
                 break;
 
             case nameof(EnableMealNotifications):
-                appSettings.EnableMealNotifications = this.EnableMealNotifications;
+                this.appSettings.EnableMealNotifications = this.EnableMealNotifications;
                 break;
 
             case nameof(EnableDrinkNotifications):
-                appSettings.EnableDrinkNotifications = this.EnableDrinkNotifications;
+                this.appSettings.EnableDrinkNotifications = this.EnableDrinkNotifications;
                 break;
 
             case nameof(EnableTimeRideNotifications):
-                appSettings.EnableTimeRideNotifications = this.EnableTimeRideNotifications;
+                this.appSettings.EnableTimeRideNotifications = this.EnableTimeRideNotifications;
+                break;
+
+            case nameof(SelectedVoice):
+                this.appSettings.VoiceId = this.SelectedVoice?.Id;
+                break;
+
+            case nameof(SpeechRatePercent):
+                this.appSettings.SpeechRatePercent = this.SpeechRatePercent;
+                break;
+
+            case nameof(PitchPercent):
+                this.appSettings.PitchPercent = this.PitchPercent;
                 break;
         }
         base.OnPropertyChanged(e);

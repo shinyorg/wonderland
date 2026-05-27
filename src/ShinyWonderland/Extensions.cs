@@ -13,11 +13,11 @@ public static class Extensions
         return true;
 #else
         var reading = await gpsManager
-            .GetCurrentPosition()
-            .Timeout(TimeSpan.FromSeconds(15))
-            .ToTask(cancellationToken);
+            .GetCurrentPosition(cancellationToken)
+            .WaitAsync(TimeSpan.FromSeconds(15), cancellationToken)
+            .ConfigureAwait(false);
 
-        return reading.IsWithinPark(parkOptions);
+        return reading?.IsWithinPark(parkOptions) ?? false;
 #endif
     }
 

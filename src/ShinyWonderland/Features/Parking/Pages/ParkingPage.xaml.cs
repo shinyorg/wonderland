@@ -1,3 +1,4 @@
+using System.Reactive.Linq;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
 
@@ -20,7 +21,7 @@ public partial class ParkingPage : ContentPage
         {
             if (vm.ParkLocation != null)
                 this.SetPin(vm.ParkLocation);
-
+            
             this.sub = vm
                 .WhenAnyProperty()
                 .Where(x => x.PropertyName == nameof(ParkingViewModel.ParkLocation))

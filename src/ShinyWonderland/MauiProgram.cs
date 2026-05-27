@@ -61,14 +61,16 @@ public static class MauiProgram
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.AddStronglyTypedLocalizations();
         builder.Services.AddGeneratedServices();
-        builder.Services.AddShinyService<AppSettings>();
+        
         builder.Services.AddSingleton(MediaPicker.Default);
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
         builder.Services.AddGps<MyGpsDelegate>();
         
+        builder.Services.AddShinyStores();
         var app = builder.Build();
+        
         return app;
     }
 }

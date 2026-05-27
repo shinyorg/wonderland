@@ -5,31 +5,21 @@ using Notification = Shiny.Notifications.Notification;
 namespace ShinyWonderland.Features.Rides.Delegates;
 
 
-public class RideTimeJob(
+public partial class RideTimeJob(
     ILogger<RideTimeJob> logger,
     IOptions<ParkOptions> parkOptions,
     ViewModelServices services
-) : Job(logger)
+) : ObservableObject, IJob
 {
-    public List<RideTime>? LastSnapshot
-    {
-        get;
-        set
-        {
-            field = value;
-            this.RaisePropertyChanged();
-        }
-    }
     
-
-    public DateTimeOffset? LastSnapshotTime
-    {
-        get;
-        set => this.Set(ref field, value);
-    }
+    [Bind]
+    public partial List<RideTime>? LastSnapshot { get; internal set; }
+    
+    [Bind]
+    public partial DateTimeOffset? LastSnapshotTime { get; internal set; }
 
     
-    protected override async Task Run(CancellationToken cancelToken)
+    public async Task Run(CancellationToken cancelToken)
     {
         if (!services.AppSettings.EnableTimeRideNotifications)
         {

@@ -1,4 +1,5 @@
-﻿using ShinyWonderland.Contracts;
+﻿using System.Reactive.Linq;
+using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland.Features.Rides.Pages;
 
@@ -17,9 +18,13 @@ public partial class RideTimesViewModel(
     public override string Title => services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
+    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
     public override void OnAppearing()
     {
+        if (this.Rides.Count == 0)
+            this.IsLoading = true;
+
         this.LoadData(false).RunInBackground(logger);
     }
     
@@ -67,13 +72,16 @@ public partial class RideTimesViewModel(
             );
             this.StartDataTimer(result.Context.Cache()?.Timestamp);
             this.FilterSortBind(result.Result);
-            this.IsBusy = false;
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
             await services.Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
+        }
+        finally
+        {
             this.IsBusy = false;
+            this.IsLoading = false;
         }
     }
 

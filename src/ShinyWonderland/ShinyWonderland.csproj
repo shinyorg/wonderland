@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
 
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-ios</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)-android</TargetFrameworks>
-        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
+        <TargetFrameworks>$(BaseTargetFramework);$(BaseTargetFramework)-ios;$(BaseTargetFramework)-android</TargetFrameworks>
 
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
@@ -95,7 +93,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>
-        <PackageReference Include="Shiny.Reflector"/>
+        <PackageReference Include="Shiny.Extensions.Reactive"/>
         <PackageReference Include="Shiny.Maui.Shell"/>
         <PackageReference Include="Shiny.Maui.Shell.UxDiversDialogs"/>
         <PackageReference Include="Shiny.Maui.Controls"/>

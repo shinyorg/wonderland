@@ -14,7 +14,7 @@ public partial class SetMyParkingHandler(
     {
         if (settings.ParkingLocation == null)
         {
-            var result = await gpsManager.GetCurrentPosition().ToTask(cancellationToken);
+            var result = await gpsManager.GetCurrentPosition(cancellationToken);
             if (result != null)
             {
                 settings.ParkingLocation = result.Position;

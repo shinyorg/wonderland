@@ -1,12 +1,9 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>4.1.0-beta-0113</ClientVersion>
-        <MediatorVersion>6.3.2-beta-0003</MediatorVersion>
-        <ShellVersion>6.0.3</ShellVersion>
+        <ClientVersion>5.0.0-beta-0071</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.8"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
@@ -15,34 +12,34 @@
         <PackageVersion Include="Sentry.Maui" Version="6.5.0"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Shiny.Reflector" Version="1.7.2"/>
         <PackageVersion Include="Shiny.Locations" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Jobs" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Notifications" Version="$(ClientVersion)"/>
-        <PackageVersion Include="Shiny.AiConversation" Version="1.0.0-beta-0043"/>
-        <PackageVersion Include="Shiny.AiConversation.Maui.GithubCopilot" Version="1.0.0-beta-0043"/>
+        <PackageVersion Include="Shiny.AiConversation" Version="1.0.0-beta-0047"/>
+        <PackageVersion Include="Shiny.AiConversation.Maui.GithubCopilot" Version="1.0.0-beta-0047"/>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="3.0.0"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0071"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="$(ShellVersion)"/>
-        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="$(ShellVersion)"/>
-        <PackageVersion Include="Shiny.Mediator.Maui" Version="$(MediatorVersion)"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="$(MediatorVersion)"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="5.0.0"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="5.0.0"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="4.0.0-beta-0063"/>
+        <PackageVersion Include="Shiny.Extensions.Reactive" Version="4.0.0-beta-0063"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0080"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="6.1.1"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.1.1"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.4.0"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.4.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="5.2.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="5.2.0"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>
         <PackageVersion Include="Shiny.Extensions.Configuration" Version="$(ClientVersion)"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.9.26258.5"/>
-        <PackageVersion Include="Microsoft.Maui.DevFlow.Driver" Version="0.1.0-preview.9.26258.5"/>
-        <PackageVersion Include="coverlet.collector" Version="10.0.0"/>
+        <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.9.26274.3"/>
+        <PackageVersion Include="Microsoft.Maui.DevFlow.Driver" Version="0.1.0-preview.9.26274.3"/>
+        <PackageVersion Include="coverlet.collector" Version="10.0.1"/>
         <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.6.0"/>
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
         <PackageVersion Include="Imposter" Version="0.1.9"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
-        <PackageVersion Include="TUnit" Version="1.44.0"/>
+        <PackageVersion Include="TUnit" Version="1.45.29"/>
     </ItemGroup>
 </Project>

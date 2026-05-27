@@ -18,10 +18,10 @@ public partial class MealTimeViewModel(ViewModelServices services) : BaseViewMod
         this.History = (await Mediator.Request(new GetMealTimeHistory())).Result;
         await RefreshAvailability();
 
-        Observable
-            .Interval(TimeSpan.FromSeconds(1))
-            .Subscribe(async _ => await RefreshAvailability())
-            .DisposedBy(this.DeactivateWith);
+        // Observable
+        //     .Interval(TimeSpan.FromSeconds(1))
+        //     .Subscribe(async _ => await RefreshAvailability())
+        //     .DisposedBy(this.DeactivateWith);
     }
 
 

@@ -28,7 +28,7 @@ public partial class SettingsViewModel : ObservableObject
         this.PitchPercent = appSettings.PitchPercent;
     }
 
-    public string AppVersion => AssemblyInfo.ApplicationDisplayVersion;
+    public string AppVersion => AppInfo.VersionString;
 
 #if IOS
     [ObservableProperty] public partial bool IsHeyWonderlandEnabled { get; set; }

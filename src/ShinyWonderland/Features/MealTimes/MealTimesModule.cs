@@ -1,4 +1,4 @@
-using ShinyWonderland.Delegates;
+using Shiny.Jobs;
 
 namespace ShinyWonderland.Features.MealTimes;
 
@@ -6,10 +6,7 @@ public class MealTimesModule : IMauiModule
 {
     public void Add(MauiAppBuilder builder)
     {
-        builder.Services.AddJob(
-            typeof(MealTimeJob),
-            runInForeground: true
-        );
+        builder.Services.AddJob<MealTimeJob>(x => x.WithForeground().WithInternet(InternetAccess.Any));
         builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealPass"));
     }
 

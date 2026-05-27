@@ -19,9 +19,9 @@ public record ViewModelServices(
 {
     public async Task<(bool IsWithinPark, Position? Position)> TrySetParking(CancellationToken cancellationToken)
     {
-        var reading = await this.Gps.GetCurrentPosition().ToTask(cancellationToken);
+        var reading = await this.Gps.GetCurrentPosition(cancellationToken);
         
-        if (reading.IsWithinPark(this.ParkOptions.Value))
+        if (reading?.IsWithinPark(this.ParkOptions.Value) ?? false)
         {
             this.AppSettings.ParkingLocation = reading.Position;
             return (true, reading.Position);

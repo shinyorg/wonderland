@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>5.0.0-beta-0109</ClientVersion>
+        <ClientVersion>5.0.0-beta-0113</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.8"/>

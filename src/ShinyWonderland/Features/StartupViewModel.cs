@@ -1,7 +1,10 @@
 namespace ShinyWonderland.Features;
 
 [ShellMap<StartupPage>(registerRoute: false)]
-public partial class StartupViewModel(ViewModelServices services) : BaseViewModel(services)
+public partial class StartupViewModel(
+    ViewModelServices services,
+    IGeofenceManager geofenceManager
+) : BaseViewModel(services)
 {
     public override async void OnAppearing()
     {
@@ -13,6 +16,11 @@ public partial class StartupViewModel(ViewModelServices services) : BaseViewMode
             // GPS RequestAccess locks Shell navigation when it resolves without
             // a popup, so run it after we've already navigated away
             await this.TryGps();
+            await geofenceManager.TryStartMonitoring(new GeofenceRegion(
+                "wonderland",
+                services.ParkOptions.Value.CenterOfPark,
+                services.ParkOptions.Value.NotificationDistance
+            ));
         }
         catch (Exception ex)
         {
@@ -40,6 +48,7 @@ public partial class StartupViewModel(ViewModelServices services) : BaseViewMode
                 {
                     await services.Gps.StartListener(GpsRequest.Realtime(true));
                 }
+                
             }
         }
         catch (Exception ex)

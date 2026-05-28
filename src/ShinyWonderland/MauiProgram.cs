@@ -66,6 +66,7 @@ public static class MauiProgram
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
+        builder.Services.AddSingleton<MyGeofenceDelegate>();
         builder.Services.AddGps<MyGpsDelegate>();
         
         builder.Services.AddShinyStores();

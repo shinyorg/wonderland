@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>5.0.0-beta-0071</ClientVersion>
+        <ClientVersion>5.0.0-beta-0109</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.8"/>
@@ -20,7 +20,7 @@
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="4.0.0-beta-0063"/>
         <PackageVersion Include="Shiny.Extensions.Reactive" Version="4.0.0-beta-0063"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0080"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0081"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="6.1.1"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.1.1"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.4.0"/>

@@ -1,4 +1,4 @@
-using Shiny.Maui.Controls.FloatingPanel;
+using Shiny.Maui.Controls;
 
 namespace ShinyWonderland.Features.Rides.Pages;
 

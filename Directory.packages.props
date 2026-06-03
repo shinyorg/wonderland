@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>5.0.0-beta-0124</ClientVersion>
+        <ClientVersion>5.0.0-beta-0128</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.8"/>
@@ -20,13 +20,13 @@
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="4.1.1"/>
         <PackageVersion Include="Shiny.Extensions.Reactive" Version="4.1.1"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0095"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0096"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="6.1.1"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.1.1"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.5.0-beta-0001"/>
         <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.5.0-beta-0001"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="6.0.0"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="6.0.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="6.1.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="6.1.0"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>

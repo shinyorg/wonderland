@@ -15,10 +15,7 @@ public class Humanizer(
         
         if (timeSpan.TotalSeconds < 60)
         {
-            var seconds = (int)timeSpan.TotalSeconds;
-            if (seconds <= 0)
-                return localized.Never;
-            
+            var seconds = Math.Max(1, (int)timeSpan.TotalSeconds);
             return seconds == 1 ? $"1 {localized.Second}" : $"{seconds} {localized.Seconds}";
         }
         

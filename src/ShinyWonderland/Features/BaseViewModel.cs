@@ -142,6 +142,7 @@ public partial class BaseViewModel(ViewModelServices services) :
     {
         this.destroyToken?.Cancel();
         this.destroyToken?.Dispose();
+        this.destroyToken = null;
 
         this.Deactivate();
         this.destroyWith?.Dispose();

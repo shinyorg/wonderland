@@ -16,6 +16,7 @@
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
+        
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">
@@ -28,13 +29,14 @@
         <OutputType>Library</OutputType>
         <UseMaui>false</UseMaui>
     </PropertyGroup>
+    
     <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">-->
     <!--        <UseMonoRuntime>false</UseMonoRuntime>-->
     <!--    </PropertyGroup>-->
 
-    <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">-->
-    <!--        <PublishAot>true</PublishAot>-->
-    <!--    </PropertyGroup>-->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <PublishAot>true</PublishAot>
+    </PropertyGroup>
 
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
         <SentryOrg>shiny-software</SentryOrg>
@@ -46,16 +48,6 @@
         <SentryUploadSources>true</SentryUploadSources>
         <SentryUploadAndroidProguardMapping>true</SentryUploadAndroidProguardMapping>
     </PropertyGroup>
-
-    <!--
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <UseInterpreter>true</UseInterpreter>
-        <ApplicationTitle>$(ApplicationTitle) (dev)</ApplicationTitle>
-        <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-        <CodesignKey>iPhone Developer</CodesignKey>
-        <CodesignProvision>Wonderland Dev</CodesignProvision>
-    </PropertyGroup>
-    -->
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>

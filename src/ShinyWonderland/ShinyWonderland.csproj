@@ -16,7 +16,7 @@
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
-        
+        <IsAotCompatible>true</IsAotCompatible>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">
@@ -34,7 +34,7 @@
     <!--        <UseMonoRuntime>false</UseMonoRuntime>-->
     <!--    </PropertyGroup>-->
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
         <PublishAot>true</PublishAot>
     </PropertyGroup>
 

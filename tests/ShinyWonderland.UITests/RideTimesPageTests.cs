@@ -45,11 +45,11 @@ public abstract class RideTimesPageTests : PlatformTestBase
     }
 
     [Test]
-    public async Task RideTimes_RefreshViewExists()
+    public async Task RideTimes_HasRefreshToolbarButton()
     {
         await NavigateToRideTimes();
 
-        var isVisible = await Driver.IsElementVisible("RideTimesRefreshView");
+        var isVisible = await Driver.IsElementVisible("RefreshToolbarButton");
         await Assert.That(isVisible).IsTrue();
     }
 

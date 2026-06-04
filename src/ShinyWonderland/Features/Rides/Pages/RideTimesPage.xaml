@@ -10,6 +10,10 @@
                         Title="{Binding Title}">
 
     <shiny:ShinyContentPage.ToolbarItems>
+        <ToolbarItem Text="{Binding Localize.Refresh}"
+                     IconImageSource="refresh.png"
+                     AutomationId="RefreshToolbarButton"
+                     Command="{Binding LoadCommand}" />
         <ToolbarItem Text="{Binding Localize.History}"
                      AutomationId="HistoryToolbarButton"
                      Command="{Binding GoToHistoryCommand}" />
@@ -75,19 +79,15 @@
         </Border>
 
         <!-- Rides list -->
-        <RefreshView Command="{Binding LoadCommand}"
-                     AutomationId="RideTimesRefreshView"
-                     IsRefreshing="{Binding IsBusy}"
-                     Grid.Row="2">
+        <CollectionView ItemsSource="{Binding Rides}"
+                        AutomationId="RidesCollectionView"
+                        Margin="0,4,0,0"
+                        Grid.Row="2">
+            <CollectionView.EmptyView>
+                <controls:NoItemsView />
+            </CollectionView.EmptyView>
 
-            <CollectionView ItemsSource="{Binding Rides}"
-                            AutomationId="RidesCollectionView"
-                            Margin="0,4,0,0">
-                <CollectionView.EmptyView>
-                    <controls:NoItemsView />
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemTemplate>
+            <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RideTimeViewModel">
                         <controls:ListItemView>
                             <Grid ColumnDefinitions="4, *"
@@ -226,9 +226,8 @@
                             </Grid>
                         </controls:ListItemView>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
     </shiny:ShinyContentPage.PageContent>
 

@@ -53,8 +53,8 @@ public partial class SettingsViewModel : ObservableObject
 
         var voices = await this.tts.GetVoicesAsync();
         this.Voices = voices
-            .OrderBy(v => v.Name)
-            .ToList();
+            ?.OrderBy(v => v.Name)
+            .ToList() ?? [];
 
         if (!string.IsNullOrWhiteSpace(this.appSettings.VoiceId))
             this.SelectedVoice = this.Voices.FirstOrDefault(v => v.Id == this.appSettings.VoiceId);

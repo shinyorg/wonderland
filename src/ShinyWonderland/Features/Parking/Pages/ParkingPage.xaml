@@ -7,7 +7,7 @@
              x:DataType="shinyWonderland:ParkingViewModel"
              x:Class="ShinyWonderland.Features.Parking.Pages.ParkingPage"
              AutomationId="ParkingPage"
-             Title="{Binding Localize.Title}">
+             Title="{Binding Localize.Parking}">
 
     <Grid>
         <!-- Map -->

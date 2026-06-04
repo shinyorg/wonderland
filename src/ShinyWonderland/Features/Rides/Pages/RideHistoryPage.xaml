@@ -6,7 +6,7 @@
              x:DataType="shinyWonderland:RideHistoryViewModel"
              x:Class="ShinyWonderland.Features.Rides.Pages.RideHistoryPage"
              AutomationId="RideHistoryPage"
-             Title="{Binding Localize.Title}">
+             Title="{Binding Localize.RideHistory}">
 
     <CollectionView ItemsSource="{Binding History}"
                     AutomationId="RideHistoryCollectionView"

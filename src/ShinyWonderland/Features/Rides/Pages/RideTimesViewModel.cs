@@ -59,10 +59,13 @@ public partial class RideTimesViewModel(
     
     async Task LoadData(bool forceRefresh)
     {
+        if (forceRefresh)
+            this.IsLoading = true;
+
         try
         {
             var result = await services.Mediator.Request(
-                new GetCurrentRideTimes(), 
+                new GetCurrentRideTimes(),
                 this.DeactivateToken,
                 ctx =>
                 {

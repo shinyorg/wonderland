@@ -60,6 +60,15 @@
     <data name="History" xml:space="preserve">
         <value>History</value>
     </data>
+    <data name="Refresh" xml:space="preserve">
+        <value>Refresh</value>
+    </data>
+    <data name="Offline" xml:space="preserve">
+        <value>Offline</value>
+    </data>
+    <data name="OfflineAiMessage" xml:space="preserve">
+        <value>AI assistant is unavailable while you are offline</value>
+    </data>
     <data name="HistoryDialogTitle" xml:space="preserve">
         <value>History?</value>
     </data>

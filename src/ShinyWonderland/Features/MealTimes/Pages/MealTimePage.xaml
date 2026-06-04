@@ -7,7 +7,7 @@
              x:DataType="shinyWonderland:MealTimeViewModel"
              x:Class="ShinyWonderland.Features.MealTimes.Pages.MealTimePage"
              AutomationId="MealTimePage"
-             Title="{Binding Localize.Title}">
+             Title="{Binding Localize.MealTimes}">
 
     <ScrollView>
         <VerticalStackLayout Spacing="12" Padding="16,12">

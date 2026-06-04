@@ -7,12 +7,36 @@ namespace ShinyWonderland.Features.Hours.Pages;
 public partial class HoursViewModel(ViewModelServices services) : BaseViewModel(services)
 {
     [ObservableProperty] List<VmParkSchedule> schedule;
+    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    public async void OnAppearing()
+    public override void OnAppearing()
     {
+        base.OnAppearing();
+        if (this.Schedule == null || this.Schedule.Count == 0)
+            this.IsLoading = true;
+
+        _ = this.LoadData(false);
+    }
+
+    [RelayCommand]
+    Task Load() => this.LoadData(true);
+
+    async Task LoadData(bool forceRefresh)
+    {
+        if (forceRefresh)
+            this.IsLoading = true;
+
         try
         {
-            var scheduleDates = await Mediator.Request(new GetUpcomingParkHours());
+            var scheduleDates = await Mediator.Request(
+                new GetUpcomingParkHours(),
+                this.DeactivateToken,
+                ctx =>
+                {
+                    if (forceRefresh)
+                        ctx.ForceCacheRefresh();
+                }
+            );
 
             var now = DateOnly.FromDateTime(Services.TimeProvider.GetLocalNow().Date);
             this.Schedule = scheduleDates
@@ -27,6 +51,10 @@ public partial class HoursViewModel(ViewModelServices services) : BaseViewModel(
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to load park hours");
+        }
+        finally
+        {
+            this.IsLoading = false;
         }
     }
 }

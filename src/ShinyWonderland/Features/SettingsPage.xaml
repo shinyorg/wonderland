@@ -34,11 +34,11 @@
 
             <shiny:TableSection Title="AI Voice"
                                 FooterText="Choose the voice the assistant uses for spoken replies">
-                <shiny:PickerCell AutomationId="VoicePicker"
-                                  Title="Voice"
-                                  ItemsSource="{Binding Voices}"
-                                  SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"
-                                  DisplayMember="Name" />
+                <shiny:TextPickerCell AutomationId="VoicePicker"
+                                      Title="Voice"
+                                      ItemsSource="{Binding Voices}"
+                                      SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"
+                                      DisplayMember="Name" />
                 <shiny:NumberPickerCell AutomationId="SpeechRate"
                                         Title="Speech Rate"
                                         Number="{Binding SpeechRatePercent, Mode=TwoWay}"

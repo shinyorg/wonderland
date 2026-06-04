@@ -6,7 +6,7 @@
              x:Class="ShinyWonderland.Features.Rides.Pages.MapRideTimesPage"
              AutomationId="MapRideTimesPage"
              x:DataType="shinyWonderland:MapRideTimesViewModel"
-             Title="Ride Times">
+             Title="{Binding Localize.RideTimes}">
     
     <maps:Map x:Name="TheMap"
               AutomationId="RidesMap"

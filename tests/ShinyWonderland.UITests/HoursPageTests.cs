@@ -27,6 +27,15 @@ public abstract class HoursPageTests : PlatformTestBase
     }
 
     [Test]
+    public async Task Hours_HasRefreshToolbarButton()
+    {
+        await NavigateToHours();
+
+        var isVisible = await Driver.IsElementVisible("RefreshToolbarButton");
+        await Assert.That(isVisible).IsTrue();
+    }
+
+    [Test]
     public async Task Hours_Screenshot()
     {
         await NavigateToHours();

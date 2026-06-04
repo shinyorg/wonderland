@@ -29,14 +29,6 @@
         <OutputType>Library</OutputType>
         <UseMaui>false</UseMaui>
     </PropertyGroup>
-    
-    <!--    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' and '$(Configuration)' == 'Release'">-->
-    <!--        <UseMonoRuntime>false</UseMonoRuntime>-->
-    <!--    </PropertyGroup>-->
-
-    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-        <PublishAot>true</PublishAot>
-    </PropertyGroup>
 
     <PropertyGroup Condition="'$(CI)' == 'true' AND '$(Configuration)' == 'Release'">
         <SentryOrg>shiny-software</SentryOrg>
@@ -56,6 +48,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <PublishAot>true</PublishAot>
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>
     </PropertyGroup>

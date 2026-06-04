@@ -268,5 +268,32 @@
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
         </VerticalStackLayout>
+
+        <!-- Offline overlay (shown when disconnected, dims and covers the AURA) -->
+        <Grid IsVisible="{Binding IsNotConnected}"
+              AutomationId="AiOfflineOverlay"
+              BackgroundColor="#CC000000"
+              InputTransparent="False"
+              CascadeInputTransparent="False">
+            <VerticalStackLayout HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="12"
+                                 Padding="32">
+                <Label Text="&#x1F4F6;"
+                       FontSize="48"
+                       HorizontalOptions="Center" />
+                <Label Text="{Binding Localize.Offline}"
+                       FontSize="22"
+                       FontFamily="OpenSansSemibold"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center" />
+                <Label Text="{Binding Localize.OfflineAiMessage}"
+                       FontSize="14"
+                       TextColor="#E5E0F5"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
 </ContentPage>

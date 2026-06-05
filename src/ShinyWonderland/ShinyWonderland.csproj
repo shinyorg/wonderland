@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
 
-        <TargetFrameworks>$(BaseTargetFramework);$(BaseTargetFramework)-ios;$(BaseTargetFramework)-android</TargetFrameworks>
-
+        <TargetFrameworks>$(BaseTargetFramework)-ios;$(BaseTargetFramework)-android</TargetFrameworks>
+<!--        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>-->
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <LangVersion>preview</LangVersion>
@@ -16,7 +16,7 @@
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
-        <IsAotCompatible>true</IsAotCompatible>
+
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">
@@ -45,9 +45,11 @@
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
         <TargetPlatformVersion>36</TargetPlatformVersion>
+        <AndroidEnableMarshalMethods>false</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <IsAotCompatible>true</IsAotCompatible>
         <PublishAot>true</PublishAot>
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <DefineConstants>$(DefineConstants);APPLE;PLATFORM</DefineConstants>

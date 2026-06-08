@@ -83,9 +83,9 @@ public partial class RideTimesViewModel(
 #if DEBUG
             await Dialogs.Alert(null, ex.ToString(), Localize.Ok);
 #else
-            Console.WriteLine("WL: " + ex);
-            await Dialogs.Alert(null, ex.ToString(), Localize.Ok);
-            // await Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
+            // Console.WriteLine("WL: " + ex);
+            // await Dialogs.Alert(null, ex.ToString(), Localize.Ok);
+            await Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
 #endif
         }
         finally

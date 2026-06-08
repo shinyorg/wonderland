@@ -1,6 +1,5 @@
 namespace ShinyWonderland.Features.Parking.Pages;
 
-[Reflector]
 [ShellMap<ParkingPage>(registerRoute: false)]
 public partial class ParkingViewModel(
     ViewModelServices services,

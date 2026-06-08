@@ -50,7 +50,7 @@ public static class MauiProgram
                 new ParkingModule()
             )
 #if RELEASE
-            .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
+            // .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
 #endif
             .ConfigureFonts(fonts =>
             {

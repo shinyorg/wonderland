@@ -2,7 +2,6 @@ namespace ShinyWonderland.Services;
 
 
 [Singleton]
-[Reflector]
 public partial class AppSettings : ObservableObject
 {
 #if IOS

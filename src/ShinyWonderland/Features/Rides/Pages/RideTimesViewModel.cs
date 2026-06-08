@@ -15,7 +15,7 @@ public partial class RideTimesViewModel(
 {
     Position? currentPosition;
 
-    public override string Title => services.ParkOptions.Value.Name;
+    public override string Title => Services.ParkOptions.Value.Name;
     [ObservableProperty] public partial IReadOnlyList<RideTimeViewModel> Rides { get; private set; } = [];
     [ObservableProperty] public partial string? DataTimestamp { get; private set; }
     [ObservableProperty] public partial bool IsLoading { get; private set; }
@@ -29,7 +29,7 @@ public partial class RideTimesViewModel(
     }
     
     [RelayCommand]
-    Task GoToHistory() => services.Navigator.NavigateToRideHistory();
+    Task GoToHistory() => Navigator.NavigateToRideHistory();
 
     [RelayCommand]
     Task Load() => this.LoadData(true);
@@ -47,7 +47,7 @@ public partial class RideTimesViewModel(
             ride.UpdateDistance(@event.Position);
 
         this.currentPosition = @event.Position;
-        if (services.AppSettings.Ordering == RideOrder.Distance)
+        if (Services.AppSettings.Ordering == RideOrder.Distance)
         {
             this.Rides = rides
                 .OrderBy(x => x.DistanceMeters ?? 999)
@@ -65,7 +65,7 @@ public partial class RideTimesViewModel(
 
         try
         {
-            var result = await services.Mediator.Request(
+            var result = await Mediator.Request(
                 new GetCurrentRideTimes(),
                 this.DeactivateToken,
                 ctx =>
@@ -80,7 +80,13 @@ public partial class RideTimesViewModel(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error loading data");
-            await services.Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
+#if DEBUG
+            await Dialogs.Alert(null, ex.ToString(), Localize.Ok);
+#else
+            Console.WriteLine("WL: " + ex);
+            await Dialogs.Alert(null, ex.ToString(), Localize.Ok);
+            // await Dialogs.Alert(Localize.Error, Localize.GeneralError, Localize.Ok);
+#endif
         }
         finally
         {

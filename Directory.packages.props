@@ -1,10 +1,10 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>5.0.0-beta-0133</ClientVersion>
+        <ClientVersion>5.0.0-beta-0137</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.8"/>
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.9"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
@@ -18,15 +18,15 @@
         <PackageVersion Include="Shiny.AiConversation" Version="1.0.0-beta-0050"/>
         <PackageVersion Include="Shiny.AiConversation.Maui.GithubCopilot" Version="1.0.0-beta-0050"/>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="5.0.0-beta-0052"/>
-        <PackageVersion Include="Shiny.Extensions.Reactive" Version="5.0.0-beta-0052"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0101"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="5.0.0"/>
+        <PackageVersion Include="Shiny.Extensions.Reactive" Version="5.0.0"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0108"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="6.2.0"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.2.0"/>
         <PackageVersion Include="Shiny.Mediator.Maui" Version="6.6.1"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.6.1`"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="6.1.0"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="6.1.0"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.6.1"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="6.2.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="6.2.0"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>
@@ -40,6 +40,6 @@
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
         <PackageVersion Include="Imposter" Version="0.1.9"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
-        <PackageVersion Include="TUnit" Version="1.48.6"/>
+        <PackageVersion Include="TUnit" Version="1.53.0"/>
     </ItemGroup>
 </Project>

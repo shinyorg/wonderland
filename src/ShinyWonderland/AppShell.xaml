@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shiny:ShinyShell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                   xmlns:local="clr-namespace:ShinyWonderland"
                    xmlns:features="clr-namespace:ShinyWonderland.Features"
                    xmlns:aiPages="clr-namespace:ShinyWonderland.Features.AI.Pages"
                    xmlns:hoursPages="clr-namespace:ShinyWonderland.Features.Hours.Pages"

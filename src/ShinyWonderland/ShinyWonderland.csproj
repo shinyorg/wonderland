@@ -16,7 +16,6 @@
         <ApplicationId>org.shiny.wonderland</ApplicationId>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
-
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' != '$(BaseTargetFramework)'">

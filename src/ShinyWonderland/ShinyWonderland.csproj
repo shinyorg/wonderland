@@ -78,6 +78,7 @@
         <PackageReference Include="Microsoft.Maui.Controls.Maps"/>
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
+        <PackageReference Include="Shiny.Extensions.DependencyInjection"/>
         <PackageReference Include="Shiny.Extensions.MauiHosting"/>
         <PackageReference Include="Shiny.Extensions.Reactive"/>
         <PackageReference Include="Shiny.Maui.Shell"/>

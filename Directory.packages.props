@@ -1,11 +1,11 @@
 <Project>
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <ClientVersion>5.1.1</ClientVersion>
+        <ClientVersion>5.2.3</ClientVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.9"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9"/>
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.10"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
@@ -18,15 +18,14 @@
         <PackageVersion Include="Shiny.AiConversation" Version="1.0.0-beta-0050"/>
         <PackageVersion Include="Shiny.AiConversation.Maui.GithubCopilot" Version="1.0.0-beta-0050"/>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="5.1.1"/>
-        <PackageVersion Include="Shiny.Extensions.Reactive" Version="5.1.1"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0141"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="6.3.1"/>
-        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.3.1"/>
-        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.6.2"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.6.2"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="10.0.0-beta-0008"/>
-        <PackageVersion Include="Shiny.DocumentDb.Extensions.DependencyInjection" Version="10.0.0-beta-0008"/>
+        <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="5.1.2"/>
+        <PackageVersion Include="Shiny.Extensions.Reactive" Version="5.1.2"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="1.0.1-beta-0146"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="6.3.2"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="6.3.2"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.7.0"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.7.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="11.1.0"/>
     </ItemGroup>
     <ItemGroup>
         <PackageVersion Include="Shiny.Hosting.Maui" Version="$(ClientVersion)"/>

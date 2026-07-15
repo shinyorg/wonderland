@@ -2,7 +2,7 @@
     <PropertyGroup>
 
         <TargetFrameworks>$(BaseTargetFramework)-ios;$(BaseTargetFramework)-android</TargetFrameworks>
-<!--        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>-->
+        <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
         <LangVersion>preview</LangVersion>
@@ -89,7 +89,6 @@
         <PackageReference Include="Shiny.Jobs"/>
         <PackageReference Include="Shiny.Notifications"/>
         <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
-        <PackageReference Include="Shiny.DocumentDb.Extensions.DependencyInjection"/>
         <PackageReference Include="Shiny.AiConversation"/>
         <PackageReference Include="Shiny.AiConversation.Maui.GithubCopilot"/>
     </ItemGroup>

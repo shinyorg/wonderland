@@ -28,10 +28,10 @@ public class ParkHourHandlers(
     public async Task<ParkHours[]> Handle(GetUpcomingParkHours request, IMediatorContext context, CancellationToken cancellationToken)
     {
         var upcoming = await context.Request(
-            new GetEntityScheduleUpcomingHttpRequest
+            new GetV1EntityScheduleHttpRequest
             {
-                EntityID = parkOptions.Value.EntityId
-            }, 
+                Id = parkOptions.Value.EntityId
+            },
             cancellationToken
         );
         return upcoming
@@ -39,13 +39,13 @@ public class ParkHourHandlers(
             .Select(x =>
             {
                 var date = DateOnly.Parse(x.Date);
-                var isOpen = x.Type == ScheduleEntryType.OPERATING;
+                var isOpen = x.Type == "OPERATING";
                 TimeRange? timeRange = null;
-                
+
                 if (isOpen)
                 {
-                    var opening = TimeOnly.FromDateTime(x.OpeningTime.LocalDateTime);
-                    var closing = TimeOnly.FromDateTime(x.ClosingTime.LocalDateTime);
+                    var opening = TimeOnly.FromDateTime(DateTimeOffset.Parse(x.OpeningTime).LocalDateTime);
+                    var closing = TimeOnly.FromDateTime(DateTimeOffset.Parse(x.ClosingTime).LocalDateTime);
                     timeRange = new(opening, closing);
                 }
                 return new ParkHours(date, timeRange);

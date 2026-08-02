@@ -7,7 +7,6 @@
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
         
-        <MauiVersion>10.0.80</MauiVersion>
         <ShinyMediatorGenerateJsonContext>true</ShinyMediatorGenerateJsonContext>
     </PropertyGroup>
 </Project>

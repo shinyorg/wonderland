@@ -95,7 +95,6 @@
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">
-        <PackageReference Include="Shiny.Hosting.Maui"/>
         <PackageReference Include="Shiny.Extensions.Configuration"/>
     </ItemGroup>
 
@@ -111,5 +110,13 @@
     <ItemGroup>
         <ProjectReference Include="..\ShinyWonderland.ApiClient\ShinyWonderland.ApiClient.csproj"/>
         <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+      <PackageReference Include="Shiny.Hosting.Maui" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
+      <PackageReference Include="Shiny.Hosting.Maui" />
     </ItemGroup>
 </Project>

@@ -1,5 +1,3 @@
-using Shiny.Speech;
-
 namespace ShinyWonderland.Tests.ViewModels;
 
 public class SettingsViewModelTests
@@ -10,7 +8,7 @@ public class SettingsViewModelTests
     public SettingsViewModelTests()
     {
         appSettings = new AppSettings();
-        viewModel = new SettingsViewModel(appSettings, new ITextToSpeechServiceImposter().Instance());
+        viewModel = new SettingsViewModel(appSettings, new TestAppInfo());
     }
 
     [Test]
@@ -80,7 +78,7 @@ public class SettingsViewModelTests
     public async Task InitialValues_ShouldMatchAppSettingsDefaults()
     {
         var defaultSettings = new AppSettings();
-        var vm = new SettingsViewModel(defaultSettings, new ITextToSpeechServiceImposter().Instance());
+        var vm = new SettingsViewModel(defaultSettings, new TestAppInfo());
 
         await Assert.That(vm.ShowOpenOnly).IsEqualTo(defaultSettings.ShowOpenOnly);
         await Assert.That(vm.ShowTimedOnly).IsEqualTo(defaultSettings.ShowTimedOnly);
@@ -94,7 +92,7 @@ public class SettingsViewModelTests
     public async Task Ordering_InitialValue_ShouldMatchAppSettings()
     {
         var settings = new AppSettings { Ordering = RideOrder.WaitTime };
-        var vm = new SettingsViewModel(settings, new ITextToSpeechServiceImposter().Instance());
+        var vm = new SettingsViewModel(settings, new TestAppInfo());
         await Assert.That(vm.Ordering).IsEqualTo(RideOrder.WaitTime);
     }
 }

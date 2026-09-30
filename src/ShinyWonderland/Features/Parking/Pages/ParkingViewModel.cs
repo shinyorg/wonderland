@@ -1,10 +1,15 @@
+using ShinyWonderland.Contracts;
+
 namespace ShinyWonderland.Features.Parking.Pages;
 
 [ShellMap<ParkingPage>(registerRoute: false)]
 public partial class ParkingViewModel(
     ViewModelServices services,
-    IMediaPicker mediaPicker
-) : BaseViewModel(services)
+    IMediaPicker mediaPicker,
+    IFileSystem fileSystem,
+    IAppInfo appInfo
+) : BaseViewModel(services),
+    IEventHandler<ParkingLocationChangedEvent>
 {
     const string PhotoFileName = "parked_photo.png";
 
@@ -28,7 +33,7 @@ public partial class ParkingViewModel(
     public Position CenterOfPark => services.ParkOptions.Value.CenterOfPark;
     public int MapStartZoomDistanceMeters => services.ParkOptions.Value.MapStartZoomDistanceMeters;
 
-    static string PhotoPath => Path.Combine(FileSystem.AppDataDirectory, PhotoFileName);
+    string PhotoPath => Path.Combine(fileSystem.AppDataDirectory, PhotoFileName);
 
     [RelayCommand]
     async Task ToggleSetLocation()
@@ -47,7 +52,7 @@ public partial class ParkingViewModel(
                     Localize.OpenSettings
                 );
                 if (confirm)
-                    AppInfo.ShowSettingsUI();
+                    appInfo.ShowSettingsUI();
             }
         }
         else
@@ -137,4 +142,16 @@ public partial class ParkingViewModel(
     }
 
     public void OnDisappearing() {}
+
+
+    // parking set/cleared outside this page (ie. Siri/Gemini while the app is open, leaving the park)
+    [MainThread]
+    public Task Handle(ParkingLocationChangedEvent @event, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        this.ParkLocation = @event.Position;
+        if (@event.Position == null)
+            this.DeletePhoto();
+
+        return Task.CompletedTask;
+    }
 }

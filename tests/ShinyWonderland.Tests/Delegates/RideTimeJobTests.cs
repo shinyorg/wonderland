@@ -110,7 +110,7 @@ public class RideTimeJobTests
 
         job.EnsureLastSnapshot();
 
-        await Assert.That(job.LastSnapshot).IsEqualTo(rides);
+        await Assert.That(job.LastSnapshot).IsEquivalentTo(rides);
     }
 
     [Test]

@@ -14,7 +14,7 @@ public class GetRideTimesRequestHandler(
         // these calls are done sequentially as themepark api doesn't like multiple requests at the same time
 
         var liveData = await context.Request(
-            new GetV1EntityLiveHttpRequest
+            new GetEntityLiveDataHttpRequest
             {
                 Id = parkOptions.Value.EntityId
             },
@@ -29,7 +29,7 @@ public class GetRideTimesRequestHandler(
     }
     
 
-    static List<RideTime> MergeData(GetV1EntityLiveResponse liveData, IReadOnlyList<ParkRideInfo> rides, List<LastRideTime> lastRides)
+    static List<RideTime> MergeData(EntityLiveDataResponse liveData, IReadOnlyList<ParkRideInfo> rides, List<LastRideTime> lastRides)
     {
         var list = new List<RideTime>();
         foreach (var rideInfo in rides)

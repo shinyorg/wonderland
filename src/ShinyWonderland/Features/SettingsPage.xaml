@@ -20,38 +20,6 @@
                 <shiny:RadioCell AutomationId="SortByDistance" Title="Distance" Value="{x:Static svc:RideOrder.Distance}" />
             </shiny:TableSection>
 
-            <shiny:TableSection Title="Voice Assistant"
-                                FooterText="Say 'Hey Wonderland' to activate the AI assistant">
-                <shiny:SwitchCell AutomationId="HeyWonderland" Title="Hey Wonderland" On="{Binding IsHeyWonderlandEnabled, Mode=TwoWay}">
-                    <shiny:SwitchCell.IsVisible>
-                        <OnPlatform x:TypeArguments="x:Boolean">
-                            <On Platform="iOS" Value="True" />
-                            <On Platform="Android" Value="False" />
-                        </OnPlatform>
-                    </shiny:SwitchCell.IsVisible>
-                </shiny:SwitchCell>
-            </shiny:TableSection>
-
-            <shiny:TableSection Title="AI Voice"
-                                FooterText="Choose the voice the assistant uses for spoken replies">
-                <shiny:TextPickerCell AutomationId="VoicePicker"
-                                      Title="Voice"
-                                      ItemsSource="{Binding Voices}"
-                                      SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"
-                                      DisplayMember="Name" />
-                <shiny:NumberPickerCell AutomationId="SpeechRate"
-                                        Title="Speech Rate"
-                                        Number="{Binding SpeechRatePercent, Mode=TwoWay}"
-                                        Min="50" Max="200" Unit="%" />
-                <shiny:NumberPickerCell AutomationId="VoicePitch"
-                                        Title="Pitch"
-                                        Number="{Binding PitchPercent, Mode=TwoWay}"
-                                        Min="50" Max="200" Unit="%" />
-                <shiny:ButtonCell AutomationId="PlayVoiceSample"
-                                  Title="Play Sample"
-                                  Command="{Binding PlaySampleCommand}" />
-            </shiny:TableSection>
-
             <shiny:TableSection Title="Notifications"
                                 FooterText="Control which alerts you receive while at the park">
                 <shiny:SwitchCell AutomationId="RideTimeNotifications" Title="Ride Wait Time Alerts" On="{Binding EnableTimeRideNotifications, Mode=TwoWay}" />

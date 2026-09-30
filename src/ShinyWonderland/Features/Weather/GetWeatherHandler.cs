@@ -1,14 +1,20 @@
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Shiny.AppFunctions;
 
-namespace ShinyWonderland.Features.AI.Handlers;
+namespace ShinyWonderland.Features.Weather;
 
-[Description("Gets current weather conditions and forecast for a given date at the park. Returns temperature, humidity, wind, precipitation chance, UV index, and a natural language summary.")]
+[AppFunction(
+    "get_weather",
+    Title = "Park Weather",
+    Description = "Gets current weather conditions and forecast for a given date at the park. Returns temperature, humidity, wind, precipitation chance, UV index, and a natural language summary."
+)]
+[AppShortcut("What's the weather at ${applicationName}", ShortTitle = "Weather", SystemImage = "cloud.sun")]
 public record GetWeather(
-    [Description("The date to retrieve weather for. Use the current date/time for today's weather, or a future date for the forecast.")]
-    DateTimeOffset When
-) : IRequest<WeatherResult>;
+    [property: AppParameter(Title = "Date", Description = "The date to retrieve weather for. Leave empty for today's weather, or use a future date for the forecast.")]
+    DateTimeOffset? When = null
+) : IAppFunctionRequest<WeatherResult>;
 
 public record WeatherResult(
     string LocationName,
@@ -32,20 +38,28 @@ public partial class GetWeatherHandler(
     IOptions<ParkOptions> parkOptions,
     TimeProvider timeProvider,
     ILogger<GetWeatherHandler> logger
-) : IRequestHandler<GetWeather, WeatherResult>
+) : IAppFunctionRequestHandler<GetWeather, WeatherResult>
 {
     const string ForecastBaseUrl = "https://api.open-meteo.com/v1/forecast";
 
-    [Cache(AbsoluteExpirationSeconds = 60 * 60)]
+    // no [Cache] here - a cache hit skips the handler and the assistant would get no dialog
     public async Task<WeatherResult> Handle(
         GetWeather request,
         IMediatorContext context,
         CancellationToken ct)
     {
+        var result = await this.GetWeather(request.When ?? timeProvider.GetLocalNow(), ct);
+        context.SayToAssistant(result.Summary);
+        return result;
+    }
+
+
+    async Task<WeatherResult> GetWeather(DateTimeOffset when, CancellationToken ct)
+    {
         var park = parkOptions.Value;
         var forecast = await this.FetchForecastAsync(park.Latitude, park.Longitude, ct);
 
-        var targetDate = request.When.Date;
+        var targetDate = when.Date;
         var isToday = targetDate == timeProvider.GetLocalNow().Date;
 
         var current = forecast.GetProperty("current");
@@ -57,7 +71,7 @@ public partial class GetWeatherHandler(
         {
             return new WeatherResult(
                 LocationName: park.Name,
-                Date: request.When,
+                Date: when,
                 TemperatureCelsius: 0, FeelsLikeCelsius: 0,
                 HighCelsius: 0, LowCelsius: 0,
                 HumidityPercent: 0, WindSpeedKmh: 0,
@@ -105,7 +119,7 @@ public partial class GetWeatherHandler(
 
         return new WeatherResult(
             LocationName: park.Name,
-            Date: request.When,
+            Date: when,
             TemperatureCelsius: Math.Round(temp, 1),
             FeelsLikeCelsius: Math.Round(feelsLike, 1),
             HighCelsius: Math.Round(high_, 1),

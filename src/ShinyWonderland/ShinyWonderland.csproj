@@ -9,8 +9,6 @@
 
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
-        <ShinyMediatorGenerateAITools>true</ShinyMediatorGenerateAITools>
-        <ShinyMauiShell_GenerateAiExtensions>true</ShinyMauiShell_GenerateAiExtensions>
 
         <ApplicationTitle>Wonderland</ApplicationTitle>
         <ApplicationId>org.shiny.wonderland</ApplicationId>
@@ -90,8 +88,8 @@
         <PackageReference Include="Shiny.Jobs"/>
         <PackageReference Include="Shiny.Notifications"/>
         <PackageReference Include="Shiny.DocumentDb.Sqlite"/>
-        <PackageReference Include="Shiny.AiConversation"/>
-        <PackageReference Include="Shiny.AiConversation.Maui.GithubCopilot"/>
+        <PackageReference Include="Shiny.AppFunctions"/>
+        <PackageReference Include="Shiny.Mediator.AppFunctions"/>
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != ''">

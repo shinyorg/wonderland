@@ -2,7 +2,6 @@
 <shiny:ShinyShell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                    xmlns:features="clr-namespace:ShinyWonderland.Features"
-                   xmlns:aiPages="clr-namespace:ShinyWonderland.Features.AI.Pages"
                    xmlns:hoursPages="clr-namespace:ShinyWonderland.Features.Hours.Pages"
                    xmlns:mealTimesPages="clr-namespace:ShinyWonderland.Features.MealTimes.Pages"
                    xmlns:parkingPages="clr-namespace:ShinyWonderland.Features.Parking.Pages"
@@ -19,9 +18,6 @@
         </Tab>
         <Tab Title="Map" Icon="map" Route="ridetimesmap" AutomationId="MapRideTimesTab">
             <ShellContent ContentTemplate="{DataTemplate ridePages:MapRideTimesPage}"/>
-        </Tab>
-        <Tab Title="AI" Icon="ai" Route="ai" AutomationId="AITab">
-            <ShellContent ContentTemplate="{DataTemplate aiPages:AiPage}"/>
         </Tab>
         <Tab Title="{Binding Localize.Parking}" Icon="parking" Route="parking" AutomationId="ParkingTab">
             <ShellContent ContentTemplate="{DataTemplate parkingPages:ParkingPage}"/>

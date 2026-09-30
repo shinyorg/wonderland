@@ -1,17 +1,27 @@
+using Shiny.AppFunctions;
 using ShinyWonderland.Features.Rides.Handlers;
 
 namespace ShinyWonderland.Features.Rides.Tools;
 
-[Description("Checks when you last went on a specific ride by its ID.")]
+[AppFunction("get_last_ride_time", Title = "Last Time On Ride", Description = "Checks when you last went on a specific ride.")]
+[AppShortcut("When did I last ride at ${applicationName}", ShortTitle = "Last Ridden", SystemImage = "clock.arrow.circlepath")]
 public record GetLastRideTimeRequest(
-    [Description("The ID of the ride to look up")]
-    string RideId
-) : IRequest<string>;
+    [property: AppParameter(Title = "Ride", Description = "The ride to look up")]
+    ParkRide Ride
+) : IAppFunctionRequest<string>;
 
 [MediatorSingleton]
-public partial class LastTimeRequestHandler(TimeProvider timeProvider) : IRequestHandler<GetLastRideTimeRequest, string>
+public partial class LastTimeRequestHandler(TimeProvider timeProvider) : IAppFunctionRequestHandler<GetLastRideTimeRequest, string>
 {
     public async Task<string> Handle(GetLastRideTimeRequest request, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        var result = await this.GetLastRideTime(request, context, cancellationToken);
+        context.SayToAssistant(result);
+        return result;
+    }
+
+
+    async Task<string> GetLastRideTime(GetLastRideTimeRequest request, IMediatorContext context, CancellationToken cancellationToken)
     {
         var history = await context.Request(new GetRideHistory(null), cancellationToken);
 
@@ -19,10 +29,10 @@ public partial class LastTimeRequestHandler(TimeProvider timeProvider) : IReques
             return "No ride history has been recorded yet.";
 
         var match = history.FirstOrDefault(r =>
-            r.RideId.Equals(request.RideId, StringComparison.OrdinalIgnoreCase));
+            r.RideId.Equals(request.Ride.Id, StringComparison.OrdinalIgnoreCase));
 
         if (match == null)
-            return $"No ride history found for ride ID '{request.RideId}'.";
+            return $"You haven't been on {request.Ride.Name} yet.";
 
         var ago = timeProvider.GetLocalNow() - match.Timestamp;
         var agoText = ago.TotalMinutes < 60

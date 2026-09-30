@@ -5,6 +5,7 @@ using Notification = Shiny.Notifications.Notification;
 namespace ShinyWonderland.Features.Rides.Delegates;
 
 
+[BindNotify]
 public partial class RideTimeJob(
     ILogger<RideTimeJob> logger,
     IOptions<ParkOptions> parkOptions,

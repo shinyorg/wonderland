@@ -1,33 +1,35 @@
-using Shiny.Speech;
+using Shiny.AppFunctions;
 
 namespace ShinyWonderland.Features.Parking.Tools;
 
-[Description("Opens a map to where you are parked - does nothing if you the user hasn't parked yet")]
-public record MapToCar : ICommand;
+// OpensApp - launching the maps app needs the app in the foreground
+[AppFunction("map_to_car", Title = "Find My Car", Description = "Opens a walking map to where you parked. Fails if you haven't set a parking location yet.", OpensApp = true)]
+[AppShortcut("Where did I park at ${applicationName}", ShortTitle = "Find My Car", SystemImage = "car")]
+public record MapToCar : IAppFunctionCommand;
 
 [MediatorSingleton]
-public partial class MapToCarHandler(
-    ITextToSpeechService textToSpeech,
-    AppSettings settings
-) : ICommandHandler<MapToCar>
+public partial class MapToCarHandler(AppSettings settings) : IAppFunctionCommandHandler<MapToCar>
 {
     public async Task Handle(MapToCar command, IMediatorContext context, CancellationToken cancellationToken)
     {
-        if (settings.ParkingLocation == null)
-        {
-            await textToSpeech.SpeakAsync("You haven't parked yet", cancellationToken: cancellationToken);
-            return;
-        }
-        var result = await Map.TryOpenAsync(
-            settings.ParkingLocation.Latitude, 
-            settings.ParkingLocation.Longitude, 
+        var parking = settings.ParkingLocation;
+        if (parking == null)
+            throw new AppFunctionException(AppFunctionErrorCode.NotFound, "You haven't set your parking location yet.");
+
+        // app function handlers never run on the main thread
+        var result = await MainThread.InvokeOnMainThreadAsync(() => Map.TryOpenAsync(
+            parking.Latitude,
+            parking.Longitude,
             new MapLaunchOptions
             {
                 Name = "Where I Parked",
                 NavigationMode = NavigationMode.Walking
             }
-        );
+        ));
+
         if (!result)
-            await textToSpeech.SpeakAsync("We were unable to open the map", cancellationToken: cancellationToken);
+            throw new AppFunctionException(AppFunctionErrorCode.AppError, "We were unable to open the map.");
+
+        context.SayToAssistant("Here are walking directions to your car.");
     }
 }

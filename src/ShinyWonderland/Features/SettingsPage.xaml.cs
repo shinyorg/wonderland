@@ -6,11 +6,4 @@ public partial class SettingsPage : ContentPage
     {
         this.InitializeComponent();
     }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        if (this.BindingContext is SettingsViewModel vm)
-            await vm.LoadVoices();
-    }
 }

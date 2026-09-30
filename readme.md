@@ -1,6 +1,6 @@
 # Shiny Wonderland
 
-A production-quality .NET MAUI reference application for **Canada's Wonderland** that delivers real-time ride wait times, AI-powered park assistance, GPS-based parking, meal-time tracking, and intelligent background notifications — all built on the [Shiny](https://github.com/shinyorg) ecosystem.
+A production-quality .NET MAUI reference application for **Canada's Wonderland** that delivers real-time ride wait times, Siri and Gemini integration, GPS-based parking, meal-time tracking, and intelligent background notifications — all built on the [Shiny](https://github.com/shinyorg) ecosystem.
 
 Live ride data is sourced from [ThemeParks.wiki](https://themeparks.wiki/).
 
@@ -11,24 +11,40 @@ Live ride data is sourced from [ThemeParks.wiki](https://themeparks.wiki/).
 
 ## Features
 
-- **Real-Time Ride Wait Times** — View current standby and paid wait times for every ride, with distance-based sorting when inside the park
-- **Interactive Map** — Browse ride locations on a native map with live wait-time pins
-- **AI Assistant** — Voice-driven AI assistant powered by Microsoft.Extensions.AI with animated phase feedback (listening, thinking, speaking)
-- **Parking Locator** — Save your parking location via GPS, capture a photo of your spot with zoomable image viewer, and clear it when you leave
-- **Meal-Time Tracking** — Track food and drink pass usage with countdown timers
-- **Park Hours** — View daily hours of operation at a glance
+- **Real-Time Ride Wait Times** — Current standby and paid wait times for every ride, sortable by name, wait time, paid wait time, or distance (when you're inside the park), with filters for open-only and timed-only rides
+- **Interactive Map** — Ride locations on a native map with live wait-time pins
+- **Siri, Shortcuts & Gemini** — The app's key actions are exposed to the system assistants through [Shiny.AppFunctions](#siri-shortcuts--gemini) — ask for wait times, park hours, the weather, or directions without opening the app
+- **Parking Locator** — Save your parking spot via GPS (only inside the park), attach a photo of your spot with a zoomable image viewer, and get walking directions back to your car. The screen stays in sync when parking is saved by voice or cleared automatically when you leave
+- **Meal-Time Tracking** — Track food and drink pass usage with countdown timers until your next pass is ready
+- **Park Hours** — Daily hours of operation, including the next open day when the park is closed
 - **Ride History** — Log rides you've been on and review your history across visits
 - **Smart Caching** — Cross-session persistent caching keeps the app functional when connectivity drops
-- **Background Notifications** — GPS-driven alerts when ride wait times drop, geofence reminders on park entry/exit, and automatic GPS shutdown outside the park to save battery
+- **Background Notifications** — Alerts when ride wait times drop, a park-arrival reminder via geofence, meal and drink pass reminders, and automatic GPS shutdown outside the park to save battery. Each alert can be switched off in Settings
 - **Light & Dark Mode** — Fully themed UI across all screens
+
+### Siri, Shortcuts & Gemini
+
+Each action is declared once in C# with Shiny.AppFunctions and handled through Shiny Mediator. The source generator emits the App Intents on iOS (Siri, Spotlight, Shortcuts, Apple Intelligence) and the AppFunctions schema on Android 16+ (Gemini and other agents).
+
+| Function | What it does | Siri phrase |
+|----------|--------------|-------------|
+| `get_ride_wait_times` | All open rides sorted by shortest wait, or the wait for one ride | "What are the wait times at Wonderland" · "What has the shortest line at Wonderland" |
+| `directions_to_ride` | Opens walking directions to a ride | "Take me to a ride in Wonderland" |
+| `get_last_ride_time` | When you last rode a specific ride | "When did I last ride at Wonderland" |
+| `get_park_hours` | Hours for today or a given date, or the next open day | "When is Wonderland open" |
+| `get_weather` | Current conditions or a forecast for a date at the park ([Open-Meteo](https://open-meteo.com/)) | "What's the weather at Wonderland" |
+| `set_my_parking` | Saves your current location as your parking spot (must be at the park) | "Remember where I parked at Wonderland" |
+| `map_to_car` | Opens walking directions to your saved parking spot | "Where did I park at Wonderland" |
+
+Rides are an `[AppEntity]`, so Siri and Shortcuts show a ride picker, and Android agents get a generated `search_ride` function instead of having to know ride IDs.
 
 ---
 
 ## Screenshots
 
-| Ride Times | Map | AI Assistant |
-|:---:|:---:|:---:|
-| ![Ride Times](assets/ride_times.png) | ![Map](assets/map_ride_times.png) | ![AI](assets/ai.png) |
+| Ride Times | Map |
+|:---:|:---:|
+| ![Ride Times](assets/ride_times.png) | ![Map](assets/map_ride_times.png) |
 
 | Parking | Meal Times | Settings |
 |:---:|:---:|:---:|
@@ -42,6 +58,8 @@ Live ride data is sourced from [ThemeParks.wiki](https://themeparks.wiki/).
 
 | Library | Description | Links |
 |---------|-------------|-------|
+| **Shiny.AppFunctions** | Declare app actions once in C# and expose them to Siri/Shortcuts (App Intents) and Gemini (Android AppFunctions) | [GitHub](https://github.com/shinyorg/shiny) · [Docs](https://shinylib.net/client/) |
+| **Shiny.Mediator.AppFunctions** | Runs App Function calls through Shiny Mediator handlers | [GitHub](https://github.com/shinyorg/mediator) · [Docs](https://shinylib.net/mediator/) |
 | **Shiny.Mediator.Maui** | In-process mediator with middleware pipeline, caching, offline support, and MAUI lifecycle integration | [GitHub](https://github.com/shinyorg/mediator) · [Docs](https://shinylib.net/mediator/) |
 | **Shiny.Locations** | Background GPS tracking and geofencing with automatic lifecycle management | [GitHub](https://github.com/shinyorg/shiny) · [Docs](https://shinylib.net/client/locations/gps/) |
 | **Shiny.Jobs** | Periodic background jobs that survive app restarts | [GitHub](https://github.com/shinyorg/shiny) · [Docs](https://shinylib.net/client/jobs/) |
@@ -52,10 +70,6 @@ Live ride data is sourced from [ThemeParks.wiki](https://themeparks.wiki/).
 | **Shiny.Extensions.MauiHosting** | Streamlined DI registration and saved-state helpers | [GitHub](https://github.com/shinyorg/extensions) |
 | **Shiny.Extensions.Localization.Generator** | Source generator for strongly-typed `IStringLocalizer` access | [GitHub](https://github.com/shinyorg/localizegen) |
 | **Shiny.DocumentDb.Sqlite** | Lightweight SQLite-backed document store for local persistence | [GitHub](https://github.com/shinyorg/sqlitedocumentdb) |
-| **Shiny.Reflector** | Source-generated reflection metadata for settings and configuration binding | [GitHub](https://github.com/shinyorg/shiny) |
-| **Microsoft.Extensions.AI** | Unified AI abstraction layer for model integration | [Docs](https://learn.microsoft.com/en-us/dotnet/ai/ai-extensions) |
-| **Microsoft.Extensions.AI.OpenAI** | OpenAI provider for Microsoft.Extensions.AI | [NuGet](https://www.nuget.org/packages/Microsoft.Extensions.AI.OpenAI) |
-| **CommunityToolkit.Maui** | Essential MAUI controls, converters, and behaviors | [GitHub](https://github.com/CommunityToolkit/Maui) · [Docs](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/maui/) |
 | **CommunityToolkit.Mvvm** | Source-generated MVVM infrastructure (`ObservableProperty`, `RelayCommand`) | [GitHub](https://github.com/CommunityToolkit/dotnet) · [Docs](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/) |
 | **Sentry.Maui** | Crash reporting and performance monitoring | [GitHub](https://github.com/getsentry/sentry-dotnet) · [Docs](https://docs.sentry.io/platforms/dotnet/guides/maui/) |
 | **Microsoft.Maui.Controls.Maps** | Native map controls for iOS, Android, and Mac Catalyst | [Docs](https://learn.microsoft.com/en-us/dotnet/maui/user-interface/controls/map) |
@@ -81,7 +95,7 @@ Live ride data is sourced from [ThemeParks.wiki](https://themeparks.wiki/).
               Visible="false" />
 ```
 
-**Mediator-Driven Architecture** — All data calls, GPS events, connectivity changes, and AI interactions flow through Shiny Mediator. Caching, offline support, and error handling are applied via middleware configuration in `appsettings.json` — no manual wiring required.
+**Mediator-Driven Architecture** — All data calls, GPS events, connectivity changes, and Siri/Gemini App Function calls flow through Shiny Mediator. Caching, offline support, and error handling are applied via middleware configuration in `appsettings.json` — no manual wiring required.
 
 **Composable ViewModel Services** — Shared services (navigation, dialogs, mediator, localization) are bundled into `ViewModelServices` to reduce constructor injection noise across ViewModels.
 

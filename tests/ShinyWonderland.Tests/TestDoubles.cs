@@ -179,40 +179,59 @@ public class TestNavigator : INavigator
     public INavigationBuilder CreateBuilder(bool fromRoot = false)
         => throw new NotImplementedException();
 
-    public Task NavigateTo(
+    public Task<bool> NavigateTo(
         string route,
         bool relativeNavigation = true,
-        IEnumerable<(string Key, object Value)>? args = null)
+        bool bypassInterceptors = false,
+        CancellationToken cancellationToken = default,
+        params IEnumerable<(string Key, object Value)> args)
     {
         NavigateToCalls.Add(route);
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
-    public Task NavigateTo<TViewModelTarget>(
+    public Task<bool> NavigateTo<TViewModelTarget>(
         Action<TViewModelTarget>? configure = null,
         bool relativeNavigation = true,
-        IEnumerable<(string Key, object Value)>? args = null)
+        bool bypassInterceptors = false,
+        CancellationToken cancellationToken = default,
+        params IEnumerable<(string Key, object Value)> args)
     {
         NavigateToViewModelCalls.Add(typeof(TViewModelTarget));
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
-    public Task PopToRoot(IEnumerable<(string Key, object Value)>? args = null)
+    Task<DialogResult<T>> INavigator.ShowDialog<TViewModel, T>(
+        Action<TViewModel>? configure,
+        CancellationToken cancellationToken)
+        => throw new NotImplementedException();
+
+    public Task<bool> PopToRoot(params IEnumerable<(string Key, object Value)> args)
+        => PopToRoot(false, default, args);
+
+    public Task<bool> PopToRoot(
+        bool bypassInterceptors,
+        CancellationToken cancellationToken = default,
+        params IEnumerable<(string Key, object Value)> args)
     {
         PopToRootCount++;
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
-    public Task GoBack(IEnumerable<(string Key, object Value)>? args = null)
-    {
-        GoBackCount++;
-        return Task.CompletedTask;
-    }
+    public Task<bool> GoBack(params IEnumerable<(string Key, object Value)> args)
+        => GoBack(1, false, default, args);
 
-    public Task GoBack(int backCount, IEnumerable<(string Key, object Value)>? args = null)
+    public Task<bool> GoBack(int backCount, params IEnumerable<(string Key, object Value)> args)
+        => GoBack(backCount, false, default, args);
+
+    public Task<bool> GoBack(
+        int backCount,
+        bool bypassInterceptors,
+        CancellationToken cancellationToken = default,
+        params IEnumerable<(string Key, object Value)> args)
     {
         GoBackCount += backCount;
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public Task SwitchShell(Microsoft.Maui.Controls.Shell shell) => Task.CompletedTask;
@@ -229,6 +248,39 @@ public class TestNavigator : INavigator
         Navigating?.Invoke(this, null!);
         Navigated?.Invoke(this, null!);
     }
+}
+
+
+/// <summary>IAppInfo test double - the static AppInfo throws outside of a MAUI platform head.</summary>
+public class TestAppInfo : Microsoft.Maui.ApplicationModel.IAppInfo
+{
+    public int ShowSettingsUICount { get; private set; }
+
+    public string PackageName => "com.shiny.wonderland.tests";
+    public string Name => "ShinyWonderland.Tests";
+    public string VersionString => "1.0.0";
+    public Version Version => new(1, 0, 0);
+    public string BuildString => "1";
+    public void ShowSettingsUI() => ShowSettingsUICount++;
+    public Microsoft.Maui.ApplicationModel.AppTheme RequestedTheme => Microsoft.Maui.ApplicationModel.AppTheme.Unspecified;
+    public Microsoft.Maui.ApplicationModel.AppPackagingModel PackagingModel => Microsoft.Maui.ApplicationModel.AppPackagingModel.Packaged;
+    public Microsoft.Maui.ApplicationModel.LayoutDirection RequestedLayoutDirection => Microsoft.Maui.ApplicationModel.LayoutDirection.LeftToRight;
+}
+
+
+/// <summary>IFileSystem test double backed by a fresh temp directory.</summary>
+public class TestFileSystem : Microsoft.Maui.Storage.IFileSystem
+{
+    readonly string root = Directory.CreateTempSubdirectory("wonderland-tests-").FullName;
+
+    public string CacheDirectory => Path.Combine(root, "cache");
+    public string AppDataDirectory => root;
+
+    public Task<Stream> OpenAppPackageFileAsync(string filename)
+        => Task.FromResult<Stream>(File.OpenRead(Path.Combine(root, filename)));
+
+    public Task<bool> AppPackageFileExistsAsync(string filename)
+        => Task.FromResult(File.Exists(Path.Combine(root, filename)));
 }
 
 

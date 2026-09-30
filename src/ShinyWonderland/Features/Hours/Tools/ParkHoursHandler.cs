@@ -1,25 +1,35 @@
+using Shiny.AppFunctions;
 using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland.Features.Hours.Tools;
 
-[Description("Gets park hours for today or a specific date. If the park is closed on that date, returns the next open date and its hours.")]
+[AppFunction(
+    "get_park_hours",
+    Title = "Park Hours",
+    Description = "Gets park hours for today or a specific date. If the park is closed on that date, returns the next open date and its hours."
+)]
+[AppShortcut("When is ${applicationName} open", ShortTitle = "Park Hours", SystemImage = "calendar")]
 public record GetParkHoursRequest(
-    [Description("Optional date to check park hours for (e.g. '2026-05-01'). If not provided, returns today's hours.")]
-    string? Date = null
-) : IRequest<string>;
+    [property: AppParameter(Title = "Date", Description = "Optional date to check park hours for. If not provided, returns today's hours.")]
+    DateTimeOffset? Date = null
+) : IAppFunctionRequest<string>;
 
 [MediatorSingleton]
-public partial class ParkHoursHandler(TimeProvider timeProvider) : IRequestHandler<GetParkHoursRequest, string>
+public partial class ParkHoursHandler(TimeProvider timeProvider) : IAppFunctionRequestHandler<GetParkHoursRequest, string>
 {
     public async Task<string> Handle(GetParkHoursRequest request, IMediatorContext context, CancellationToken cancellationToken)
     {
+        var result = await this.GetParkHours(request, context, cancellationToken);
+        context.SayToAssistant(result);
+        return result;
+    }
+
+
+    async Task<string> GetParkHours(GetParkHoursRequest request, IMediatorContext context, CancellationToken cancellationToken)
+    {
         var upcoming = await context.Request(new GetUpcomingParkHours(), cancellationToken);
 
-        DateOnly targetDate;
-        if (!string.IsNullOrWhiteSpace(request.Date) && DateOnly.TryParse(request.Date, out var parsed))
-            targetDate = parsed;
-        else
-            targetDate = DateOnly.FromDateTime(timeProvider.GetLocalNow().Date);
+        var targetDate = DateOnly.FromDateTime((request.Date ?? timeProvider.GetLocalNow()).Date);
 
         var hours = upcoming.FirstOrDefault(h => h.Date == targetDate);
 

@@ -1,3 +1,4 @@
+using ShinyWonderland.Contracts;
 using Microsoft.Maui.Media;
 using Shiny.Notifications;
 
@@ -51,7 +52,9 @@ public class ParkingViewModelTests
 
         viewModel = new ParkingViewModel(
             services,
-            new IMediaPickerImposter().Instance()
+            new IMediaPickerImposter().Instance(),
+            new TestFileSystem(),
+            new TestAppInfo()
         );
     }
 
@@ -130,6 +133,30 @@ public class ParkingViewModelTests
         viewModel.OnAppearing();
 
         await Assert.That(viewModel.ParkLocation).IsNull();
+    }
+
+    [Test]
+    public async Task ParkingLocationChanged_ShouldUpdateParkLocation()
+    {
+        viewModel.OnAppearing();
+        var position = new Position(33.8121, -117.9190);
+
+        await viewModel.Handle(new ParkingLocationChangedEvent(position), new TestMediatorContext(), CancellationToken.None);
+
+        await Assert.That(viewModel.ParkLocation).IsEqualTo(position);
+        await Assert.That(viewModel.IsParked).IsTrue();
+    }
+
+    [Test]
+    public async Task ParkingLocationChanged_WhenCleared_ShouldClearParkLocation()
+    {
+        appSettings.ParkingLocation = new Position(33.8121, -117.9190);
+        viewModel.OnAppearing();
+
+        await viewModel.Handle(new ParkingLocationChangedEvent(null), new TestMediatorContext(), CancellationToken.None);
+
+        await Assert.That(viewModel.ParkLocation).IsNull();
+        await Assert.That(viewModel.IsParked).IsFalse();
     }
 
     [Test]

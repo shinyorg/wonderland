@@ -1,28 +1,43 @@
+using Shiny.AppFunctions;
 using ShinyWonderland.Contracts;
 
 namespace ShinyWonderland.Features.Rides.Tools;
 
-[Description("Gets current ride wait times. Can find the shortest queue or the wait time for a specific ride by ID.")]
+[AppFunction(
+    "get_ride_wait_times",
+    Title = "Ride Wait Times",
+    Description = "Gets current ride wait times. Can find the shortest queue or the wait time for a specific ride."
+)]
+[AppShortcut("What are the wait times at ${applicationName}", ShortTitle = "Wait Times", SystemImage = "clock")]
+[AppShortcut("What has the shortest line at ${applicationName}")]
 public record GetRideWaitTimes(
-    [Description("Optional ride ID to look up. Leave null to return all open rides sorted by shortest wait time.")]
-    string? RideId = null
-) : IRequest<string>;
+    [property: AppParameter(Title = "Ride", Description = "Optional ride to look up. Leave empty to return all open rides sorted by shortest wait time.")]
+    ParkRide? Ride = null
+) : IAppFunctionRequest<string>;
 
+// no [Cache] here - a cache hit skips the handler and the assistant would get no dialog. GetCurrentRideTimes is cached.
 [MediatorSingleton]
-public partial class FastRideHandler : IRequestHandler<GetRideWaitTimes, string>
+public partial class FastRideHandler : IAppFunctionRequestHandler<GetRideWaitTimes, string>
 {
-    [Cache(AbsoluteExpirationSeconds = 120)]
     public async Task<string> Handle(GetRideWaitTimes request, IMediatorContext context, CancellationToken cancellationToken)
+    {
+        var result = await GetWaitTimes(request, context, cancellationToken);
+        context.SayToAssistant(result);
+        return result;
+    }
+
+
+    static async Task<string> GetWaitTimes(GetRideWaitTimes request, IMediatorContext context, CancellationToken cancellationToken)
     {
         var rides = await context.Request(new GetCurrentRideTimes(), cancellationToken);
 
-        if (!string.IsNullOrWhiteSpace(request.RideId))
+        if (request.Ride != null)
         {
             var match = rides.FirstOrDefault(r =>
-                r.Id.Equals(request.RideId, StringComparison.OrdinalIgnoreCase));
+                r.Id.Equals(request.Ride.Id, StringComparison.OrdinalIgnoreCase));
 
             if (match == null)
-                return $"No ride found with ID '{request.RideId}'.";
+                throw new AppFunctionException(AppFunctionErrorCode.NotFound, $"There are no wait times for {request.Ride.Name}.");
 
             if (!match.IsOpen)
                 return $"{match.Name} is currently closed.";

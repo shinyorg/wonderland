@@ -4,9 +4,6 @@ namespace ShinyWonderland.Services;
 [Singleton]
 public partial class AppSettings : ObservableObject
 {
-#if IOS
-    [Bind] public partial bool IsHeyWonderlandEnabled { get; set; }
-#endif    
     [Bind(Default = true)] 
     public partial bool EnableTimeRideNotifications { get; set; }
     
@@ -29,13 +26,6 @@ public partial class AppSettings : ObservableObject
     public partial RideOrder Ordering { get; set; }
     
     [Bind] public partial Position? ParkingLocation { get; set; }
-    [Bind] public partial string? VoiceId { get; set; }
-    
-    [Bind(Default = 100)] 
-    public partial int SpeechRatePercent { get; set; }
-    
-    [Bind(Default = 100)] 
-    public partial int PitchPercent { get; set; }
 }
 
 public enum RideOrder

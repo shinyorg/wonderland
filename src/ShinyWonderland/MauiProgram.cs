@@ -31,12 +31,10 @@ public static class MauiProgram
             .UseShinyShell(x => x
                 .AddGeneratedMaps()
                 .UseUxDiversDialogs()
-                .AddAiTools()
             )
             .AddShinyMediator(
                 x => x
                     .AddMediatorRegistry()
-                    .AddGeneratedAITools()
                     .AddGeneratedOpenApiClient()
                     .AddMauiPersistentCache()
                     .AddConnectivityBroadcaster()
@@ -44,7 +42,6 @@ public static class MauiProgram
                 false
             )
             .AddInfrastructureModules(
-                new AIModule(),
                 new MealTimesModule(),
                 new RideModule(),
                 new ParkingModule()
@@ -63,6 +60,8 @@ public static class MauiProgram
         builder.Services.AddGeneratedServices();
         
         builder.Services.AddSingleton(MediaPicker.Default);
+        builder.Services.AddSingleton(FileSystem.Current);
+        builder.Services.AddSingleton(AppInfo.Current);
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddDatabase();
         builder.Services.AddNotifications();
@@ -70,6 +69,7 @@ public static class MauiProgram
         builder.Services.AddGps<MyGpsDelegate>();
         
         builder.Services.AddShinyStores();
+        builder.Services.AddAppFunctions();
         var app = builder.Build();
         
         return app;

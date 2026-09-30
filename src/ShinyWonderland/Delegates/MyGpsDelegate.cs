@@ -34,6 +34,7 @@ public class MyGpsDelegate(
                 this.Logger.LogInformation("Outside Wonderland, shutting down GPS");
 
                 appSettings.ParkingLocation = null;
+                await mediator.Publish(new ParkingLocationChangedEvent(null));
                 await gpsManager.StopListener();
 
                 if (this.LastReading != null)

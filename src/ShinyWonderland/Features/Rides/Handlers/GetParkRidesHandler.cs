@@ -13,7 +13,7 @@ public partial class GetParkRidesHandler(IOptions<ParkOptions> parkOptions)  : I
     public async Task<IReadOnlyList<ParkRideInfo>> Handle(GetParkRidesRequest request, IMediatorContext context, CancellationToken cancellationToken)
     {
         var rides = await context.Request(
-            new GetV1EntityChildrenHttpRequest
+            new GetEntityChildrenHttpRequest
             {
                 Id = parkOptions.Value.EntityId
             },

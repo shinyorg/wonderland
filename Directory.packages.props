@@ -13,12 +13,12 @@
         <PackageVersion Include="Sentry.Maui" Version="6.11.1"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Shiny.Hosting.Maui" Version="5.8.0-beta-0011"/>
-        <PackageVersion Include="Shiny.Locations" Version="5.8.0-beta-0011"/>
-        <PackageVersion Include="Shiny.Jobs" Version="5.8.0-beta-0011"/>
-        <PackageVersion Include="Shiny.Notifications" Version="5.8.0-beta-0011"/>
-        <PackageVersion Include="Shiny.Extensions.Configuration" Version="5.8.0-beta-0011"/>
-        <PackageVersion Include="Shiny.AppFunctions" Version="5.8.0-beta-0011"/>
+        <PackageVersion Include="Shiny.Hosting.Maui" Version="5.8.0"/>
+        <PackageVersion Include="Shiny.Locations" Version="5.8.0"/>
+        <PackageVersion Include="Shiny.Jobs" Version="5.8.0"/>
+        <PackageVersion Include="Shiny.Notifications" Version="5.8.0"/>
+        <PackageVersion Include="Shiny.Extensions.Configuration" Version="5.8.0"/>
+        <PackageVersion Include="Shiny.AppFunctions" Version="5.8.0"/>
         <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
         <PackageVersion Include="Shiny.Extensions.MauiHosting" Version="5.3.1"/>
         <PackageVersion Include="Shiny.Extensions.DependencyInjection" Version="5.3.1"/>
@@ -26,9 +26,9 @@
         <PackageVersion Include="Shiny.Maui.Controls" Version="1.5.0-beta-0043"/>
         <PackageVersion Include="Shiny.Maui.Shell" Version="7.0.1"/>
         <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="7.0.1"/>
-        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.10.0-beta-0001"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.10.0-beta-0001"/>
-        <PackageVersion Include="Shiny.Mediator.AppFunctions" Version="6.10.0-beta-0001"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.10.0"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.10.0"/>
+        <PackageVersion Include="Shiny.Mediator.AppFunctions" Version="6.10.0"/>
         <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="14.0.0"/>
         <PackageVersion Include="Shiny.Extensions.Serialization" Version="5.3.1"/>
     </ItemGroup>

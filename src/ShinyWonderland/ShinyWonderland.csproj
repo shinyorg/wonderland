@@ -5,8 +5,6 @@
         <TargetFrameworks>$(TargetFrameworks);$(BaseTargetFramework)</TargetFrameworks>
         <RootNamespace>ShinyWonderland</RootNamespace>
         <SingleProject>true</SingleProject>
-        <LangVersion>preview</LangVersion>
-
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
 
@@ -77,7 +75,6 @@
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Sentry.Maui"/>
         <PackageReference Include="Shiny.Extensions.DependencyInjection"/>
-        <PackageReference Include="Shiny.Extensions.MauiHosting"/>
         <PackageReference Include="Shiny.Extensions.Reactive"/>
         <PackageReference Include="Shiny.Maui.Shell"/>
         <PackageReference Include="Shiny.Maui.Shell.UxDiversDialogs"/>

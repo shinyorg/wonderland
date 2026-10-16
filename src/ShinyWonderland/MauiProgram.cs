@@ -1,5 +1,6 @@
 ﻿#if PLATFORM
 using Microsoft.Extensions.Configuration;
+using Shiny.Jobs;
 using ShinyWonderland.Delegates;
 #if DEBUG
 using Microsoft.Maui.DevFlow.Agent;
@@ -41,11 +42,6 @@ public static class MauiProgram
                     .UseSentry(),
                 false
             )
-            .AddInfrastructureModules(
-                new MealTimesModule(),
-                new RideModule(),
-                new ParkingModule()
-            )
 #if RELEASE
             // .UseSentry(x => x.Dsn = builder.Configuration["SentryDsn"]!)
 #endif
@@ -54,6 +50,19 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+        
+        builder.Services.AddJob<MealTimeJob>(x => x
+            .WithForeground()
+            .WithInternet(InternetAccess.Any)
+        );
+        builder.Services.Configure<MealTimeOptions>(builder.Configuration.GetSection("MealPass"));
+        
+        builder.Services.AddGeofencing<ParkingReminderGeofenceDelegate>();
+        
+        builder.Services.AddJob<RideTimeJob>(x => x
+            .WithForeground()
+            .WithInternet(InternetAccess.Any)
+        );
         
         builder.Services.Configure<ParkOptions>(builder.Configuration.GetSection("Park"));
         builder.Services.AddStronglyTypedLocalizations();

@@ -29,7 +29,7 @@ env:
 
 jobs:
   build:
-    runs-on: [self-hosted]
+    runs-on: xcode-27
     
     steps:
     - name: '✅ Checkout'

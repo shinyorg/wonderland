@@ -2,43 +2,45 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-        <MauiVersion>10.0.110</MauiVersion>
+        <MauiVersion>11.0.10</MauiVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Localization" Version="10.0.12"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12"/>
+        <PackageVersion Include="Microsoft.Extensions.Localization" Version="11.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0"/>
         <PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
         <PackageVersion Include="Microsoft.Maui.Controls.Maps" Version="$(MauiVersion)"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageVersion Include="Sentry.Maui" Version="6.12.1"/>
+        <PackageVersion Include="Sentry.Maui" Version="7.0.1"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Shiny.Hosting.Maui" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.Locations" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.Jobs" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.Notifications" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.Extensions.Configuration" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.AppFunctions" Version="6.3.0"/>
-        <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.DependencyInjection" Version="6.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.Reactive" Version="6.0.1"/>
-        <PackageVersion Include="Shiny.Extensions.Serialization" Version="6.0.1"/>
-        <PackageVersion Include="Shiny.Maui.Controls" Version="1.8.0"/>
-        <PackageVersion Include="Shiny.Maui.Shell" Version="7.0.3"/>
-        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="7.0.3"/>
-        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.11.0"/>
-        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.11.0"/>
-        <PackageVersion Include="Shiny.Mediator.AppFunctions" Version="6.11.0"/>
-        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="14.1.0"/>
+        <PackageVersion Include="Shiny.Hosting.Maui" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.Locations" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.Jobs" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.Notifications" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.Extensions.Configuration" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.AppFunctions" Version="7.1.0"/>
+        <PackageVersion Include="Shiny.Extensions.Localization.Generator" Version="2.1.2"/>
+        <PackageVersion Include="Shiny.Extensions.DependencyInjection" Version="6.0.2"/>
+        <PackageVersion Include="Shiny.Extensions.Reactive" Version="6.0.2"/>
+        <PackageVersion Include="Shiny.Extensions.Serialization" Version="6.0.2"/>
+        <PackageVersion Include="Shiny.Maui.Controls" Version="3.0.0"/>
+        <PackageVersion Include="Shiny.Maui.Shell" Version="8.0.1"/>
+        <PackageVersion Include="Shiny.Maui.Shell.UxDiversDialogs" Version="8.0.1"/>
+        <PackageVersion Include="Shiny.Mediator.Maui" Version="6.13.0"/>
+        <PackageVersion Include="Shiny.Mediator.Sentry" Version="6.13.0"/>
+        <PackageVersion Include="Shiny.Mediator.AppFunctions" Version="6.13.0"/>
+        <PackageVersion Include="Shiny.DocumentDb.Sqlite" Version="14.4.1"/>
+        <!-- transitive pin: pulls SQLitePCLRaw 3.x (fixes GHSA-2m69-gcr7-jv3q in 2.1.11) -->
+        <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.12.26421.1"/>
-        <PackageVersion Include="Microsoft.Maui.DevFlow.Driver" Version="0.1.0-preview.12.26421.1"/>
-        <PackageVersion Include="coverlet.collector" Version="10.1.0"/>
-        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0"/>
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1"/>
-        <PackageVersion Include="Imposter" Version="0.1.11"/>
+        <PackageVersion Include="Microsoft.Maui.DevFlow.Agent" Version="0.1.0-preview.16.26575.2"/>
+        <PackageVersion Include="Microsoft.Maui.DevFlow.Driver" Version="0.1.0-preview.16.26575.2"/>
+        <PackageVersion Include="coverlet.collector" Version="10.1.1"/>
+        <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="11.0.1"/>
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.12.0"/>
+        <PackageVersion Include="Imposter" Version="1.0.13"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
-        <PackageVersion Include="TUnit" Version="1.72.4"/>
+        <PackageVersion Include="TUnit" Version="1.87.12"/>
     </ItemGroup>
 </Project>

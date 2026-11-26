@@ -239,6 +239,8 @@ public class TestNavigator : INavigator
 
     public Task SetTabBadge(string route, int value) => Task.CompletedTask;
     public Task SetTabBadge<TViewModel>(int value) => Task.CompletedTask;
+    public Task SetTabBadge(string route, string text) => Task.CompletedTask;
+    public Task SetTabBadge<TViewModel>(string text) => Task.CompletedTask;
     public Task ClearTabBadge(string route) => Task.CompletedTask;
     public Task ClearTabBadge<TViewModel>() => Task.CompletedTask;
 

@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <BaseTargetFramework>net10.0</BaseTargetFramework>
+        <BaseTargetFramework>net11.0</BaseTargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <EnableAotAnalyzer>true</EnableAotAnalyzer>

@@ -39,7 +39,6 @@
     <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <DefineConstants>$(DefineConstants);PLATFORM</DefineConstants>
         <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
-        <TargetPlatformVersion>36</TargetPlatformVersion>
         <AndroidEnableMarshalMethods>false</AndroidEnableMarshalMethods>
     </PropertyGroup>
 
@@ -107,11 +106,11 @@
         <ProjectReference Include="..\ShinyWonderland.Localization\ShinyWonderland.Localization.csproj"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+    <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)-android'">
       <PackageReference Include="Shiny.Hosting.Maui" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
+    <ItemGroup Condition="'$(TargetFramework)' == '$(BaseTargetFramework)-ios'">
       <PackageReference Include="Shiny.Hosting.Maui" />
     </ItemGroup>
 </Project>
